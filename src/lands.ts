@@ -1,0 +1,17 @@
+export enum lands {
+    Sea,
+    Waste,
+    Plains,
+    Town,
+    Forest,
+    Farm,
+    Factory,
+    Base,
+    Defence,
+    Mountain,
+    Monster,
+    Sbase,
+    Oil,
+    Monument,
+    Haribote,
+}
