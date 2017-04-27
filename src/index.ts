@@ -1,4 +1,3 @@
-import {lands as lands} from "./lands";
-import {default as hako} from "./settings";
-console.log(hako.comFromId(3));
-console.log(hako.unitTime);
+import * as lib from "./lib";
+console.log(lib.hako.comFromId(3));
+console.log(lib.hako.unitTime);

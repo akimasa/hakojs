@@ -1,10 +1,10 @@
 declare module "*settings.json" {
-    interface ICommandElement {
+    interface CommandElement {
         name: string;
         const: number;
         id: number;
     }
-    interface ISettings {
+    interface Settings {
         unitTime: number;
         maxIsland: number;
         logMax: number;
@@ -67,9 +67,9 @@ declare module "*settings.json" {
         landOil: number;
         landMonument: number;
         landHaribote: number;
-        com: ICommandElement[];
-        comFromId(id: number): ICommandElement;
+        com: CommandElement[];
+        comFromId(id: number): CommandElement;
     }
-    const value: ISettings;
+    const value: Settings;
     export default value;
 }
