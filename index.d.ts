@@ -67,7 +67,6 @@ declare module "*settings.json" {
         landOil: number;
         landMonument: number;
         landHaribote: number;
-        land: enum;
         com: ICommandElement[];
         comFromId(id: number): ICommandElement;
     }
