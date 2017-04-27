@@ -1,0 +1,28 @@
+{
+  "name": "hakojs",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "gulp build",
+    "watch": "gulp watch",
+    "test": "gulp test",
+    "clean": "gulp clean",
+    "prepublish": "gulp build"
+  },
+  "author": "akimasa",
+  "license": "ISC",
+  "dependencies": {
+    "typescript": "^2.2.2"
+  },
+  "devDependencies": {
+    "@types/node": "^6.0.70",
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
+    "gulp-tslint": "^8.0.0",
+    "gulp-typescript": "^3.1.6",
+    "merge2": "^1.0.3",
+    "tslint": "^5.1.0",
+    "typescript": "^2.2.2"
+  }
+}

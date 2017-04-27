@@ -1,0 +1,12 @@
+{
+  "lintOptions": {
+    "typeCheck": true
+  },
+  "extends": "tslint:recommended",
+  "rules": {
+      "no-console": false,
+      "no-require-imports": false,
+      "no-var-requires": false,
+      "eofline": false
+  }
+}
