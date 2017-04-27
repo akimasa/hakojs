@@ -1,6 +1,6 @@
 export { lands as lands } from "./lands";
 export { default as hako } from "./settings";
-interface Island {
+export interface Island {
     name: string;
     id: number;
     prize: any; // TBD
@@ -15,13 +15,24 @@ interface Island {
     factory: number;
     mountain: number;
     score: number;
+    lands: Land[][];
+    commands: Command[];
+    bbs: string[];
 }
-interface Islands {
-    islands: Island[];
+interface Land {
+    land: number;
+    value: number;
 }
-interface NewIslandArg {
+interface Command {
+    kind: number;
+    target: number;
+    x: number;
+    y: number;
+    arg: number;
+}
+export interface NewIslandArg {
     islandNumber: number;
     name: string;
     password: string;
-    islands: Islands;
+    islands: Island[];
 }

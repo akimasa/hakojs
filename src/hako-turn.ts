@@ -1,4 +1,4 @@
 import * as lib from "./lib";
-function newIslandMain(): void {
-    return;
+export function newIslandMain(arg: lib.NewIslandArg): void {
+    console.log(arg);
 }

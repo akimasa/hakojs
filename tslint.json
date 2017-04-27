@@ -8,6 +8,7 @@
       "no-console": false,
       "no-require-imports": false,
       "no-var-requires": false,
-      "eofline": false
+      "eofline": false,
+      "object-literal-sort-keys": false
   }
 }
