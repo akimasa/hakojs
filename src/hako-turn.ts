@@ -1,46 +1,41 @@
 import * as lib from "./lib";
-
-export function newIslandMain(arg: lib.NewIslandArg) {
-    const ret: { islands: lib.Island[] | null, nextId: number, err: string | null }
-        = { islands: null, nextId: -1, err: null };
-    if (arg.islands.length >= lib.hako.maxIsland) {
-        ret.err = "申し訳ありません、島が一杯で登録できません！！";
-        return ret;
+interface NewIslandArg {
+    name: string;
+    password: string;
+    password2: string;
+    hako: lib.Hakojima;
+}
+export function newIslandMain(arg: NewIslandArg) {
+    if (arg.hako.islands.length >= lib.hako.maxIsland) {
+        return "申し訳ありません、島が一杯で登録できません！！";
     }
     if (arg.name === "") {
-        ret.err = "島につける名前が必要です。";
-        return ret;
+        return "島につける名前が必要です。";
     }
     if (/[,\?\(\)\<\>]|^無人$/.test(arg.name)) {
-        ret.err = "',?()<>\$'とか入ってたり、「無人島」とかいった変な名前はやめましょうよ〜";
-        return ret;
+        return "',?()<>\$'とか入ってたり、「無人島」とかいった変な名前はやめましょうよ〜";
     }
-    for (const island of arg.islands) {
+    for (const island of arg.hako.islands) {
         if (island.name === arg.name) {
-            ret.err = "その島ならすでに発見されています。";
-            return ret;
+            return "その島ならすでに発見されています。";
         }
     }
     if (arg.password === "") {
-        ret.err = "パスワードが必要です。" ;
-        return ret;
+        return "パスワードが必要です。";
     }
     if (arg.password !== arg.password2) {
-        ret.err = "パスワードが違います。";
-        return ret;
+        return "パスワードが違います。";
     }
     const island = new lib.Island();
     island.lands = makeNewLand();
     island.name = arg.name;
-    island.id = arg.nextId;
-    arg.nextId++;
+    island.id = arg.hako.nextId;
+    arg.hako.nextId++;
     island.absent = lib.hako.giveupTurn - 3;
     island.comment = "(未登録)";
     island.password = lib.encodepass(arg.password);
-    arg.islands.push(island);
-    ret.islands = arg.islands;
-    ret.nextId = arg.nextId;
-    return ret;
+    arg.hako.islands.push(island);
+    return null;
 }
 function makeNewLand(): lib.Land[][] {
     const land: lib.Land[][] = [];
