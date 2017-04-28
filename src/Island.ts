@@ -1,5 +1,5 @@
 export interface Land {
-    land: number;
+    kind: number;
     value: number;
 }
 interface Command {

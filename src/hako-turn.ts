@@ -43,13 +43,13 @@ function makeNewLand(): lib.Land[][] {
     for (let y = 0; y < lib.hako.islandSize; y++) {
         land[y] = [];
         for (let x = 0; x < lib.hako.islandSize; x++) {
-            land[y][x] = { land: lib.lands.Sea, value: 0 };
+            land[y][x] = { kind: lib.lands.Sea, value: 0 };
         }
     }
     const center = lib.hako.islandSize / 2 - 1;
     for (let y = center - 1; y < center + 3; y++) {
         for (let x = center - 1; x < center + 3; x++) {
-            land[x][y].land = lib.lands.Waste;
+            land[x][y].kind = lib.lands.Waste;
         }
     }
 
@@ -62,12 +62,12 @@ function makeNewLand(): lib.Land[][] {
             // 周りに陸地がある場合、浅瀬にする
             // 浅瀬は荒地にする
             // 荒地は平地にする
-            if (land[x][y].land === lib.lands.Waste) {
-                land[x][y].land = lib.lands.Plains;
+            if (land[x][y].kind === lib.lands.Waste) {
+                land[x][y].kind = lib.lands.Plains;
                 land[x][y].value = 0;
             } else {
                 if (land[x][y].value === 1) {
-                    land[x][y].land = lib.lands.Waste;
+                    land[x][y].kind = lib.lands.Waste;
                     land[x][y].value = 0;
                 } else {
                     land[x][y].value = 1;
@@ -83,8 +83,8 @@ function makeNewLand(): lib.Land[][] {
         const y = random(4) + center - 1;
 
         // そこがすでに森でなければ、森を作る
-        if (land[x][y].land !== lib.lands.Forest) {
-            land[x][y].land = lib.lands.Forest;
+        if (land[x][y].kind !== lib.lands.Forest) {
+            land[x][y].kind = lib.lands.Forest;
             land[x][y].value = 5;
             count++;
         }
@@ -96,9 +96,9 @@ function makeNewLand(): lib.Land[][] {
         const x = random(4) + center - 1;
         const y = random(4) + center - 1;
 
-        if ((land[x][y].land !== lib.lands.Town) &&
-            (land[x][y].land !== lib.lands.Forest)) {
-            land[x][y].land = lib.lands.Town;
+        if ((land[x][y].kind !== lib.lands.Town) &&
+            (land[x][y].kind !== lib.lands.Forest)) {
+            land[x][y].kind = lib.lands.Town;
             land[x][y].value = 5;
             count++;
         }
@@ -110,9 +110,9 @@ function makeNewLand(): lib.Land[][] {
         const x = random(4) + center - 1;
         const y = random(4) + center - 1;
 
-        if ((land[x][y].land !== lib.lands.Town) &&
-            (land[x][y].land !== lib.lands.Forest)) {
-            land[x][y].land = lib.lands.Mountain;
+        if ((land[x][y].kind !== lib.lands.Town) &&
+            (land[x][y].kind !== lib.lands.Forest)) {
+            land[x][y].kind = lib.lands.Mountain;
             land[x][y].value = 0;
             count++;
         }
@@ -124,10 +124,10 @@ function makeNewLand(): lib.Land[][] {
         const x = random(4) + center - 1;
         const y = random(4) + center - 1;
 
-        if ((land[x][y].land !== lib.lands.Town) &&
-            (land[x][y].land !== lib.lands.Forest) &&
-            (land[x][y].land !== lib.lands.Mountain)) {
-            land[x][y].land = lib.lands.Base;
+        if ((land[x][y].kind !== lib.lands.Town) &&
+            (land[x][y].kind !== lib.lands.Forest) &&
+            (land[x][y].kind !== lib.lands.Mountain)) {
+            land[x][y].kind = lib.lands.Base;
             land[x][y].value = 0;
             count++;
         }
@@ -155,7 +155,7 @@ function countAround(land: lib.Land[][], x: number, y: number, kind: number, ran
                 count++;
             }
         } else {
-            if (land[sx][sy].land === kind) {
+            if (land[sx][sy].kind === kind) {
                 count++;
             }
         }
@@ -165,4 +165,38 @@ function countAround(land: lib.Land[][], x: number, y: number, kind: number, ran
 }
 function random(i: number) {
     return Math.floor(Math.random() * i);
+}
+function estimate(num: number, hako: lib.Hakojima) {
+    let pop = 0;
+    let area = 0;
+    let farm = 0;
+    let factory = 0;
+    let mountain = 0;
+
+    const island = hako.islands[num];
+    for (let y = 0; y < lib.hako.islandSize; y++) {
+        for (let x = 0; x < lib.hako.islandSize; x++) {
+            const kind = island.lands[x][y].kind;
+            const value = island.lands[x][y].value;
+            if ((kind !== lib.lands.Sea) &&
+                (kind !== lib.lands.Sbase) &&
+                (kind !== lib.lands.Oil)) {
+                area++;
+                if (kind === lib.lands.Town) {
+                    pop += value;
+                } else if (kind === lib.lands.Farm) {
+                    farm += value;
+                } else if (kind === lib.lands.Factory) {
+                    factory += value;
+                } else if (kind === lib.lands.Mountain) {
+                    mountain += value;
+                }
+            }
+        }
+    }
+    island.pop = pop;
+    island.area = area;
+    island.farm = farm;
+    island.factory = factory;
+    island.mountain = mountain;
 }
