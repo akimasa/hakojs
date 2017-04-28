@@ -20,10 +20,8 @@ export function checkPassword(saved: string, input: string) {
         return true;
     }
     const parts = saved.split(":");
-    console.log(parts);
     const salt = new Buffer(parts[0], "base64");
     const key = crypto.pbkdf2Sync(input, salt, settings.passwordIterations, 128, "sha512");
-    console.log(key.toString("base64"));
     if (parts[1] === key.toString("base64")) {
         return true;
     }
