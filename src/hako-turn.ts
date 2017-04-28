@@ -34,7 +34,8 @@ export function newIslandMain(arg: NewIslandArg) {
     island.absent = lib.hako.giveupTurn - 3;
     island.comment = "(未登録)";
     island.password = lib.encodepass(arg.password);
-    arg.hako.islands.push(island);
+    const index = arg.hako.islands.push(island);
+    estimate(index - 1, arg.hako);
     return null;
 }
 function makeNewLand(): lib.Land[][] {
@@ -199,4 +200,25 @@ function estimate(num: number, hako: lib.Hakojima) {
     island.farm = farm;
     island.factory = factory;
     island.mountain = mountain;
+}
+function randomArray(num: number) {
+    const arr = [];
+    for (let i = 0; i < num; i++) {
+        arr[i] = i;
+    }
+    let m = arr.length;
+    while (m) {
+        const i = Math.floor(Math.random() * m--);
+
+        const t = arr[m];
+        arr[m] = arr[i];
+        arr[i] = t;
+    }
+    return arr;
+}
+export function turnMain(hako: lib.Hakojima) {
+    const order = randomArray(hako.islands.length);
+    for (let i = 0; i < hako.islands.length; i++) {
+        estimate(order[i], hako);
+    }
 }

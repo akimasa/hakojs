@@ -2,7 +2,7 @@ import * as turn from "./hako-turn";
 import * as lib from "./lib";
 const json = require("../test3.json");
 const hako = new lib.Hakojima(json);
-let ret = turn.newIslandMain({
+const ret = turn.newIslandMain({
     name: "higee",
     password: "pass",
     password2: "pass",
@@ -11,6 +11,7 @@ let ret = turn.newIslandMain({
 if (ret) {
     console.log(ret);
 }
+/*
 for (let i = 0; i < 10; i++) {
     ret = turn.newIslandMain({
         name: "higee" + i,
@@ -22,4 +23,7 @@ for (let i = 0; i < 10; i++) {
         console.log(ret);
     }
 }
-console.log(JSON.stringify({ nextId: hako.nextId, islands: hako.islands }));
+*/
+// console.log(JSON.stringify({ nextId: hako.nextId, islands: hako.islands }));
+turn.turnMain(hako);
+console.log(JSON.stringify(hako));
