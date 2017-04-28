@@ -25,9 +25,15 @@ const dmyislands = [
 ];
 console.log(lib.hako.comFromId(3));
 console.log(lib.hako.unitTime);
-console.log(turn.newIslandMain({
+const gNextId = 0;
+const ret = turn.newIslandMain({
     islandNumber: 1,
     name: "hoge",
     password: "pass",
+    password2: "pass",
     islands: dmyislands,
-}));
+    nextId: gNextId,
+});
+if (ret !== true) {
+    console.log(ret.message);
+}
