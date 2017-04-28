@@ -1,29 +1,34 @@
 import * as lib from "./lib";
 export function newIslandMain(arg: lib.NewIslandArg) {
-    console.log(arg);
-    if (arg.islandNumber >= lib.hako.maxIsland) {
-        return new Error("申し訳ありません、島が一杯で登録できません！！");
+    const ret: { islands: lib.Island[] | null, nextId: number, err: string | null }
+        = { islands: null, nextId: -1, err: null };
+    if (arg.islands.length >= lib.hako.maxIsland) {
+        ret.err = "申し訳ありません、島が一杯で登録できません！！";
+        return ret;
     }
     if (arg.name === "") {
-        return new Error("島につける名前が必要です。");
+        ret.err = "島につける名前が必要です。";
+        return ret;
     }
     if (/[,\?\(\)\<\>]|^無人$/.test(arg.name)) {
-        return new Error("',?()<>\$'とか入ってたり、「無人島」とかいった変な名前はやめましょうよ〜");
+        ret.err = "',?()<>\$'とか入ってたり、「無人島」とかいった変な名前はやめましょうよ〜";
+        return ret;
     }
     for (const island of arg.islands) {
         if (island.name === arg.name) {
-            return new Error("その島ならすでに発見されています。");
+            ret.err = "その島ならすでに発見されています。";
+            return ret;
         }
     }
     if (arg.password === "") {
-        return new Error("パスワードが必要です。");
+        ret.err = "パスワードが必要です。" ;
+        return ret;
     }
     if (arg.password !== arg.password2) {
-        return new Error("パスワードが違います。");
+        ret.err = "パスワードが違います。";
+        return ret;
     }
-    const currentNumber = arg.islandNumber + 1;
-    let island = arg.islands[currentNumber];
-    island = new lib.IslandClass();
+    const island = new lib.IslandClass();
     island.lands = makeNewLand();
     island.name = arg.name;
     island.id = arg.nextId;
@@ -31,7 +36,10 @@ export function newIslandMain(arg: lib.NewIslandArg) {
     island.absent = lib.hako.giveupTurn - 3;
     island.comment = "(未登録)";
     island.password = lib.encodepass(arg.password);
-    return true;
+    arg.islands.push(island);
+    ret.islands = arg.islands;
+    ret.nextId = arg.nextId;
+    return ret;
 }
 function makeNewLand(): lib.Land[][] {
     const land: lib.Land[][] = [];
@@ -128,7 +136,6 @@ function makeNewLand(): lib.Land[][] {
             count++;
         }
     }
-    console.log(land);
     return land;
 }
 function countAround(land: lib.Land[][], x: number, y: number, kind: number, range: number) {

@@ -1,9 +1,9 @@
 import * as turn from "./hako-turn";
 import * as lib from "./lib";
-const dmyislands = [
+let gIslands = [
     {
         name: "hogesima",
-        id: 1,
+        id: 0,
         prize: "hogehoge", // TBD
         absent: 2,
         comment: "yahoo",
@@ -23,17 +23,33 @@ const dmyislands = [
         bbs: [""],
     },
 ];
-console.log(lib.hako.comFromId(3));
-console.log(lib.hako.unitTime);
-const gNextId = 0;
-const ret = turn.newIslandMain({
-    islandNumber: 1,
+let gNextId = 1;
+let ret = turn.newIslandMain({
     name: "hoge",
     password: "pass",
     password2: "pass",
-    islands: dmyislands,
+    islands: gIslands,
     nextId: gNextId,
 });
-if (ret !== true) {
-    console.log(ret.message);
+if (ret.err) {
+    console.log(ret.err);
+} else {
+    gNextId = ret.nextId;
+    gIslands = ret.islands;
 }
+for (let i = 0; i < 10; i++) {
+    ret = turn.newIslandMain({
+        name: "hoge" + i,
+        password: "pass",
+        password2: "pass",
+        islands: gIslands,
+        nextId: gNextId,
+    });
+    if (ret.err) {
+        console.log(ret.err);
+    } else {
+        gNextId = ret.nextId;
+        gIslands = ret.islands;
+    }
+}
+console.log(JSON.stringify(gIslands));

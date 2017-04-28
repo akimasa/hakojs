@@ -31,7 +31,6 @@ interface Command {
     arg: number;
 }
 export interface NewIslandArg {
-    islandNumber: number;
     name: string;
     password: string;
     password2: string;
