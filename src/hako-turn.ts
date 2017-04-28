@@ -6,7 +6,7 @@ interface NewIslandArg {
     hako: lib.Hakojima;
 }
 export function newIslandMain(arg: NewIslandArg) {
-    if (arg.hako.islands.length >= lib.hako.maxIsland) {
+    if (arg.hako.islands.length >= lib.settings.maxIsland) {
         return "申し訳ありません、島が一杯で登録できません！！";
     }
     if (arg.name === "") {
@@ -31,7 +31,7 @@ export function newIslandMain(arg: NewIslandArg) {
     island.name = arg.name;
     island.id = arg.hako.nextId;
     arg.hako.nextId++;
-    island.absent = lib.hako.giveupTurn - 3;
+    island.absent = lib.settings.giveupTurn - 3;
     island.comment = "(未登録)";
     island.password = lib.encodepass(arg.password);
     const index = arg.hako.islands.push(island);
@@ -41,13 +41,13 @@ export function newIslandMain(arg: NewIslandArg) {
 function makeNewLand(): lib.Land[][] {
     const land: lib.Land[][] = [];
     // 勝手に配列が広がらないので。幸い、xとyを入れ替えても同じ。
-    for (let y = 0; y < lib.hako.islandSize; y++) {
+    for (let y = 0; y < lib.settings.islandSize; y++) {
         land[y] = [];
-        for (let x = 0; x < lib.hako.islandSize; x++) {
+        for (let x = 0; x < lib.settings.islandSize; x++) {
             land[y][x] = { kind: lib.lands.Sea, value: 0 };
         }
     }
-    const center = lib.hako.islandSize / 2 - 1;
+    const center = lib.settings.islandSize / 2 - 1;
     for (let y = center - 1; y < center + 3; y++) {
         for (let x = center - 1; x < center + 3; x++) {
             land[x][y].kind = lib.lands.Waste;
@@ -148,8 +148,8 @@ function countAround(land: lib.Land[][], x: number, y: number, kind: number, ran
         if (((sx % 2) === 0) && ((y % 2) === 1)) {
             sx--;
         }
-        if ((sx < 0) || (sx >= lib.hako.islandSize) ||
-            (sy < 0) || (sy >= lib.hako.islandSize)) {
+        if ((sx < 0) || (sx >= lib.settings.islandSize) ||
+            (sy < 0) || (sy >= lib.settings.islandSize)) {
             // 範囲外の場合
             if (kind === lib.lands.Sea) {
                 // 海なら加算
@@ -175,8 +175,8 @@ function estimate(num: number, hako: lib.Hakojima) {
     let mountain = 0;
 
     const island = hako.islands[num];
-    for (let y = 0; y < lib.hako.islandSize; y++) {
-        for (let x = 0; x < lib.hako.islandSize; x++) {
+    for (let y = 0; y < lib.settings.islandSize; y++) {
+        for (let x = 0; x < lib.settings.islandSize; x++) {
             const kind = island.lands[x][y].kind;
             const value = island.lands[x][y].value;
             if ((kind !== lib.lands.Sea) &&
