@@ -1,4 +1,5 @@
 import * as lib from "./lib";
+
 export function newIslandMain(arg: lib.NewIslandArg) {
     const ret: { islands: lib.Island[] | null, nextId: number, err: string | null }
         = { islands: null, nextId: -1, err: null };
@@ -28,7 +29,7 @@ export function newIslandMain(arg: lib.NewIslandArg) {
         ret.err = "パスワードが違います。";
         return ret;
     }
-    const island = new lib.IslandClass();
+    const island = new lib.Island();
     island.lands = makeNewLand();
     island.name = arg.name;
     island.id = arg.nextId;
