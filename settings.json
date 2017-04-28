@@ -1,5 +1,7 @@
 {
     "default": {
+        "masterPassword": "masterpassword",
+        "passwordIterations": 8000,
         "unitTime": 21600,
         "maxIsland": 30,
         "logMax": 8,

@@ -25,5 +25,7 @@ for (let i = 0; i < 10; i++) {
 }
 */
 // console.log(JSON.stringify({ nextId: hako.nextId, islands: hako.islands }));
-turn.turnMain(hako);
-console.log(JSON.stringify(hako));
+// turn.turnMain(hako);
+// console.log(JSON.stringify(hako));
+const saved = lib.encodepass("str");
+console.log(lib.checkPassword(saved, "str"));

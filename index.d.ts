@@ -5,6 +5,8 @@ declare module "*settings.json" {
         id: number;
     }
     interface Settings {
+        masterPassword: string;
+        passwordIterations: number;
         unitTime: number;
         maxIsland: number;
         logMax: number;
