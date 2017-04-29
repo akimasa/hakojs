@@ -14,6 +14,9 @@ gulp.task("tslint", () => {
         .pipe(tslint.report({
             summarizeFailureOutput: true
         }))
+        .on('error', notify.onError(function (error) {
+            return "Lint: " + error.message;
+        }));
 });
 gulp.task("clean", () => {
     del.sync(["release"]);
