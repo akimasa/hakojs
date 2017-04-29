@@ -41,10 +41,10 @@ export function newIslandMain(arg: NewIslandArg) {
 function makeNewLand(): lib.Land[][] {
     const land: lib.Land[][] = [];
     // 勝手に配列が広がらないので。幸い、xとyを入れ替えても同じ。
-    for (let y = 0; y < lib.settings.islandSize; y++) {
-        land[y] = [];
-        for (let x = 0; x < lib.settings.islandSize; x++) {
-            land[y][x] = { kind: lib.lands.Sea, value: 0 };
+    for (let x = 0; x < lib.settings.islandSize; x++) {
+        land[x] = [];
+        for (let y = 0; y < lib.settings.islandSize; y++) {
+            land[x][y] = { kind: lib.lands.Sea, value: 0 };
         }
     }
     const center = lib.settings.islandSize / 2 - 1;
