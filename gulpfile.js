@@ -3,6 +3,7 @@ const ts = require('gulp-typescript');
 const tslint = require("gulp-tslint");
 const sourcemaps = require("gulp-sourcemaps");
 const notify = require("gulp-notify");
+const mocha = require("gulp-mocha");
 const del = require("del");
 const merge = require('merge2');
 const tsopt = "tsconfig.json";
@@ -37,3 +38,7 @@ gulp.task("build", ["tslint"], () => {
 gulp.task("watch", () => {
     gulp.watch(["./src/**/*.ts"],["build"]);
 });
+gulp.task("test", ["build"], () => {
+    gulp.src('./release/test/**/*.js', { read: false })
+        .pipe(mocha({ reporter: 'spec' }));
+})

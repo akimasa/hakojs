@@ -16,9 +16,11 @@
     "typescript": "^2.2.2"
   },
   "devDependencies": {
+    "@types/mocha": "^2.2.41",
     "@types/node": "^6.0.70",
     "del": "^2.2.2",
     "gulp": "^3.9.1",
+    "gulp-mocha": "^4.3.1",
     "gulp-notify": "^3.0.0",
     "gulp-sourcemaps": "^2.6.0",
     "gulp-tslint": "^8.0.0",
