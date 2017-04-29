@@ -1,8 +1,3 @@
-interface CommandElement {
-    name: string;
-    const: number;
-    id: number;
-}
 interface Settings {
     masterPassword: string;
     passwordIterations: number;
@@ -68,15 +63,7 @@ interface Settings {
     landOil: number;
     landMonument: number;
     landHaribote: number;
-    com: CommandElement[];
-    comFromId(id: number): CommandElement;
 }
 const settings: Settings = require("../settings.json");
-settings.comFromId = (id) => {
-    for (const ele in settings.com) {
-        if (settings.com[ele].id === id) {
-            return settings.com[ele];
-        }
-    }
-};
+
 export default settings;

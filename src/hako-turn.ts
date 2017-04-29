@@ -1,3 +1,4 @@
+import coms from "./coms";
 import * as lib from "./lib";
 interface NewIslandArg {
     name: string;
@@ -257,6 +258,27 @@ function income(island: lib.Island, hako: lib.Hakojima) {
 
     // 食料消費
     island.food = Math.floor(island.food - pop * lib.settings.eatenFood);
+}
+function doCommand(island: lib.Island) {
+    const command = island.commands.splice(0, 1)[0];
+
+    if (command.kind === coms.coms.donothing.id) {
+        island.money += 10;
+        island.absent++;
+
+        if (island.absent >= lib.settings.giveupTurn) {
+            island.commands[0] = {
+                kind: coms.coms.giveup.id,
+                target: 0,
+                x: 0,
+                y: 0,
+                arg: 0,
+            };
+        }
+        return 1;
+    }
+
+    island.absent = 0;
 }
 export function turnMain(hako: lib.Hakojima) {
     // 最終更新時間を更新
