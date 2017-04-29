@@ -1,7 +1,7 @@
 import * as assert from "assert";
 import * as turn from "../hako-turn";
 import * as lib from "../lib";
-const json = require("../../test3.json");
+const json = require("../../src/test/test.json");
 const hako = new lib.Hakojima(json);
 describe("turn newIsland", () => {
     it("fails when wrong password confirm", () => {
@@ -16,6 +16,33 @@ describe("turn newIsland", () => {
     it("fails when there are same island name", () => {
         const ret = turn.newIslandMain({
             name: "hoge",
+            password: "pass",
+            password2: "pass",
+            hako,
+        });
+        assert.notStrictEqual(ret, null);
+    });
+    it("fails when no password", () => {
+        const ret = turn.newIslandMain({
+            name: "hogehoge",
+            password: "",
+            password2: "",
+            hako,
+        });
+        assert.notStrictEqual(ret, null);
+    });
+    it("fails when no wierd name", () => {
+        const ret = turn.newIslandMain({
+            name: "<>",
+            password: "",
+            password2: "",
+            hako,
+        });
+        assert.notStrictEqual(ret, null);
+    });
+    it("fails when no island name", () => {
+        const ret = turn.newIslandMain({
+            name: "",
             password: "pass",
             password2: "pass",
             hako,
@@ -45,7 +72,7 @@ describe("turn newIsland", () => {
 
 });
 
-describe("Password", () => {
+describe("lib Password", () => {
     const saved = lib.encodepass("str");
     console.log(lib.checkPassword(saved, "str"));
     it("checkPassword passes when correct password", () => {
@@ -59,5 +86,18 @@ describe("Password", () => {
     });
     it("checkPassword fails when blank password entered", () => {
         assert.strictEqual(lib.checkPassword(saved, ""), false);
+    });
+});
+describe("lib settings", () => {
+    it("find settings command from id", () => {
+        assert.notStrictEqual(lib.settings.comFromId(1), null);
+    });
+    it("find settings command from id return null out of range", () => {
+        assert.notStrictEqual(lib.settings.comFromId(999), null);
+    });
+});
+describe("turn", () => {
+    it("main", () => {
+        turn.turnMain(hako);
     });
 });
