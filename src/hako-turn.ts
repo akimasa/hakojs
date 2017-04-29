@@ -40,7 +40,7 @@ export function newIslandMain(arg: NewIslandArg) {
 }
 function makeNewLand(): lib.Land[][] {
     const land: lib.Land[][] = [];
-    // 勝手に配列が広がらないので。幸い、xとyを入れ替えても同じ。
+
     for (let x = 0; x < lib.settings.islandSize; x++) {
         land[x] = [];
         for (let y = 0; y < lib.settings.islandSize; y++) {
@@ -215,6 +215,32 @@ function randomArray(num: number) {
         arr[i] = t;
     }
     return arr;
+}
+function randomPointArray() {
+    // 元の箱庭諸島と厳密には非互換
+    const rpx = [];
+    const rpy = [];
+    for (let i = 0; i < lib.settings.islandSize; i++) {
+        rpx[i] = i;
+        rpy[i] = i;
+    }
+    let m = rpx.length;
+    while (m) {
+        const i = Math.floor(Math.random() * m--);
+
+        const t = rpx[m];
+        rpx[m] = rpx[i];
+        rpx[i] = t;
+    }
+    m = rpy.length;
+    while (m) {
+        const i = Math.floor(Math.random() * m--);
+
+        const t = rpy[m];
+        rpy[m] = rpy[i];
+        rpy[i] = t;
+    }
+    return {rpx, rpy};
 }
 export function turnMain(hako: lib.Hakojima) {
     const order = randomArray(hako.islands.length);
