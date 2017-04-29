@@ -242,9 +242,35 @@ function randomPointArray() {
     }
     return {rpx, rpy};
 }
+function income(island: lib.Island, hako: lib.Hakojima) {
+    const [pop, farm, factory, mountain] = [island.pop, island.farm * 10, island.factory, island.mountain];
+
+    // 収入
+    if (pop > farm) {
+        // 農業だけじゃ手が余る場合
+        island.food += farm; // 農場フル稼働
+        island.money += Math.min(Math.floor((pop - farm) / 10), factory + mountain);
+    } else {
+        // 農業だけで手一杯の場合
+        island.food += pop; // 全員野良仕事
+    }
+
+    // 食料消費
+    island.food = Math.floor(island.food - pop * lib.settings.eatenFood);
+}
 export function turnMain(hako: lib.Hakojima) {
+    // 最終更新時間を更新
+    hako.islandLastTime += lib.settings.unitTime;
+
+    // ターン番号
+    hako.islandTurn++;
+
+    // 順番決め
     const order = randomArray(hako.islands.length);
+
+    // 収入、消費フェイズ
     for (let i = 0; i < hako.islands.length; i++) {
         estimate(order[i], hako);
+        income(hako.islands[order[i]], hako);
     }
 }
