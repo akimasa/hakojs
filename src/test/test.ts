@@ -22,7 +22,7 @@ describe("turn newIsland", () => {
         });
         assert.notStrictEqual(ret, null);
     });
-    it("fails", () => {
+    it("success when no problem", () => {
         for (let i = 0; i < 8; i++) {
             const ret = turn.newIslandMain({
                 name: "higee" + i,
