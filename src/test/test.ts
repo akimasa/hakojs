@@ -6,9 +6,8 @@ import Hakojima from "../Hakojima";
 import * as lib from "../lib";
 const gunzip = zlib.createGunzip();
 const buf = zlib.gunzipSync(fs.readFileSync(`${__dirname}/../../src/test/test.json.gz`));
-const json = JSON.parse(buf.toString("utf-8"));
 const hako = new Hakojima();
-hako.load(JSON.stringify(json));
+hako.load(buf.toString("utf-8"));
 describe("turn newIsland", () => {
     it("fails when wrong password confirm", () => {
         const ret = hako.newIslandMain({
