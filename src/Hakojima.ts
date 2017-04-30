@@ -33,6 +33,14 @@ export default class Hakojima {
         }
         this.nextId++;
     }
+    public getJSON() {
+        return JSON.stringify({
+            nextId: this.nextId,
+            islandLastTime: this.islandLastTime,
+            islandTurn: this.islandTurn,
+            islands: this.islands,
+        });
+    }
     public getIsland(id: number) {
         return this.islands.find((ele) => ele.id === id);
     }

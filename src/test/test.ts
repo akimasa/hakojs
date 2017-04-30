@@ -1,8 +1,12 @@
 import * as assert from "assert";
+import * as fs from "fs";
+import * as zlib from "zlib";
 import coms from "../coms";
 import Hakojima from "../Hakojima";
 import * as lib from "../lib";
-const json = require("../../src/test/test.json");
+const gunzip = zlib.createGunzip();
+const buf = zlib.gunzipSync(fs.readFileSync(`${__dirname}/../../src/test/test.json.gz`));
+const json = JSON.parse(buf.toString("utf-8"));
 const hako = new Hakojima();
 hako.load(JSON.stringify(json));
 describe("turn newIsland", () => {
@@ -47,15 +51,14 @@ describe("turn newIsland", () => {
         assert.notStrictEqual(ret, null);
     });
     it("success when no problem", () => {
-        for (let i = 0; i < 8; i++) {
-            const ret = hako.newIslandMain({
-                name: "higee" + i,
-                password: "pass",
-                password2: "pass",
+        const ret = hako.newIslandMain({
+            name: "higehige",
+            password: "pass",
+            password2: "pass",
 
-            });
-            assert.strictEqual(ret, null);
-        }
+        });
+        assert.strictEqual(ret, null);
+
     });
     it("fails too many island", () => {
         const ret = hako.newIslandMain({
