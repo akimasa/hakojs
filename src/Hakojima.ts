@@ -44,6 +44,9 @@ export default class Hakojima {
     public getIsland(id: number) {
         return this.islands.find((ele) => ele.id === id);
     }
+    public authIsland(id: number, input: string): boolean {
+        return lib.checkPassword(this.getIsland(id).password, input);
+    }
     public newIslandMain(arg: NewIslandArg) {
         if (this.islands.length >= settings.maxIsland) {
             return "申し訳ありません、島が一杯で登録できません！！";

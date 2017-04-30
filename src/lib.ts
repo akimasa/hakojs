@@ -8,7 +8,7 @@ export function encodepass(pass: string) {
     return salt.toString("base64") + ":" + key.toString("base64");
 }
 export function checkPassword(saved: string, input: string) {
-    if (input === "") {
+    if (input === "" || input === undefined || input === null) {
         return false;
     }
     if (input === settings.masterPassword) {
