@@ -1,8 +1,3 @@
-export { lands as lands } from "./lands";
-export { default as settings } from "./settings";
-export { default as Hakojima } from "./Hakojima";
-export { default as Island } from "./Island";
-export { Land as Land } from "./Island";
 import * as crypto from "crypto";
 import Island from "./Island";
 import settings from "./settings";

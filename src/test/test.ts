@@ -1,72 +1,66 @@
 import * as assert from "assert";
 import coms from "../coms";
-import * as turn from "../hako-turn";
+import Hakojima from "../Hakojima";
 import * as lib from "../lib";
 const json = require("../../src/test/test.json");
-const hako = new lib.Hakojima(json);
+const hako = new Hakojima(json);
 describe("turn newIsland", () => {
     it("fails when wrong password confirm", () => {
-        const ret = turn.newIslandMain({
+        const ret = hako.newIslandMain({
             name: "higee",
             password: "pass",
             password2: "passwrong",
-            hako,
         });
         assert.notStrictEqual(ret, null);
     });
     it("fails when there are same island name", () => {
-        const ret = turn.newIslandMain({
+        const ret = hako.newIslandMain({
             name: "hoge",
             password: "pass",
             password2: "pass",
-            hako,
         });
         assert.notStrictEqual(ret, null);
     });
     it("fails when no password", () => {
-        const ret = turn.newIslandMain({
+        const ret = hako.newIslandMain({
             name: "hogehoge",
             password: "",
             password2: "",
-            hako,
         });
         assert.notStrictEqual(ret, null);
     });
     it("fails when no wierd name", () => {
-        const ret = turn.newIslandMain({
+        const ret = hako.newIslandMain({
             name: "<>",
             password: "",
             password2: "",
-            hako,
         });
         assert.notStrictEqual(ret, null);
     });
     it("fails when no island name", () => {
-        const ret = turn.newIslandMain({
+        const ret = hako.newIslandMain({
             name: "",
             password: "pass",
             password2: "pass",
-            hako,
         });
         assert.notStrictEqual(ret, null);
     });
     it("success when no problem", () => {
         for (let i = 0; i < 8; i++) {
-            const ret = turn.newIslandMain({
+            const ret = hako.newIslandMain({
                 name: "higee" + i,
                 password: "pass",
                 password2: "pass",
-                hako,
+
             });
             assert.strictEqual(ret, null);
         }
     });
     it("fails too many island", () => {
-        const ret = turn.newIslandMain({
+        const ret = hako.newIslandMain({
             name: "hogehoge",
             password: "pass",
             password2: "pass",
-            hako,
         });
         assert.notStrictEqual(ret, null);
     });
@@ -99,6 +93,6 @@ describe("lib settings", () => {
 });
 describe("turn", () => {
     it("main", () => {
-        turn.turnMain(hako);
+        hako.turnMain();
     });
 });
