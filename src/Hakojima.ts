@@ -14,12 +14,14 @@ export default class Hakojima {
     public islandLastTime: number;
     public islandTurn: number;
     public islands: Island[];
-    constructor(json: {
-        nextId: number,
-        islandLastTime: number,
-        islandTurn: number,
-        islands: Island[],
-    }) {
+    constructor() {
+        this.nextId = 0;
+        this.islandLastTime = new Date().getTime();
+        this.islandTurn = 0;
+        this.islands = [];
+    }
+    public load(jsonstr: string) {
+        const json = JSON.parse(jsonstr);
         this.nextId = json.nextId - 1;
         this.islandLastTime = json.islandLastTime;
         this.islandTurn = json.islandTurn;

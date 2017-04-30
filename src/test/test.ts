@@ -3,7 +3,8 @@ import coms from "../coms";
 import Hakojima from "../Hakojima";
 import * as lib from "../lib";
 const json = require("../../src/test/test.json");
-const hako = new Hakojima(json);
+const hako = new Hakojima();
+hako.load(JSON.stringify(json));
 describe("turn newIsland", () => {
     it("fails when wrong password confirm", () => {
         const ret = hako.newIslandMain({
