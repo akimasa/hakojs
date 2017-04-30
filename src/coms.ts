@@ -126,7 +126,7 @@ const coms = {
             id: 46,
         },
     },
-    comsFromId: (id: number): {name: string, cost: number, id: number} => {
+    comFromId: (id: number): {name: string, cost: number, id: number} => {
         for (const ele in coms.coms) {
             if (coms.coms[ele].id === id) {
                 return coms.coms[ele];

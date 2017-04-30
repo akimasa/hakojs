@@ -1,4 +1,5 @@
 import * as assert from "assert";
+import coms from "../coms";
 import * as turn from "../hako-turn";
 import * as lib from "../lib";
 const json = require("../../src/test/test.json");
@@ -90,10 +91,10 @@ describe("lib Password", () => {
 });
 describe("lib settings", () => {
     it("find settings command from id", () => {
-        assert.notStrictEqual(lib.settings.comFromId(1), null);
+        assert.notStrictEqual(coms.comFromId(1), null);
     });
     it("find settings command from id return null out of range", () => {
-        assert.notStrictEqual(lib.settings.comFromId(999), null);
+        assert.notStrictEqual(coms.comFromId(999), null);
     });
 });
 describe("turn", () => {

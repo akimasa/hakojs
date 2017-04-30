@@ -312,7 +312,7 @@ function doCommand(island: lib.Island) {
 
     const [kind, target, x, y, arg] = [command.kind, command.target, command.x, command.y, command.arg];
     const [name, id, landKind, lv] = [island.name, island.id, island.lands[x][y].kind, island.lands[x][y].value];
-    const [cost, comName] = [coms.comsFromId(kind).cost, coms.comsFromId(kind).name];
+    const [cost, comName] = [coms.comsFromId(kind).cost, coms.comFromId(kind).name];
     const [point, landName] = [`(${x}, ${y})`, landName(landKind, lv)];
 
     if (command.kind === coms.coms.donothing.id) {
