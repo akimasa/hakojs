@@ -1,3 +1,4 @@
+<script src="js/index.js"></script>
 <table>
     <tr><td>
 <script>
@@ -147,16 +148,16 @@ var data =[ [ { land: 0, value: 0 },
     { land: 0, value: 0 } ] ]
     ;
 
-document.write("<img src='xbar12.gif'><br>");
+document.write("<img src='img/xbar12.gif'><br>");
 for(var y = 0;y<12;y++){
     if((y % 2) == 0){
-        document.write("<img src='space" + y + ".gif'>");
+        document.write("<img src='img/space" + y + ".gif'>");
     }
     for(var x=0; x<12; x++){
         landstr(data[x][y]);
     }
     if((y % 2) == 1){
-        document.write("<img src='space" + y + ".gif'>");
+        document.write("<img src='img/space" + y + ".gif'>");
     }
     document.write("<br>");
 }
@@ -196,7 +197,7 @@ function landstr(data){
     } else {
         alt = data.land;
     }
-    document.write("<img src='"+image+"' alt='"+alt+"' width=32 height=32 border=0>");
+    document.write("<img src='img/"+image+"' alt='"+alt+"' width=32 height=32 border=0>");
 }
 </script>
 </td></tr>
