@@ -243,6 +243,54 @@ function randomPointArray() {
     }
     return {rpx, rpy};
 }
+function landName(land: number, lv: number) {
+    if (land === lib.lands.Sea) {
+        if (lv === 1) {
+            return "浅瀬";
+        } else {
+            return "海";
+        }
+    } else if (land === lib.lands.Waste) {
+        return "荒地";
+    } else if (land === lib.lands.Plains) {
+        return "平地";
+    } else if (land === lib.lands.Town) {
+        if (lv < 30) {
+            return "村";
+        } else if (lv < 100) {
+            return "町";
+        } else {
+            return "都市";
+        }
+    } else if (land === lib.lands.Forest) {
+        return "森";
+    } else if (land === lib.lands.Farm) {
+        return "農場";
+    } else if (land === lib.lands.Factory) {
+        return "工場";
+    } else if (land === lib.lands.Base) {
+        return "ミサイル基地";
+    } else if (land === lib.lands.Mountain) {
+        return "山";
+    } else if (land === lib.lands.Monster) {
+        return monsterSpec(lv).name;
+    } else if (land === lib.lands.Sbase) {
+        return "海底基地";
+    } else if (land === lib.lands.Oil) {
+        return "海底油田";
+    } else if (land === lib.lands.Monument) {
+        return lib.settings.monumentName[lv];
+    } else if (land === lib.lands.Haribote) {
+        return "ハリボテ";
+    }
+}
+function monsterSpec(lv: number) {
+    const kind = Math.floor(lv / 10);
+    const name = lib.settings.monsterName[kind];
+    const hp = lv - kind * 10;
+
+    return { kind, name, hp };
+}
 function income(island: lib.Island, hako: lib.Hakojima) {
     const [pop, farm, factory, mountain] = [island.pop, island.farm * 10, island.factory, island.mountain];
 
@@ -261,6 +309,11 @@ function income(island: lib.Island, hako: lib.Hakojima) {
 }
 function doCommand(island: lib.Island) {
     const command = island.commands.splice(0, 1)[0];
+
+    const [kind, target, x, y, arg] = [command.kind, command.target, command.x, command.y, command.arg];
+    const [name, id, landKind, lv] = [island.name, island.id, island.lands[x][y].kind, island.lands[x][y].value];
+    const [cost, comName] = [coms.comsFromId(kind).cost, coms.comsFromId(kind).name];
+    const [point, landName] = [`(${x}, ${y})`, landName(landKind, lv)];
 
     if (command.kind === coms.coms.donothing.id) {
         island.money += 10;
