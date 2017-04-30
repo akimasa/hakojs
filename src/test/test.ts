@@ -96,3 +96,8 @@ describe("turn", () => {
         hako.turnMain();
     });
 });
+describe("Hakojima", () => {
+    it("getIsland", () => {
+        assert.equal(hako.getIsland(1).name, "hoge");
+    });
+});

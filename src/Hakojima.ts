@@ -31,6 +31,9 @@ export default class Hakojima {
         }
         this.nextId++;
     }
+    public getIsland(id: number) {
+        return this.islands.find((ele) => ele.id === id);
+    }
     public newIslandMain(arg: NewIslandArg) {
         if (this.islands.length >= settings.maxIsland) {
             return "申し訳ありません、島が一杯で登録できません！！";
