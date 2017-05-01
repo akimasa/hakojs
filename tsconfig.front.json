@@ -4,7 +4,9 @@
     "removeComments": false,
     "module": "commonjs",
     "moduleResolution": "node",
-    "sourceMap": true
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true
   } ,
   "exclude": [
     "src",

@@ -10,7 +10,7 @@ module.exports = {
   },
   module: {
     loaders: [
-      { test: /\.tsx?$/, loader: 'ts-loader', exclude: /node_modules|src\/web/ },
+      { test: /\.tsx?$/, loader: 'ts-loader?'+ JSON.stringify({ configFileName: "tsconfig.front.json" }), exclude: /node_modules|src\/web/ },
       { test: /\.scss$/, loader: ExtractTextPlugin.extract(['css-loader', 'sass-loader']) },
       { test: /\.html$/, loader: 'vue-template-loader', include: /web/ }
     ]
