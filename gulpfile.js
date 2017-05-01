@@ -7,7 +7,8 @@ const mocha = require("gulp-mocha");
 const del = require("del");
 const merge = require('merge2');
 const tsopt = "tsconfig.json";
-const webpack = require("webpack-stream");
+const webpackStream = require("webpack-stream");
+const webpack = require("webpack");
 gulp.task("tslint", () => {
     return gulp.src(["./src/**/*.ts"])
         .pipe(tslint({
@@ -38,7 +39,7 @@ gulp.task("build", ["tslint"], () => {
 });
 gulp.task("webpack", () => {
     return gulp.src('web/index.ts')
-        .pipe(webpack(require('./webpack.config.js')))
+        .pipe(webpackStream(require('./webpack.config.js'), webpack))
         .pipe(gulp.dest('release/webpack'));
 });
 gulp.task("watch", () => {
