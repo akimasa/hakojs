@@ -39,7 +39,7 @@ gulp.task("build", ["tslint"], () => {
 gulp.task("webpack", () => {
     return gulp.src('web/index.ts')
         .pipe(webpack(require('./webpack.config.js')))
-        .pipe(gulp.dest('static/'));
+        .pipe(gulp.dest('release/webpack'));
 });
 gulp.task("watch", () => {
     gulp.watch(["./src/**/*.ts"],["build"]);

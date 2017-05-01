@@ -6,7 +6,7 @@ module.exports = {
   entry: path.resolve(__dirname, 'web', 'index'),
   output: {
     filename: '[name].js',
-    path: path.resolve(__dirname, './dist'),
+    path: path.resolve(__dirname, 'release', "webpack"),
   },
   module: {
     loaders: [
