@@ -24,6 +24,10 @@
             "args": ["run", "build"],
             "isBuildCommand": true,
             "problemMatcher": ["$tsc", "$tslint5"]
+        },
+        {
+            "taskName": "webpack",
+            "args": ["run", "webpack"]
         }
     ]
 }
