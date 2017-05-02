@@ -9,7 +9,7 @@ import * as Template from "./index.html";
 @Template
 @Component
 class App extends Vue {
-    public hoge = [1, 2, 3];
+    public hoge = "hoge";
  }
 
 const vm = new App();
