@@ -7,9 +7,5 @@
     "sourceMap": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true
-  } ,
-  "exclude": [
-    "src",
-    "node_modules"
-  ]
+  }
 }

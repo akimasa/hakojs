@@ -10,18 +10,18 @@ module.exports = {
   },
   module: {
     loaders: [
-      { test: /\.tsx?$/, loader: 'ts-loader?'+ JSON.stringify({ configFileName: "tsconfig.front.json" }), exclude: /node_modules|src\/web/ },
+      { test: /\.tsx?$/, loader: 'ts-loader?'+ JSON.stringify({ configFileName: "./web/tsconfig.json" }), exclude: /node_modules|src\/web/ },
       { test: /\.scss$/, loader: ExtractTextPlugin.extract(['css-loader', 'sass-loader']) },
-      { test: /\.html$/, loader: 'vue-template-loader', include: /web/ }
+      { test: /\.html$/, loader: 'vue-template-loader', include: /web/, exclude: /template/ }
     ]
   },
   resolve: {
     extensions: ['.ts', '.js']
   },
-  /*
+  
   plugins: [
-    new HTMLWebpackPlugin({ template: './template.html' }),
-    new ExtractTextPlugin('styles.css')
+    new HTMLWebpackPlugin({ template: path.resolve(__dirname, 'web', 'template.html') })//,
+    //new ExtractTextPlugin('styles.css')
   ]
-  */
+  
 }
