@@ -44,6 +44,7 @@ gulp.task("webpack", () => {
 });
 gulp.task("watch", () => {
     gulp.watch(["./src/**/*.ts"],["build"]);
+    gulp.watch(["./web/**/*"],["webpack"]);
 });
 gulp.task("test", ["build"], () => {
     gulp.src('./release/test/**/*.js', { read: false })
