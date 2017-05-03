@@ -1,5 +1,26 @@
 <div v-if="islands">
+    <h1>ターン$HislandTurn</h1>
+
     <hr>
+    <h1>自分の島へ</h1>
+    <form v-on:submit.prevent="goOwner">
+        <div>あなたの島の名前は？</div>
+        <select v-model="islandid">
+            <template v-for="island in islands.islands">
+                <option :value="island.id">{{island.name}}島</option>
+            </template>
+        </select>
+
+        <div>パスワードをどうぞ！！</div>
+        <input type="password" v-model="password" :value=pass><br>
+        <input type="submit" value="開発しに行く" name="OwnerButton">
+    </form>
+    <hr>
+
+    <h1>諸島の状況</h1>
+    <p>
+        島の名前をクリックすると、<b>観光</b>することができます。
+    </p>    <hr>
     <h1>新しい島を探す</h1>
     <form>
         <div>どんな名前をつける予定？</div>

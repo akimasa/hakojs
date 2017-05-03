@@ -7,7 +7,11 @@ import * as Template from "./Home.html";
 @Component
 export default class Home extends Vue {
     public islands;
+    public password;
+    public islandid;
     public created() {
+        this.password = localStorage.getItem("password");
+        this.islandid = localStorage.getItem("islandid");
         this.fetchData();
     }
     public fetchData() {
@@ -20,5 +24,9 @@ export default class Home extends Vue {
         xhr.responseType = "json";
         xhr.open("get", "api/islands");
         xhr.send();
+    }
+    public goOwner() {
+        localStorage.setItem("password", this.password);
+        localStorage.setItem("islandid", this.islandid);
     }
 }
