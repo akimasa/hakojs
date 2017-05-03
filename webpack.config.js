@@ -22,6 +22,7 @@ module.exports = {
   plugins: [
     new HTMLWebpackPlugin({ template: path.resolve(__dirname, 'web', 'template.html') })//,
     //new ExtractTextPlugin('styles.css')
-  ]
+  ],
+  devtool: "inline-source-map"
   
 }
