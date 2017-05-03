@@ -16,6 +16,7 @@ app.use(bodyParser.json());
 // app.use("/", express.static(`${__dirname}/../static/`));
 // app.use("/js/", express.static(`${__dirname}/../release/web/`));
 app.use("/", express.static(`${__dirname}/../release/webpack/`));
+app.use("/img/", express.static(`${__dirname}/../static/img/`));
 
 app.get("/api/island/:id", (req, res, next) => {
     req.params.id = parseInt(req.params.id, 10);

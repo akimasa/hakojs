@@ -5,6 +5,6 @@ import * as Template from "./IslandMap.html";
 
 @Template
 @Component({
-    props: ["hako"],
+    props: ["imgs", "foo"],
 })
-export default class IslandMap extends Vue {}
+export default class IslandMap extends Vue {  }
