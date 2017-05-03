@@ -1,11 +1,12 @@
-<div>
-    <div style="margin: 0" v-for="(items, indexy) in landMap">
-        <img v-bind:src="'img/space'+ indexy + '.gif'" v-if="(indexy % 2) !== 0">
-        <span v-for="(item, indexx) in items">
+<div class="island-map">
+    <template v-for="(items, indexy) in landMap">
+        <img :src="'img/space'+ indexy + '.gif'" v-if="(indexy % 2) !== 0"><!--
+        --><template v-for="(item, indexx) in items">
             <img :src=item>
-        </span>
-        <img v-bind:src="'img/space'+ indexy + '.gif'" v-if="(indexy % 2) === 0">
-    </div>
+        </template><!--
+        --><img v-bind:src="'img/space'+ indexy + '.gif'" v-if="(indexy % 2) === 0">
+        <br>
+    </template>
     {{foo}}
     {{landMap}}
 </div>
