@@ -21,11 +21,9 @@ export default class Island extends Vue {
     public imgs = [];
     public lands = [];
     public created() {
-        console.log("created");
         this.fetchData();
     }
     public fetchData() {
-        console.log(this.$route.params.id);
         this.foo = this.$route.params.id;
         const xhr = new XMLHttpRequest();
         xhr.onload = (e) => {
