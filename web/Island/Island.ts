@@ -9,6 +9,12 @@ import * as Template from "./Island.html";
     components: {
         IslandMap,
     },
+    methods: {
+        fetchData: this.fetchData,
+    },
+    watch: {
+        $route: "fetchData",
+    },
 })
 export default class Island extends Vue {
     public foo = "hige";
