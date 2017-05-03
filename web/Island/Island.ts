@@ -29,11 +29,9 @@ export default class Island extends Vue {
         this.foo = this.$route.params.id;
         const xhr = new XMLHttpRequest();
         xhr.onload = (e) => {
-            console.log(xhr.response);
             const island = xhr.response;
             this.foo = island.name;
             this.lands = island.lands;
-            console.log(this.lands);
             this.$forceUpdate();
         };
 
