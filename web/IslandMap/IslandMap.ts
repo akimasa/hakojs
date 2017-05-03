@@ -11,19 +11,15 @@ import * as Template from "./IslandMap.html";
                 if (this.lands === undefined) {
                     return;
                 }
-                let indy = 0;
                 const imgs = [];
                 for (const y of this.lands) {
-                    console.log(y);
-                    if (imgs[indy] === undefined) {
-                        imgs[indy] = [];
-                    }
+                    const line = [];
                     for (const x of y) {
-                        imgs[indy].push(this.landstr(x));
+                        line.push(this.landstr(x));
                     }
-                    indy++;
-                    return imgs;
-            }
+                    imgs.push(line);
+                }
+                return imgs;
         },
     },
 })
