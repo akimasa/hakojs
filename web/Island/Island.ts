@@ -13,6 +13,7 @@ import * as Template from "./Island.html";
 export default class Island extends Vue {
     public foo = "hige";
     public imgs = [];
+    public lands = [];
     public created() {
         console.log("created");
         this.fetchData();
@@ -25,11 +26,8 @@ export default class Island extends Vue {
             console.log(xhr.response);
             const island = xhr.response;
             this.foo = island.name;
-            for (const y of island.lands) {
-                for (const x of y) {
-                    this.imgs.push(this.landstr(x));
-                }
-            }
+            this.lands = island.lands;
+            console.log(this.lands);
             this.$forceUpdate();
         };
 

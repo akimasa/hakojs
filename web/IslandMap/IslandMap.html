@@ -1,7 +1,10 @@
 <div>
-    <span v-for="(item, index) in imgs">
-        <img :src=item>
+    <span v-for="(items, indexy) in landMap">
+        <span v-for="(item, indexx) in items">
+            <img :src=item>
+        </span>
+        <img src="img/space1.gif" v-if="(indexy % 2) === 0">
     </span>
-    {{lands}}
     {{foo}}
+    {{landMap}}
 </div>
