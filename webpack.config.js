@@ -1,6 +1,28 @@
 const HTMLWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const path = require('path')
+const CompressionPlugin = require("compression-webpack-plugin");
+const webpack = require("webpack");
+
+var PROD = JSON.parse(process.env.PROD || '0');
+
+const path = require('path');
+let plugins = [new HTMLWebpackPlugin({ template: path.resolve(__dirname, 'web', 'template.html') })];
+//new ExtractTextPlugin('styles.css')
+if(PROD){
+plugins.push(
+  new webpack.optimize.UglifyJsPlugin({
+    compress: { warnings: false }
+  }),
+  new CompressionPlugin({
+    asset: "[path].gz[query]",
+    algorithm: "zopfli",
+    test: /\.(js|html)$/,
+    threshold: 10240,
+    minRatio: 0.8
+  })
+);
+}
+
 
 module.exports = {
   entry: path.resolve(__dirname, 'web', 'index'),
@@ -19,10 +41,8 @@ module.exports = {
     extensions: ['.ts', '.js']
   },
   
-  plugins: [
-    new HTMLWebpackPlugin({ template: path.resolve(__dirname, 'web', 'template.html') })//,
-    //new ExtractTextPlugin('styles.css')
-  ],
-  devtool: "inline-source-map"
-  
+  plugins: plugins,
 }
+if (!PROD) {
+  module.exports.devtool = "inline-source-map";
+}  

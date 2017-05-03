@@ -13,6 +13,16 @@ const app = express();
 
 app.use(bodyParser.json());
 
+const PROD = JSON.parse(process.env.PROD || 0);
+if (PROD) {
+    app.get("*.js", (req, res, next) => {
+        req.url = req.url + ".gz";
+        res.set("Content-Encoding", "gzip");
+        res.set("Content-Type", "text/javascript");
+        next();
+    });
+}
+
 // app.use("/", express.static(`${__dirname}/../static/`));
 // app.use("/js/", express.static(`${__dirname}/../release/web/`));
 app.use("/", express.static(`${__dirname}/../release/webpack/`));
