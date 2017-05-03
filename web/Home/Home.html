@@ -1,1 +1,42 @@
-<p>Home.</p>
+<div v-if="islands">
+    <hr>
+    <h1>新しい島を探す</h1>
+    <form>
+        <div>どんな名前をつける予定？</div>
+        <input type="text">島
+        <div>パスワードは？</div>
+        <input type="password" name="password">
+        <div>念のためパスワードをもう一回</div>
+        <input type="password" name="password2">
+        <br>
+        <input type="submit" value="探しに行く" name="NewIslandButton">
+    </form>
+    <hr>
+    <h1>島の名前とパスワードの変更</h1>
+    <p>(注意)名前の変更には{{ islands.settings.costChangeName+islands.settings.unitMoney}}かかります。</p>
+    <form>
+        <div>どの島ですか？</div>
+        <select name="islandid">
+            <template v-for="island in islands.islands">
+                <option :value="island.id">{{island.name}}島</option>
+            </template>
+        </select>
+        <div>どんな名前に変えますか？(変更する場合のみ)</div>
+        <input type="text" name="islandname">島
+        <div>パスワードは？(必須)</div>
+        <input type="password" name="oldpass">
+        <div>新しいパスワードは？(変更する時のみ)</div>
+        <input type="password" name="password">
+        <div>念のためパスワードをもう一回(変更する時のみ)</div>
+        <input type="password" name="password2"><br>
+
+        <input type="submit" value="変更する" name="ChangeInfoButton">
+    </form>
+
+    <hr>
+
+    <h1>最近の出来事</h1>
+    logPrintTop();
+    <h1>発見の記録</h1>
+    historyPrint();
+</div>

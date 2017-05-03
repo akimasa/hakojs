@@ -18,6 +18,11 @@ app.use(bodyParser.json());
 app.use("/", express.static(`${__dirname}/../release/webpack/`));
 app.use("/img/", express.static(`${__dirname}/../static/img/`));
 
+app.get("/api/islands", (req, res, next) => {
+    req.params.id = parseInt(req.params.id, 10);
+    res.writeHead(200, { "Content-Type": "application/json;charset=utf-8" });
+    res.end(JSON.stringify(hako.getSummary()));
+});
 app.get("/api/island/:id", (req, res, next) => {
     req.params.id = parseInt(req.params.id, 10);
     const island = hako.getIsland(req.params.id);

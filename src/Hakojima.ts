@@ -41,6 +41,31 @@ export default class Hakojima {
             islands: this.islands,
         });
     }
+    public getSummary() {
+        return {
+            nextId: this.nextId,
+            islandLastTime: this.islandLastTime,
+            islandTurn: this.islandTurn,
+            islands: this.getIslandsCamouflagedSummary(),
+            settings: {
+                unitArea: settings.unitArea,
+                unitFood: settings.unitFood,
+                unitMoney: settings.unitMoney,
+                unitPop: settings.unitPop,
+                unitTime: settings.unitTime,
+                unitTree: settings.unitTree,
+                costChangeName: settings.costChangeName,
+                baseLevelUp: settings.baseLevelUp,
+                maxIsland: settings.maxIsland,
+                monsterImage: settings.monsterImage,
+                monsterImage2: settings.monsterImage2,
+                monsterName: settings.monsterName,
+                monumentImage: settings.monumentImage,
+                monumentName: settings.monumentName,
+
+            },
+        };
+    }
     public getIsland(id: number) {
         return this.islands.find((ele) => ele.id === id);
     }
@@ -95,6 +120,26 @@ export default class Hakojima {
             this.estimate(order[i]);
             this.income(this.islands[order[i]]);
         }
+    }
+    private getIslandsCamouflagedSummary(): Island[] {
+        const islands = [];
+        for (const island of this.islands) {
+            islands.push({
+                name: island.name,
+                id: island.id,
+                prize: island.prize,
+                absent: island.absent,
+                comment: island.comment,
+                money: island.money,
+                food: island.food,
+                pop: island.pop,
+                area: island.area,
+                farm: island.farm,
+                factory: island.factory,
+                mountain: island.mountain,
+            });
+        }
+        return islands;
     }
     private makeNewLand(): Land[][] {
         const land: Land[][] = [];
