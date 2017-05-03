@@ -26,6 +26,15 @@ export default class Home extends Vue {
         xhr.send();
     }
     public goOwner() {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = (e) => {
+            console.log(xhr.response);
+        };
+
+        xhr.responseType = "json";
+        xhr.open("post", `api/island/${this.islandid}/login`);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(JSON.stringify({password: this.password}));
         localStorage.setItem("password", this.password);
         localStorage.setItem("islandid", this.islandid);
     }
