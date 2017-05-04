@@ -22,6 +22,10 @@ import * as Template from "./IslandMap.html";
                 }
                 return imgs;
         },
+        islandSize: () => {
+            const settings = JSON.parse(localStorage.getItem("settings"));
+            return settings.islandSize;
+        },
     },
 })
 export default class IslandMap extends Vue {

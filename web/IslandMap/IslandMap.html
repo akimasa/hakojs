@@ -1,5 +1,5 @@
 <div class="island-map">
-    <img :src="`img/xbar12.gif`">
+    <img :src="'img/xbar'+islandSize+'.gif'">
     <br>
     <template v-for="(items, indexy) in landMap">
         <img :src="'img/space'+ indexy + '.gif'" v-if="(indexy % 2) === 0"><!--

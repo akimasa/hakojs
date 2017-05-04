@@ -62,7 +62,7 @@ export default class Hakojima {
                 monsterName: settings.monsterName,
                 monumentImage: settings.monumentImage,
                 monumentName: settings.monumentName,
-
+                islandSize: settings.islandSize,
             },
         };
     }
