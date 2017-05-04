@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 
+import IslandHeader from "../IslandHeader/IslandHeader";
 import IslandMap from "../IslandMap/IslandMap";
 import * as Template from "./Island.html";
 
@@ -8,6 +9,7 @@ import * as Template from "./Island.html";
 @Component<Island>({
     components: {
         IslandMap,
+        IslandHeader,
     },
     methods: {
         fetchData: this.fetchData,
@@ -20,6 +22,7 @@ export default class Island extends Vue {
     public foo = "hige";
     public imgs = [];
     public lands = [];
+    public island;
     public created() {
         this.fetchData();
     }
@@ -30,6 +33,7 @@ export default class Island extends Vue {
             const island = xhr.response;
             this.foo = island.name;
             this.lands = island.lands;
+            this.island = island;
             this.$forceUpdate();
         };
 

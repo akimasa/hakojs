@@ -18,6 +18,7 @@ export default class Home extends Vue {
         const xhr = new XMLHttpRequest();
         xhr.onload = (e) => {
             this.islands = xhr.response;
+            localStorage.setItem("settings", JSON.stringify(this.islands.settings));
             this.$forceUpdate();
         };
 
