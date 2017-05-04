@@ -1,10 +1,12 @@
 <div class="island-map">
+    <img :src="`img/xbar12.gif`">
+    <br>
     <template v-for="(items, indexy) in landMap">
-        <img :src="'img/space'+ indexy + '.gif'" v-if="(indexy % 2) !== 0"><!--
+        <img :src="'img/space'+ indexy + '.gif'" v-if="(indexy % 2) === 0"><!--
         --><template v-for="(item, indexx) in items">
             <img :src=item>
         </template><!--
-        --><img v-bind:src="'img/space'+ indexy + '.gif'" v-if="(indexy % 2) === 0">
+        --><img v-bind:src="'img/space'+ indexy + '.gif'" v-if="(indexy % 2) !== 0">
         <br>
     </template>
 </div>
