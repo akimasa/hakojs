@@ -1,6 +1,7 @@
 import * as bodyParser from "body-parser";
 import * as express from "express";
 import * as fs from "fs";
+import coms from "./coms";
 import Hakojima from "./Hakojima";
 
 import * as zlib from "zlib";
@@ -32,6 +33,11 @@ app.get("/api/islands", (req, res, next) => {
     req.params.id = parseInt(req.params.id, 10);
     res.writeHead(200, { "Content-Type": "application/json;charset=utf-8" });
     res.end(JSON.stringify(hako.getSummary()));
+});
+app.get("/api/commands", (req, res, next) => {
+    req.params.id = parseInt(req.params.id, 10);
+    res.writeHead(200, { "Content-Type": "application/json;charset=utf-8" });
+    res.end(JSON.stringify(coms.coms));
 });
 app.get("/api/island/:id", (req, res, next) => {
     req.params.id = parseInt(req.params.id, 10);

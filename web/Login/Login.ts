@@ -12,6 +12,7 @@ import * as Template from "./Login.html";
     },
 })
 export default class Login extends Vue {
+    public commands;
     public island;
     public lands;
     public password;
@@ -29,12 +30,14 @@ export default class Login extends Vue {
         if (password === undefined) {
             password = localStorage.getItem("password");
         }
-        utils.postApi(`api/island/${id}/login`, JSON.stringify({ password }))
-            .then((response) => {
+        Promise.all([utils.postApi(`api/island/${id}/login`, JSON.stringify({ password })), 
+        utils.getApi("api/commands")])
+            .then((responses) => {
                 localStorage.setItem("password", password);
                 localStorage.setItem("islandid", id);
-                this.lands = (response as any).lands;
-                this.island = response;
+                this.lands = (responses[0] as any).lands;
+                this.island = responses[0];
+                this.commands = responses[1];
                 this.$forceUpdate();
             });
     }
@@ -42,5 +45,17 @@ export default class Login extends Vue {
         this.x = x;
         this.y = y;
         this.$forceUpdate();
+    }
+    private commandStr(item) {
+        let cost = item.cost;
+        if (cost === 0) {
+            cost = "無料";
+        } else if (cost < 0) {
+            cost = - cost;
+            cost += this.settings.unitFood;
+        } else {
+            cost += this.settings.unitMoney;
+        }
+        return `${item.name}(${cost})`;
     }
 }

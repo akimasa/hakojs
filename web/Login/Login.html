@@ -17,6 +17,11 @@
                 </select>
                 <hr>
                 <div>開発計画</div>
+                <select name="command">
+                    <template v-for="item in commands">
+                        <option :value="item.id">{{ commandStr(item) }}</option>
+                    </template>
+                </select>
             </form>
         </div>
         <island-map @setPoint="setPoint" :lands=lands>
