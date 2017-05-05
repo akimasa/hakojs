@@ -2,6 +2,7 @@ import Vue from "vue";
 import Component from "vue-class-component";
 
 import IslandMap from "../IslandMap/IslandMap";
+import utils from "../utils";
 import * as Template from "./Login.html";
 
 @Template
@@ -21,21 +22,12 @@ export default class Login extends Vue {
         if (password === undefined) {
             password = localStorage.getItem("password");
         }
-        const xhr = new XMLHttpRequest();
-        xhr.onload = (e) => {
-            console.log(xhr.response);
-            if (xhr.status === 200) {
+        utils.postApi(`api/island/${id}/login`, JSON.stringify({ password }))
+            .then((response) => {
                 localStorage.setItem("password", password);
                 localStorage.setItem("islandid", id);
-                this.lands = xhr.response.lands;
+                this.lands = (response as any).lands;
                 this.$forceUpdate();
-            }
-        };
-
-        xhr.responseType = "json";
-        xhr.open("post", `api/island/${id}/login`);
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.send(JSON.stringify({ password }));
-
+            });
     }
 }

@@ -3,6 +3,7 @@ import Component from "vue-class-component";
 
 import IslandHeader from "../IslandHeader/IslandHeader";
 import IslandMap from "../IslandMap/IslandMap";
+import utils from "../utils";
 import * as Template from "./Island.html";
 
 @Template
@@ -28,18 +29,14 @@ export default class Island extends Vue {
     }
     public fetchData() {
         this.foo = this.$route.params.id;
-        const xhr = new XMLHttpRequest();
-        xhr.onload = (e) => {
-            const island = xhr.response;
+        utils.getApi(`api/island/${this.$route.params.id}`)
+        .then((response) => {
+            const island = response as any;
             this.foo = island.name;
             this.lands = island.lands;
             this.island = island;
             this.$forceUpdate();
-        };
-
-        xhr.responseType = "json";
-        xhr.open("get", "api/island/" + this.$route.params.id);
-        xhr.send();
+        });
     }
     private landstr(data) {
         let image = "";

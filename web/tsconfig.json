@@ -6,6 +6,12 @@
     "moduleResolution": "node",
     "sourceMap": true,
     "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "lib": [
+      "es2015.promise",
+      "dom",
+      "es5",
+      "scripthost"
+    ]
   }
 }
