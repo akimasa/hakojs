@@ -4,7 +4,7 @@
     <template v-for="(items, indexy) in landMap">
         <img :src="'img/space'+ indexy + '.gif'" v-if="(indexy % 2) === 0"><!--
         --><template v-for="(item, indexx) in items">
-            <img :src=item>
+            <img :src=item @click="setPoint(indexx,indexy)">
         </template><!--
         --><img v-bind:src="'img/space'+ indexy + '.gif'" v-if="(indexy % 2) !== 0">
         <br>

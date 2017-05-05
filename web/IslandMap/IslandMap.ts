@@ -32,6 +32,9 @@ import * as Template from "./IslandMap.html";
 export default class IslandMap extends Vue {
     public lands;
     private imgs;
+    public setPoint(x, y) {
+        this.$emit("setPoint", x, y);
+    }
         private landstr(data) {
         let image = "";
         let alt = "";
@@ -72,4 +75,4 @@ export default class IslandMap extends Vue {
         }
         return "img/" + image;
     }
- }
+}

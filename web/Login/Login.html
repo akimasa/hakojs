@@ -1,4 +1,5 @@
 <div>
-    <island-map :lands=lands>
+    <island-map @setPoint="setPoint" :lands=lands>
     </island-map>
+    <p>({{ x }}, {{ y }})</p>
 </div>

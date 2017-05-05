@@ -13,6 +13,8 @@ import * as Template from "./Login.html";
 })
 export default class Login extends Vue {
     public lands;
+    public x: number = 0;
+    public y: number = 0;
     public created() {
         let id = this.$route.params.id;
         let password = this.$route.params.password;
@@ -29,5 +31,10 @@ export default class Login extends Vue {
                 this.lands = (response as any).lands;
                 this.$forceUpdate();
             });
+    }
+    public setPoint(x, y) {
+        this.x = x;
+        this.y = y;
+        this.$forceUpdate();
     }
 }
