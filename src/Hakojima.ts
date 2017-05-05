@@ -63,6 +63,7 @@ export default class Hakojima {
                 monumentImage: settings.monumentImage,
                 monumentName: settings.monumentName,
                 islandSize: settings.islandSize,
+                commandMax: settings.commandMax,
             },
         };
     }
