@@ -2,6 +2,7 @@ import Vue from "vue";
 import Component from "vue-class-component";
 
 import { lands as Lands } from "../../src/lands";
+import utils from "../utils";
 import * as Template from "./IslandMap.html";
 
 @Template
@@ -23,7 +24,7 @@ import * as Template from "./IslandMap.html";
                 return imgs;
         },
         islandSize: () => {
-            const settings = JSON.parse(localStorage.getItem("settings"));
+            const settings = utils.getSettings();
             return settings.islandSize;
         },
     },
