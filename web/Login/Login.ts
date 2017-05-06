@@ -30,7 +30,7 @@ export default class Login extends Vue {
         if (password === undefined) {
             password = localStorage.getItem("password");
         }
-        Promise.all([utils.postApi(`api/island/${id}/login`, JSON.stringify({ password })), 
+        Promise.all([utils.postApi(`api/island/${id}/login`, JSON.stringify({ password })),
         utils.getApi("api/commands")])
             .then((responses) => {
                 localStorage.setItem("password", password);
