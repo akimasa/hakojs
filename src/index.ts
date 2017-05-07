@@ -1,4 +1,5 @@
 import * as bodyParser from "body-parser";
+import * as compression from "compression";
 import * as express from "express";
 import * as fs from "fs";
 import coms from "./coms";
@@ -13,6 +14,7 @@ hako.load(buf.toString("utf-8"));
 const app = express();
 
 app.use(bodyParser.json());
+app.use(compression());
 
 const PROD = JSON.parse(process.env.PROD || 0);
 if (PROD) {
