@@ -7,7 +7,7 @@ import * as Template from "./IslandMap.html";
 
 @Template
 @Component<IslandMap>({
-        props: ["foo", "lands"],
+        props: ["lands"],
         computed: {
             landMap: function landMap() {
                 if (this.lands === undefined) {
