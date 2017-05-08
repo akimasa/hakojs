@@ -4,6 +4,7 @@ import VueRouter from "vue-router";
 import Home from "./Home/Home";
 import Island from "./Island/Island";
 import Login from "./Login/Login";
+import NewIsland from "./NewIsland/NewIsland";
 
 Vue.use(VueRouter);
 
@@ -18,6 +19,11 @@ export default new VueRouter({
             path: "/login",
             component: Login,
             name: "login",
+        },
+        {
+            path: "/island/new",
+            component: NewIsland,
+            name: "newisland",
         },
         {
             path: "/island/:id",

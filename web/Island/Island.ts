@@ -8,15 +8,19 @@ import * as Template from "./Island.html";
 
 @Template
 @Component<Island>({
+    props: ["id"],
     components: {
         IslandMap,
         IslandHeader,
     },
     methods: {
+        fetchDataByRoute: this.fetchDataByRoute,
+        fetchDataByProp: this.fetchDataByProp,
         fetchData: this.fetchData,
     },
     watch: {
-        $route: "fetchData",
+        $route: "fetchDataByRoute",
+        id: "fetchDataByProp",
     },
 })
 export default class Island extends Vue {
@@ -24,12 +28,16 @@ export default class Island extends Vue {
     public imgs = [];
     public lands = [];
     public island;
+    public id;
     public created() {
-        this.fetchData();
+        if (this.$route.params.id) {
+            this.fetchDataByRoute();
+        } else {
+            this.fetchDataByProp();
+        }
     }
-    public fetchData() {
-        this.foo = this.$route.params.id;
-        utils.getApi(`api/island/${this.$route.params.id}`)
+    public fetchData(id: string | number) {
+        utils.getApi(`api/island/${id}`)
         .then((response) => {
             const island = response as any;
             this.foo = island.name;
@@ -37,6 +45,12 @@ export default class Island extends Vue {
             this.island = island;
             this.$forceUpdate();
         });
+    }
+    private fetchDataByRoute() {
+        this.fetchData(this.$route.params.id);
+    }
+    private fetchDataByProp() {
+        this.fetchData(this.id);
     }
     private landstr(data) {
         let image = "";

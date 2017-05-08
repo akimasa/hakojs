@@ -22,13 +22,13 @@
         島の名前をクリックすると、<b>観光</b>することができます。
     </p>    <hr>
     <h1>新しい島を探す</h1>
-    <form>
+    <form @submit.prevent="newIsland">
         <div>どんな名前をつける予定？</div>
-        <input type="text">島
+        <input type="text" v-model="newislandname">島
         <div>パスワードは？</div>
-        <input type="password" name="password">
+        <input type="password" name="password" v-model="newislandpassword">
         <div>念のためパスワードをもう一回</div>
-        <input type="password" name="password2">
+        <input type="password" name="password2" v-model="newislandpassword2">
         <br>
         <input type="submit" value="探しに行く" name="NewIslandButton">
     </form>

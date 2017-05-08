@@ -77,7 +77,7 @@ export default class Hakojima {
         if (this.islands.length >= settings.maxIsland) {
             return "申し訳ありません、島が一杯で登録できません！！";
         }
-        if (arg.name === "") {
+        if (arg.name === "" || arg.name === undefined) {
             return "島につける名前が必要です。";
         }
         if (/[,\?\(\)\<\>]|^無人$/.test(arg.name)) {
@@ -88,7 +88,7 @@ export default class Hakojima {
                 return "その島ならすでに発見されています。";
             }
         }
-        if (arg.password === "") {
+        if (arg.password === "" || arg.password === undefined) {
             return "パスワードが必要です。";
         }
         if (arg.password !== arg.password2) {
@@ -104,7 +104,7 @@ export default class Hakojima {
         island.password = lib.encodepass(arg.password);
         const index = this.islands.push(island);
         this.estimate(index - 1);
-        return null;
+        return island.id;
     }
     public turnMain() {
         // 最終更新時間を更新

@@ -32,7 +32,7 @@ export default class {
             xhr.responseType = "json";
             xhr.open("post", url);
             xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.send(data);
+            xhr.send(JSON.stringify(data));
         });
     }
 }

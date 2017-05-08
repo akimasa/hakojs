@@ -1,0 +1,8 @@
+<div>
+    <p class="err" v-if="err big">{{err}}</p>
+    <div v-if="name" class="big center">
+        <p>島を発見しました！！</p>
+        <p><span class="name">「{{name}}島」</span>と命名します。</p>
+    </div>
+    <island v-if="id" :id="id"></island>
+</div>

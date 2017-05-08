@@ -10,6 +10,9 @@ export default class Home extends Vue {
     public islands;
     public password;
     public islandid;
+    public newislandname;
+    public newislandpassword;
+    public newislandpassword2;
     public created() {
         this.password = localStorage.getItem("password");
         this.islandid = localStorage.getItem("islandid");
@@ -28,5 +31,23 @@ export default class Home extends Vue {
             id: this.islandid,
         }});
 
+    }
+    public newIsland() {
+        utils.postApi("api/island/new", {
+            name: this.newislandname,
+            password: this.newislandpassword,
+            password2: this.newislandpassword2,
+        }).then((response) => {
+            this.$router.push({
+                name: "newisland", params: {
+                    name: this.newislandname,
+                    id: (response as any).id,
+                },
+            });
+        }).catch((response) => {
+            this.$router.push({
+                name: "newisland", params: response,
+            });
+        });
     }
 }
