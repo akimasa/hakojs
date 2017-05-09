@@ -85,10 +85,9 @@ export default class Login extends Vue {
         return `${item.name}(${cost})`;
     }
     private addCommand() {
-        console.log(null);
         const cmds = this.island.commands as Command[];
         const head: Command[] = cmds.slice(0, this.number - 1);
-        const tail: Command[] = cmds.slice(this.number, cmds.length - 1);
+        const tail: Command[] = cmds.slice(this.number, cmds.length);
         const current: Command = {
             kind: this.kind,
             x: this.x,
@@ -100,13 +99,34 @@ export default class Login extends Vue {
         this.island.commands = [].concat(head, [current], tail);
         console.log(cmds);
         this.number++;
+        if (this.number > cmds.length) {
+            this.number = cmds.length;
+        }
         this.selectCmdPos(this.number);
         this.$forceUpdate();
     }
     private overCommand() {
-        console.log(null);
+        this.island.commands[this.number - 1] = {
+            kind: this.kind,
+            x: this.x,
+            y: this.y,
+            target: this.target,
+            arg: this.arg,
+        };
+        this.$forceUpdate();
     }
     private delCommand() {
-        console.log(null);
+        const cmds = this.island.commands as Command[];
+        const head: Command[] = cmds.slice(0, this.number - 1);
+        const tail: Command[] = cmds.slice(this.number, cmds.length);
+        const last: Command = {
+            kind: 0,
+            x: 0,
+            y: 0,
+            target: 0,
+            arg: 0,
+        };
+        this.island.commands = [].concat(head, tail, [last]);
+        this.$forceUpdate();
     }
 }
