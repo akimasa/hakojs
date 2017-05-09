@@ -17,6 +17,8 @@ import * as Template from "./Login.html";
         overCommand: this.overCommand,
         delCommand: this.delCommand,
         getIslandNameFromId: this.getIslandNameFromId,
+        getCommandName: this.getCommandName,
+        isMissile: this.isMissile,
     },
 })
 export default class Login extends Vue {
@@ -134,5 +136,23 @@ export default class Login extends Vue {
         };
         this.island.commands = [].concat(head, tail, [last]);
         this.$forceUpdate();
+    }
+    private getCommandName(id) {
+        for (const ele in this.commands) {
+            if (this.commands[ele].id === id) {
+                return this.commands[ele].name;
+            }
+        }
+    }
+    private isMissile(kind) {
+        if (kind === 31 ||
+            kind === 32 ||
+            kind === 33 ||
+            kind === 34 ||
+            kind === 35) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

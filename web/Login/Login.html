@@ -61,9 +61,12 @@
                     <template v-if="c.kind === commands.donothing.id">
                         資金繰り
                     </template>
+                    <template v-else-if="isMissile(c.kind)">
+                        {{getIslandNameFromId(c.target)}}島<span>({{c.x}}, {{c.y}})</span>へ{{getCommandName(c.kind)}}
+                    </template>
                     <template v-else>
                         {{JSON.stringify(c)}}
-                        {{getIslandNameFromId(c.target)}}島<span>({{c.x}}, {{c.y}})</span>へ
+                        <span>({{c.x}}, {{c.y}})</span>で{{getCommandName(c.kind)}}
                     </template>
                 </a>
             </div>
