@@ -13,6 +13,7 @@ import * as Template from "./Login.html";
     },
     methods: {
         comClick: this.comClick,
+        selectComPos: this.selectCmdPos,
         addCommand: this.addCommand,
         overCommand: this.overCommand,
         delCommand: this.delCommand,
@@ -69,6 +70,7 @@ export default class Login extends Vue {
             e.classList.remove("selected");
         }
         document.getElementsByClassName("command")[i - 1].classList.add("selected");
+        this.number = i;
     }
     private commandStr(item) {
         let cost = item.cost;
@@ -81,17 +83,6 @@ export default class Login extends Vue {
             cost += this.settings.unitMoney;
         }
         return `${item.name}(${cost})`;
-    }
-    private comClick(n, evt) {
-        console.log(n, evt);
-        const commands = document.querySelectorAll(".commands > div a");
-        for (const element of commands as any) {
-            const e = element as HTMLElement;
-            e.classList.remove("selected");
-        }
-        evt.target.classList.add("selected");
-        this.number = n + 1;
-        // this.$forceUpdate();
     }
     private addCommand() {
         console.log(null);
