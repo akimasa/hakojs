@@ -11,3 +11,6 @@
   /* display: table-cell; */
   float: left;
 }
+.commands .selected {
+  background-color: #ffffaa;
+}

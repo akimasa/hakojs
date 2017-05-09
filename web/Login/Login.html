@@ -10,7 +10,7 @@
                 <div>パスワード</div>
                 <input type="password" name="password" :value='password'>
                 <div>計画番号</div>
-                <select name="number">
+                <select name="number" v-model="number">
                     <template v-for="n in settings.commandMax">
                         <option :value="n">{{n}}</option>
                     </template>
@@ -50,15 +50,17 @@
         </div>
         <island-map @setPoint="setPoint" :lands=lands>
         </island-map>
-        <div>
+        <div class="commands">
             <div v-for="(c, i) in island.commands">
-                {{i+1}}.
-                <template v-if="c.kind === commands.donothing.id">
-                    資金繰り
-                </template>
-                <template v-else>
-                    <span>{{c.x}}, {{c.y}}</span>
-                </template>
+                <a @click="comClick(i, $event)" v-bind:class="{selected : i === 0}">
+                    {{i+1}}.
+                    <template v-if="c.kind === commands.donothing.id">
+                        資金繰り
+                    </template>
+                    <template v-else>
+                        <span>{{c.x}}, {{c.y}}</span>
+                    </template>
+                </a>
             </div>
         </div>
         <p>({{ x }}, {{ y }})</p>

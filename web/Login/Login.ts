@@ -10,6 +10,9 @@ import * as Template from "./Login.html";
     components: {
         IslandMap,
     },
+    methods: {
+        comClick: this.comClick,
+    },
 })
 export default class Login extends Vue {
     public commands;
@@ -18,6 +21,7 @@ export default class Login extends Vue {
     public lands;
     public password;
     public settings;
+    public number = 1;
     public x: number = 0;
     public y: number = 0;
     public created() {
@@ -61,5 +65,16 @@ export default class Login extends Vue {
             cost += this.settings.unitMoney;
         }
         return `${item.name}(${cost})`;
+    }
+    private comClick(n, evt) {
+        console.log(n, evt);
+        const commands = document.querySelectorAll(".commands > div a");
+        for (const element of commands as any) {
+            const e = element as HTMLElement;
+            e.classList.remove("selected");
+        }
+        evt.target.classList.add("selected");
+        this.number = n + 1;
+        // this.$forceUpdate();
     }
 }
