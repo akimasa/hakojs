@@ -36,7 +36,7 @@
         <tr if="islands.settings" v-for="island in islands.islands">
             <td></td>
             <td><router-link :to="{name: 'island', params: { id: island.id }}">{{island.name}}</router-link></td>
-            <td>{{island.pop}}</td>
+            <td>{{island.pop+islands.settings.unitPop}}</td>
             <td>{{island.area+islands.settings.unitArea}}</td>
             <td>{{island.money+islands.settings.unitMoney}}</td>
             <td>{{island.food+islands.settings.unitFood}}</td>
