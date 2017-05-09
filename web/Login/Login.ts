@@ -12,11 +12,11 @@ import * as Template from "./Login.html";
         IslandMap,
     },
     methods: {
-        comClick: this.comClick,
         selectComPos: this.selectCmdPos,
         addCommand: this.addCommand,
         overCommand: this.overCommand,
         delCommand: this.delCommand,
+        getIslandNameFromId: this.getIslandNameFromId,
     },
 })
 export default class Login extends Vue {
@@ -71,6 +71,12 @@ export default class Login extends Vue {
         }
         document.getElementsByClassName("command")[i - 1].classList.add("selected");
         this.number = i;
+    }
+    public getIslandNameFromId(id) {
+        id = parseInt(id, 10);
+        const island = this.islands.find((ele) => ele.id === id);
+        console.log(island);
+        return island.name;
     }
     private commandStr(item) {
         let cost = item.cost;

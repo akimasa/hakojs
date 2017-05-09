@@ -63,7 +63,7 @@
                     </template>
                     <template v-else>
                         {{JSON.stringify(c)}}
-                        <span>{{c.x}}, {{c.y}}</span>
+                        {{getIslandNameFromId(c.target)}}島<span>({{c.x}}, {{c.y}})</span>へ
                     </template>
                 </a>
             </div>
