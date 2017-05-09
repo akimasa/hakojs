@@ -14,6 +14,7 @@ import * as Template from "./Login.html";
 export default class Login extends Vue {
     public commands;
     public island;
+    public islands;
     public lands;
     public password;
     public settings;
@@ -30,14 +31,17 @@ export default class Login extends Vue {
         if (password === undefined) {
             password = localStorage.getItem("password");
         }
-        Promise.all([utils.postApi(`api/island/${id}/login`, { password }),
-        utils.getApi("api/commands")])
+        Promise.all([
+            utils.postApi(`api/island/${id}/login`, { password }),
+            utils.getApi("api/commands"),
+            utils.getApi("api/islands")])
             .then((responses) => {
                 localStorage.setItem("password", password);
                 localStorage.setItem("islandid", id);
                 this.lands = (responses[0] as any).lands;
                 this.island = responses[0];
                 this.commands = responses[1];
+                this.islands = (responses[2] as any).islands;
                 this.$forceUpdate();
             });
     }
