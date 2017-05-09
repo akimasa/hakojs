@@ -2,7 +2,7 @@ export interface Land {
     kind: number;
     value: number;
 }
-interface Command {
+export interface Command {
     kind: number;
     target: number;
     x: number;
