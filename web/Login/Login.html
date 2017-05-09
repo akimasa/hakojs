@@ -2,7 +2,7 @@
     <div class="header" v-if="island">
         <span class="name">{{ island.name }}島</span>開発計画
     </div>
-    <div class="main">
+    <div class="main" v-if="island">
         <div class="input">
             <form @submit.prevent="submitCommand">
                 <input type="submit" value="計画送信">
