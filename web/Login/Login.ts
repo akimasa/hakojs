@@ -12,7 +12,7 @@ import * as Template from "./Login.html";
         IslandMap,
     },
     methods: {
-        selectComPos: this.selectCmdPos,
+        selectCmdPos: this.selectCmdPos,
         addCommand: this.addCommand,
         overCommand: this.overCommand,
         delCommand: this.delCommand,
