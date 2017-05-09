@@ -7,6 +7,7 @@
 .input div {
   font-weight: bold;
 }
-.login .main div {
-  display: table-cell;
+.login .main > div {
+  /* display: table-cell; */
+  float: left;
 }

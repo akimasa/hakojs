@@ -22,22 +22,45 @@
                         <option :value="item.id">{{ commandStr(item) }}</option>
                     </template>
                 </select>
+                <div>座標</div>
+                <select name="x" v-model="x">
+                    <template v-for="n in settings.islandSize">
+                        <option :value="n-1">{{n-1}}</option>
+                    </template>
+                </select>
+                ,&nbsp;
+                <select name="y" v-model="y">
+                    <template v-for="n in settings.islandSize">
+                        <option :value="n-1">{{n-1}}</option>
+                    </template>
+                </select>
                 <div>数量</div>
                 <select name="amount">
-                    <template v-for="n in 99">
-                        <option :value="n">{{n}}</option>
+                    <template v-for="n in 100">
+                        <option :value="n-1">{{n-1}}</option>
                     </template>
                 </select>
                 <div>目標の島</div>
                 <select name="target" v-model="island.id">
                     <template v-for="island in islands">
-                        <option :value="island.id">{{island.name}}</option>
+                        <option :value="island.id">{{island.name}}島</option>
                     </template>
                 </select>
             </form>
         </div>
         <island-map @setPoint="setPoint" :lands=lands>
         </island-map>
+        <div>
+            <div v-for="(c, i) in island.commands">
+                {{i+1}}.
+                <template v-if="c.kind === commands.donothing.id">
+                    資金繰り
+                </template>
+                <template v-else>
+                    <span>{{c.x}}, {{c.y}}</span>
+                </template>
+            </div>
+        </div>
         <p>({{ x }}, {{ y }})</p>
     </div>
 </div>
