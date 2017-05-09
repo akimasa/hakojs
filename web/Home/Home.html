@@ -20,7 +20,32 @@
     <h1>諸島の状況</h1>
     <p>
         島の名前をクリックすると、<b>観光</b>することができます。
-    </p>    <hr>
+    </p>
+    <table>
+        <tr>
+            <th>順位</th>
+            <th>島</th>
+            <th>人口</th>
+            <th>面積</th>
+            <th>資金</th>
+            <th>食料</th>
+            <th>農場規模</th>
+            <th>工場規模</th>
+            <th>採掘場規模</th>
+        </tr>
+        <tr if="islands.settings" v-for="island in islands.islands">
+            <td></td>
+            <td><router-link :to="{name: 'island', params: { id: island.id }}">{{island.name}}</router-link></td>
+            <td>{{island.pop}}</td>
+            <td>{{island.area+islands.settings.unitArea}}</td>
+            <td>{{island.money+islands.settings.unitMoney}}</td>
+            <td>{{island.food+islands.settings.unitFood}}</td>
+            <td>{{island.farm}}</td>
+            <td>{{island.factory}}</td>
+            <td>{{island.mountain}}</td>
+        </tr>
+    </table>
+    <hr>
     <h1>新しい島を探す</h1>
     <form @submit.prevent="newIsland">
         <div>どんな名前をつける予定？</div>

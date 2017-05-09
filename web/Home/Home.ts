@@ -13,6 +13,7 @@ export default class Home extends Vue {
     public newislandname;
     public newislandpassword;
     public newislandpassword2;
+    public settings;
     public created() {
         this.password = localStorage.getItem("password");
         this.islandid = localStorage.getItem("islandid");
@@ -22,6 +23,13 @@ export default class Home extends Vue {
         utils.getApi("api/islands").then((response) => {
             this.islands = response;
             localStorage.setItem("settings", JSON.stringify(this.islands.settings));
+            console.log(this.islands.islands.length);
+            for (const island of this.islands.islands) {
+                const ret = utils.islandInfo({island, settings: this.islands.settings});
+                island.farm = ret.farm;
+                island.factory = ret.factory;
+                island.mountain = ret.mountain;
+            }
             this.$forceUpdate();
         });
     }
