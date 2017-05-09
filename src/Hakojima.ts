@@ -102,6 +102,17 @@ export default class Hakojima {
         island.absent = settings.giveupTurn - 3;
         island.comment = "(未登録)";
         island.password = lib.encodepass(arg.password);
+        island.money = settings.initialMoney;
+        island.food = settings.initialFood;
+        for (let i = 0; i < settings.commandMax; i++) {
+            island.commands[i] = {
+                kind: coms.coms.donothing.id,
+                target: 0,
+                x: 0,
+                y: 0,
+                arg: 0,
+            };
+        }
         const index = this.islands.push(island);
         this.estimate(index - 1);
         return island.id;
