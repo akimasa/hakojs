@@ -5,7 +5,11 @@ import { Getter } from "vuex";
 import utils from "../utils";
 import * as Template from "./Home.html";
 @Template
-@Component
+@Component<Home>({
+    methods: {
+        getRemainingTime: this.getRemainingTime,
+    },
+})
 export default class Home extends Vue {
     public islands;
     public password;
@@ -14,6 +18,7 @@ export default class Home extends Vue {
     public newislandpassword;
     public newislandpassword2;
     public settings;
+    public islandNextTime;
     public created() {
         this.password = localStorage.getItem("password");
         this.islandid = localStorage.getItem("islandid");
@@ -22,6 +27,7 @@ export default class Home extends Vue {
     public fetchData() {
         utils.getApi("api/islands").then((response) => {
             this.islands = response;
+            this.islandNextTime = new Date(this.islands.islandLastTime + this.islands.settings.unitTime * 1000);
             localStorage.setItem("settings", JSON.stringify(this.islands.settings));
             console.log(this.islands.islands.length);
             for (const island of this.islands.islands) {
@@ -30,6 +36,9 @@ export default class Home extends Vue {
                 island.factory = ret.factory;
                 island.mountain = ret.mountain;
             }
+            setInterval(() => {
+                document.getElementById("remainingtime").innerText = this.getRemainingTime();
+            }, 1000);
             this.$forceUpdate();
         });
     }
@@ -57,5 +66,17 @@ export default class Home extends Vue {
                 name: "newisland", params: response,
             });
         });
+    }
+    public getRemainingTime() {
+        let remaining = this.islandNextTime - new Date().getTime();
+        remaining = Math.floor(remaining / 1000);
+        const days = Math.floor(remaining / 60 / 60 / 24);
+        remaining -= days * 60 * 60 * 24;
+        const hours = Math.floor(remaining / 60 / 60);
+        remaining -= hours * 60 * 60;
+        const minutes = Math.floor(remaining / 60);
+        remaining -= minutes * 60;
+        const seconds = remaining;
+        return `(残り ${days}日${hours}時間${minutes}分${seconds}秒)`;
     }
 }

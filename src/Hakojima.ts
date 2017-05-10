@@ -17,6 +17,7 @@ export default class Hakojima {
     constructor() {
         this.nextId = 1;
         this.islandLastTime = new Date().getTime();
+        this.islandLastTime = this.islandLastTime - (this.islandLastTime % (settings.unitTime * 1000));
         this.islandTurn = 1;
         this.islands = [];
     }

@@ -1,6 +1,9 @@
 <div v-if="islands">
     <h1>ターン{{islands.islandTurn}}</h1>
-
+    <div class="nexttime">
+        <span>次回の更新時間：{{islandNextTime.toLocaleString()}}</span>
+        <span id="remainingtime">{{getRemainingTime()}}</span>
+    </div>
     <hr>
     <h1>自分の島へ</h1>
     <form v-on:submit.prevent="goOwner">
