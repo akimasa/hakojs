@@ -72,6 +72,9 @@ export default class Home extends Vue {
     }
     public getRemainingTime() {
         let remaining = this.islandNextTime - new Date().getTime();
+        if (remaining < 0) {
+            remaining = 0;
+        }
         remaining = Math.floor(remaining / 1000);
         const days = Math.floor(remaining / 60 / 60 / 24);
         remaining -= days * 60 * 60 * 24;
