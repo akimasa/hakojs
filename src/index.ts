@@ -95,5 +95,19 @@ app.post("/api/island/:id/login", (req, res, next) => {
         res.end(JSON.stringify(island));
     }
 });
-
+app.post("/api/island/:id/update", (req, res, next) => {
+    const id = parseInt(req.params.id, 10);
+    const island = hako.getIsland(id);
+    if (island === undefined) {
+        res.writeHead(404, { "Content-Type": "application/json;charset=utf-8" });
+        res.end(JSON.stringify({ err: "Island not found." }));
+    } else if (hako.authIsland(id, req.body.password) === false) {
+        res.writeHead(403, { "Content-Type": "application/json;charset=utf-8" });
+        res.end(JSON.stringify({ err: "Island Forbidden" }));
+    } else {
+        island.commands = req.body.commands;
+        res.writeHead(200, { "Content-Type": "application/json;charset=utf-8" });
+        res.end();
+    }
+});
 app.listen(3000);

@@ -10,7 +10,23 @@
 .login .main > div {
   /* display: table-cell; */
   float: left;
+  background-color: #CCFFCC;
 }
 .commands .selected {
   background-color: #ffffaa;
+}
+.commands {
+  background-color: #CCFFCC;
+}
+.dirty {
+  background-color: #ffffff !important;
+}
+.sent {
+  color: #00f;
+}
+.notsent {
+  color: #f00;
+}
+body {
+  background-color: #eeffff;
 }

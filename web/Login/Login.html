@@ -54,7 +54,9 @@
         </div>
         <island-map @setPoint="setPoint" :lands=lands>
         </island-map>
-        <div class="commands">
+        <div :class="{commands: true, dirty: commandsDirty}">
+            <div v-if="commandsDirty" class="notsent">－－－－－未送信－－－－－</div>
+            <div v-if="!commandsDirty" class="sent">－－－－ 送信済み －－－－</div>
             <div v-for="(c, i) in island.commands">
                 <a @click="selectCmdPos(i+1)" v-bind:class="{selected : i === 0, command: true}">
                     {{i+1}}.
@@ -70,6 +72,8 @@
                     </template>
                 </a>
             </div>
+            <div v-if="commandsDirty" class="notsent">－－－－－未送信－－－－－</div>
+            <div v-if="!commandsDirty" class="sent">－－－－ 送信済み －－－－</div>
         </div>
         <p>({{ x }}, {{ y }})</p>
     </div>

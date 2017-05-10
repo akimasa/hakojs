@@ -19,6 +19,7 @@ import * as Template from "./Login.html";
         getIslandNameFromId: this.getIslandNameFromId,
         getCommandName: this.getCommandName,
         isMissile: this.isMissile,
+        submitCommand: this.submitCommand,
     },
 })
 export default class Login extends Vue {
@@ -34,6 +35,7 @@ export default class Login extends Vue {
     public y: number = 0;
     public arg = 0;
     public target;
+    public commandsDirty = false;
     public created() {
         let id = this.$route.params.id;
         let password = this.$route.params.password;
@@ -46,6 +48,7 @@ export default class Login extends Vue {
             password = localStorage.getItem("password");
         }
         this.target = id;
+        this.password = password;
         Promise.all([
             utils.postApi(`api/island/${id}/login`, { password }),
             utils.getApi("api/commands"),
@@ -93,6 +96,7 @@ export default class Login extends Vue {
         return `${item.name}(${cost})`;
     }
     private addCommand() {
+        this.commandsDirty = true;
         const cmds = this.island.commands as Command[];
         const head: Command[] = cmds.slice(0, this.number - 1);
         const tail: Command[] = cmds.slice(this.number, cmds.length);
@@ -114,6 +118,7 @@ export default class Login extends Vue {
         this.$forceUpdate();
     }
     private overCommand() {
+        this.commandsDirty = true;
         this.island.commands[this.number - 1] = {
             kind: this.kind,
             x: this.x,
@@ -124,6 +129,7 @@ export default class Login extends Vue {
         this.$forceUpdate();
     }
     private delCommand() {
+        this.commandsDirty = true;
         const cmds = this.island.commands as Command[];
         const head: Command[] = cmds.slice(0, this.number - 1);
         const tail: Command[] = cmds.slice(this.number, cmds.length);
@@ -154,5 +160,13 @@ export default class Login extends Vue {
         } else {
             return false;
         }
+    }
+    private submitCommand() {
+        utils.postApi(`api/island/${this.island.id}/update`, {
+            password: this.password,
+            commands: this.island.commands,
+        }).then(() => {
+            this.commandsDirty = false;
+        });
     }
 }
