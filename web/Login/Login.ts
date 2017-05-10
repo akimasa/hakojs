@@ -80,7 +80,6 @@ export default class Login extends Vue {
     public getIslandNameFromId(id) {
         id = parseInt(id, 10);
         const island = this.islandsNames.find((ele) => ele.id === id);
-        console.log(island);
         return island.name;
     }
     private commandStr(item) {
@@ -107,9 +106,7 @@ export default class Login extends Vue {
             target: this.target,
             arg: this.arg,
         };
-        console.log(head, tail, current);
         this.island.commands = [].concat(head, [current], tail);
-        console.log(cmds);
         this.number++;
         if (this.number > cmds.length) {
             this.number = cmds.length;

@@ -33,7 +33,6 @@ export default class Home extends Vue {
             this.islands = response;
             this.islandNextTime = new Date(this.islands.islandLastTime + this.islands.settings.unitTime * 1000);
             localStorage.setItem("settings", JSON.stringify(this.islands.settings));
-            console.log(this.islands.islands.length);
             for (const island of this.islands.islands) {
                 const ret = utils.islandInfo({island, settings: this.islands.settings});
                 island.farm = ret.farm;
