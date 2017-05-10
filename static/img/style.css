@@ -21,7 +21,7 @@
 .login .main > div {
    display: table-cell; 
   /*float: left;*/
-  background-color: #CCFFCC;
+  background-color: #ccffcc;
 }
 .header {
   text-align: center;
@@ -32,7 +32,7 @@
   background-color: #ffffaa;
 }
 .commands {
-  background-color: #CCFFCC;
+  background-color: #ccffcc;
 }
 .dirty {
   background-color: #ffffff !important;
@@ -45,4 +45,10 @@
 }
 body {
   background-color: #eeffff;
+}
+.home table th, .home table .rank {
+  background-color: #ccffcc;
+}
+.home table td {
+  background-color: #ccffff;
 }

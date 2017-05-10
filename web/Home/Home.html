@@ -1,4 +1,4 @@
-<div v-if="islands">
+<div v-if="islands" class="home">
     <h1>ターン{{islands.islandTurn}}</h1>
     <div class="nexttime">
         <span>次回の更新時間：{{islandNextTime.toLocaleString()}}</span>
@@ -37,7 +37,7 @@
             <th>採掘場規模</th>
         </tr>
         <tr if="islands.settings" v-for="island in islands.islands">
-            <td></td>
+            <td class="rank"></td>
             <td><router-link :to="{name: 'island', params: { id: island.id }}">{{island.name}}</router-link></td>
             <td>{{island.pop+islands.settings.unitPop}}</td>
             <td>{{island.area+islands.settings.unitArea}}</td>
