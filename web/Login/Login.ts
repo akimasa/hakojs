@@ -99,7 +99,7 @@ export default class Login extends Vue {
         this.commandsDirty = true;
         const cmds = this.island.commands as Command[];
         const head: Command[] = cmds.slice(0, this.number - 1);
-        const tail: Command[] = cmds.slice(this.number, cmds.length);
+        const tail: Command[] = cmds.slice(this.number - 1, cmds.length - 1);
         const current: Command = {
             kind: this.kind,
             x: this.x,
@@ -134,7 +134,7 @@ export default class Login extends Vue {
         const head: Command[] = cmds.slice(0, this.number - 1);
         const tail: Command[] = cmds.slice(this.number, cmds.length);
         const last: Command = {
-            kind: 0,
+            kind: this.commands.donothing.id,
             x: 0,
             y: 0,
             target: 0,
