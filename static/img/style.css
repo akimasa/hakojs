@@ -7,10 +7,19 @@
 .input div {
   font-weight: bold;
 }
+.login, .login .main {
+  margin: auto;
+  width: 90%;
+}
 .login .main > div {
-  /* display: table-cell; */
-  float: left;
+   display: table-cell; 
+  /*float: left;*/
   background-color: #CCFFCC;
+}
+.header {
+  text-align: center;
+  font-size: 200%;
+  font-weight: bold;
 }
 .commands .selected {
   background-color: #ffffaa;
