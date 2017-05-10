@@ -60,15 +60,32 @@
             <div v-for="(c, i) in island.commands">
                 <a @click="selectCmdPos(i+1)" v-bind:class="{selected : i === 0, command: true}">
                     {{i+1}}.
-                    <template v-if="c.kind === commands.donothing.id">
-                        資金繰り
-                    </template>
-                    <template v-else-if="isMissile(c.kind)">
+                    <template v-if="isMissile(c.kind)">
                         {{getIslandNameFromId(c.target)}}島<span>({{c.x}}, {{c.y}})</span>へ{{getCommandName(c.kind)}}
                     </template>
+                    <template v-else-if="c.kind === commands.donothing.id || c.kind === commands.propaganda.id || c.kind === commands.sell.id">
+                        {{getCommandName(c.kind)}}
+                    </template>
+                    <template v-else-if="c.kind === commands.money.id || c.kind === commands.food.id">
+                        {{getIslandNameFromId(c.target)}}島へ{{getCommandName(c.kind)}}
+                    </template>
                     <template v-else>
-                        {{JSON.stringify(c)}}<br>
                         <span>({{c.x}}, {{c.y}})</span>で{{getCommandName(c.kind)}}
+                    </template>
+
+                    <template v-if="isMissile(c.kind)">
+                        ({{c.arg > 0 ? c.arg + "発" : "無制限"}})
+                    </template>
+                    <template v-else-if="c.arg > 0">
+                        <template v-if="c.kind === commands.sell.id || c.kind === commands.food.id">
+                            ({{c.arg}}{{settings.unitFood}})
+                        </template>
+                        <template v-else-if="c.kind === commands.money.id">
+                            ({{c.arg}}{{settings.unitMoney}})
+                        </template>
+                        <template v-else>
+                            ({{c.arg}}回)
+                        </template>
                     </template>
                 </a>
             </div>
