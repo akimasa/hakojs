@@ -11,6 +11,13 @@
   margin: auto;
   width: 90%;
 }
+.login .main + div {
+  width: 100%;
+  margin: auto;
+}
+.login .main .input {
+  text-align: center;
+}
 .login .main > div {
    display: table-cell; 
   /*float: left;*/
