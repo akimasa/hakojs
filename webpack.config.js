@@ -10,6 +10,11 @@ let plugins = [new HTMLWebpackPlugin({ template: path.resolve(__dirname, 'web', 
 //new ExtractTextPlugin('styles.css')
 if(PROD){
 plugins.push(
+  new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: '"production"'
+      }
+  }),
   new webpack.optimize.UglifyJsPlugin({
     compress: { warnings: false }
   }),
@@ -20,7 +25,7 @@ plugins.push(
     threshold: 10240,
     minRatio: 0.8
   })
-);
+  );
 }
 
 
