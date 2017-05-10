@@ -9,7 +9,7 @@ import * as zlib from "zlib";
 const gunzip = zlib.createGunzip();
 const buf = zlib.gunzipSync(fs.readFileSync(`${__dirname}/../src/test/test.json.gz`));
 const hako = new Hakojima();
-hako.load(buf.toString("utf-8"));
+// hako.load(buf.toString("utf-8"));
 
 const app = express();
 
