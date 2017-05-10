@@ -1,6 +1,7 @@
 import coms from "./coms";
 import Island from "./Island";
 import { Land as Land } from "./Island";
+import { CamouflagedIsland as CamouflagedIsland } from "./Island";
 import { lands as lands } from "./lands";
 import * as lib from "./lib";
 import settings from "./settings";
@@ -71,6 +72,29 @@ export default class Hakojima {
     public getIsland(id: number) {
         return this.islands.find((ele) => ele.id === id);
     }
+    public getCamouflagedIsland(id: number): CamouflagedIsland {
+        const island = this.getIsland(id);
+        if (island === undefined) {
+            return undefined;
+        }
+        return {
+            name: island.name,
+            id: island.id,
+            prize: island.prize,
+            absent: island.absent,
+            comment: island.comment,
+            money: island.money,
+            pop: island.pop,
+            food: island.food,
+            area: island.area,
+            farm: island.farm,
+            factory: island.factory,
+            mountain: island.mountain,
+            score: island.score,
+            lands: this.camouflageLands(island.lands),
+            bbs: island.bbs,
+        };
+    }
     public getIslandNames() {
         const ret = [];
         for (const island of this.islands) {
@@ -140,6 +164,28 @@ export default class Hakojima {
             this.estimate(order[i]);
             this.income(this.islands[order[i]]);
         }
+    }
+    private camouflageLands(rawLands: Land[][]): Land[][] {
+        const camouflagedLands: Land[][] = [[]];
+        for (let x = 0; x < settings.islandSize; x++) {
+            camouflagedLands[x] = [];
+            for (let y = 0; y < settings.islandSize; y++) {
+                camouflagedLands[x][y] = {kind: rawLands[x][y].kind, value: rawLands[x][y].value};
+                if (camouflagedLands[x][y].kind === lands.Base || camouflagedLands[x][y].kind === lands.Sbase) {
+                    camouflagedLands[x][y].value = 0;
+                }
+                if (camouflagedLands[x][y].kind === lands.Base) {
+                    camouflagedLands[x][y].kind = lands.Forest;
+                }
+                if (camouflagedLands[x][y].kind === lands.Forest) {
+                    camouflagedLands[x][y].value = 0;
+                }
+                if (camouflagedLands[x][y].kind === lands.Sbase) {
+                    camouflagedLands[x][y].kind = lands.Sea;
+                }
+            }
+        }
+        return camouflagedLands;
     }
     private getIslandsCamouflagedSummary(): Island[] {
         const islands = [];

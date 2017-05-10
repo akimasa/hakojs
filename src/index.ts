@@ -48,7 +48,7 @@ app.get("/api/commands", (req, res, next) => {
 });
 app.get("/api/island/:id", (req, res, next) => {
     req.params.id = parseInt(req.params.id, 10);
-    const island = hako.getIsland(req.params.id);
+    const island = hako.getCamouflagedIsland(req.params.id);
     if (island === undefined) {
         res.writeHead(404, { "Content-Type": "application/json;charset=utf-8" });
         res.end(JSON.stringify({ err: "Island not found." }));
