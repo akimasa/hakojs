@@ -62,6 +62,7 @@ export default class Home extends Vue {
                 name: "newisland", params: {
                     name: this.newislandname,
                     id: (response as any).id,
+                    password: this.newislandpassword,
                 },
             });
         }).catch((response) => {

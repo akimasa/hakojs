@@ -8,7 +8,7 @@ import * as Template from "./Island.html";
 
 @Template
 @Component<Island>({
-    props: ["id"],
+    props: ["id", "password"],
     components: {
         IslandMap,
         IslandHeader,
@@ -26,6 +26,7 @@ import * as Template from "./Island.html";
 export default class Island extends Vue {
     public lands = [];
     public island;
+    public password;
     public id;
     public created() {
         if (this.$route.params.id) {
@@ -44,7 +45,17 @@ export default class Island extends Vue {
         });
     }
     private fetchDataByRoute() {
-        this.fetchData(this.$route.params.id);
+        if (this.password) {
+            utils.postApi(`api/island/${this.id}/login`, { password: this.password })
+                .then((response) => {
+                    const island = response as any;
+                    this.lands = island.lands;
+                    this.island = island;
+                    this.$forceUpdate();
+                });
+        } else {
+            this.fetchData(this.$route.params.id);
+        }
     }
     private fetchDataByProp() {
         this.fetchData(this.id);
