@@ -11,9 +11,7 @@ import router from "./router";
 @Component<App>({
     router,
 })
-class App extends Vue {
-    public hoge = "hoge";
- }
+class App extends Vue { }
 
 const vm = new App();
 
