@@ -19,10 +19,14 @@ export default class Home extends Vue {
     public newislandpassword2;
     public settings;
     public islandNextTime;
+    public remainingTimeTimer;
     public created() {
         this.password = localStorage.getItem("password");
         this.islandid = localStorage.getItem("islandid");
         this.fetchData();
+    }
+    public destroyed() {
+        clearInterval(this.remainingTimeTimer);
     }
     public fetchData() {
         utils.getApi("api/islands").then((response) => {
@@ -36,7 +40,7 @@ export default class Home extends Vue {
                 island.factory = ret.factory;
                 island.mountain = ret.mountain;
             }
-            setInterval(() => {
+            this.remainingTimeTimer = setInterval(() => {
                 document.getElementById("remainingtime").innerText = this.getRemainingTime();
             }, 1000);
             this.$forceUpdate();
