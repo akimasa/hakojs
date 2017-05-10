@@ -24,7 +24,7 @@ import * as Template from "./Login.html";
 export default class Login extends Vue {
     public commands;
     public island;
-    public islands;
+    public islandsNames;
     public lands;
     public password;
     public settings;
@@ -49,14 +49,14 @@ export default class Login extends Vue {
         Promise.all([
             utils.postApi(`api/island/${id}/login`, { password }),
             utils.getApi("api/commands"),
-            utils.getApi("api/islands")])
+            utils.getApi("api/islands/names")])
             .then((responses) => {
                 localStorage.setItem("password", password);
                 localStorage.setItem("islandid", id);
                 this.lands = (responses[0] as any).lands;
                 this.island = responses[0];
                 this.commands = responses[1];
-                this.islands = (responses[2] as any).islands;
+                this.islandsNames = responses[2];
                 this.$forceUpdate();
             });
     }
@@ -76,7 +76,7 @@ export default class Login extends Vue {
     }
     public getIslandNameFromId(id) {
         id = parseInt(id, 10);
-        const island = this.islands.find((ele) => ele.id === id);
+        const island = this.islandsNames.find((ele) => ele.id === id);
         console.log(island);
         return island.name;
     }

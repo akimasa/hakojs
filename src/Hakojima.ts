@@ -70,6 +70,13 @@ export default class Hakojima {
     public getIsland(id: number) {
         return this.islands.find((ele) => ele.id === id);
     }
+    public getIslandNames() {
+        const ret = [];
+        for (const island of this.islands) {
+            ret.push({id: island.id, name: island.name});
+        }
+        return ret;
+    }
     public authIsland(id: number, input: string): boolean {
         return lib.checkPassword(this.getIsland(id).password, input);
     }

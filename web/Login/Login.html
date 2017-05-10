@@ -46,7 +46,7 @@
                 </select>
                 <div>目標の島</div>
                 <select name="target" v-model="target">
-                    <template v-for="island in islands">
+                    <template v-for="island in islandsNames">
                         <option :value="island.id">{{island.name}}島</option>
                     </template>
                 </select>
