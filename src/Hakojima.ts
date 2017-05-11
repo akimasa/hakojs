@@ -646,6 +646,18 @@ export default class Hakojima {
                 }
                 return 1;
             }
+            if (landKind === lands.Mountain) {
+                island.lands[x][y] = { kind: lands.Waste, value: 0};
+            } else if (landKind === lands.Sea) {
+                island.lands[x][y].value = 0;
+            } else {
+                island.lands[x][y] = { kind: lands.Sea, value: 1};
+                island.area--;
+            }
+            this.logData.logLandSuc({id, name, comName, point, turn});
+
+            island.money -= cost;
+            return 1;
         }
 
         if (command.kind === Commands.farm.id) {
