@@ -66,8 +66,17 @@ export default class Hakojima {
                 monumentName: settings.monumentName,
                 islandSize: settings.islandSize,
                 commandMax: settings.commandMax,
+                debug: settings.debug,
             },
         };
+    }
+    public debugButton() {
+        if (settings.debug) {
+            this.turnMain();
+            return true;
+        } else {
+            return false;
+        }
     }
     public getIsland(id: number) {
         return this.islands.find((ele) => ele.id === id);
@@ -151,7 +160,7 @@ export default class Hakojima {
     }
     public turnMain() {
         // 最終更新時間を更新
-        this.islandLastTime += settings.unitTime;
+        this.islandLastTime += settings.unitTime * 1000;
 
         // ターン番号
         this.islandTurn++;

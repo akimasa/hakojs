@@ -8,6 +8,7 @@ import * as Template from "./Home.html";
 @Component<Home>({
     methods: {
         getRemainingTime: this.getRemainingTime,
+        debugButton: this.debugButton,
     },
 })
 export default class Home extends Vue {
@@ -38,6 +39,9 @@ export default class Home extends Vue {
                 island.farm = ret.farm;
                 island.factory = ret.factory;
                 island.mountain = ret.mountain;
+            }
+            if (this.remainingTimeTimer) {
+                clearInterval(this.remainingTimeTimer);
             }
             this.remainingTimeTimer = setInterval(() => {
                 document.getElementById("remainingtime").innerText = this.getRemainingTime();
@@ -85,5 +89,11 @@ export default class Home extends Vue {
         remaining -= minutes * 60;
         const seconds = remaining;
         return `(残り ${days}日${hours}時間${minutes}分${seconds}秒)`;
+    }
+    public debugButton() {
+        utils.getApi("api/debug")
+        .then(() => {
+           this.fetchData();
+        });
     }
 }

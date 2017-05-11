@@ -1,4 +1,5 @@
 <div v-if="islands" class="home">
+    <button v-if="islands.settings.debug" @click="debugButton">ターンを進める</button>
     <h1>ターン{{islands.islandTurn}}</h1>
     <div class="nexttime">
         <span>次回の更新時間：{{islandNextTime.toLocaleString()}}</span>

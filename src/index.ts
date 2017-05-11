@@ -46,6 +46,15 @@ app.get("/api/commands", (req, res, next) => {
     res.writeHead(200, { "Content-Type": "application/json;charset=utf-8" });
     res.end(JSON.stringify(coms.coms));
 });
+app.get("/api/debug", (req, res, next) => {
+    if (hako.debugButton()) {
+        res.writeHead(200, { "Content-Type": "application/json;charset=utf-8" });
+        res.end();
+    } else {
+        res.writeHead(403, { "Content-Type": "application/json;charset=utf-8" });
+        res.end(JSON.stringify({ err: "Debug not activated" }));
+    }
+});
 app.get("/api/island/:id", (req, res, next) => {
     req.params.id = parseInt(req.params.id, 10);
     const island = hako.getCamouflagedIsland(req.params.id);
