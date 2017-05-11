@@ -358,6 +358,9 @@ export default class Hakojima {
     private random(i: number) {
         return Math.floor(Math.random() * i);
     }
+    private log(str: string, id: number) {
+        console.log(str);
+    }
     private estimate(num: number) {
         let pop = 0;
         let area = 0;
@@ -505,6 +508,7 @@ export default class Hakojima {
         const [name, id, landKind, lv] = [island.name, island.id, island.lands[x][y].kind, island.lands[x][y].value];
         const [cost, comName] = [coms.comFromId(kind).cost, coms.comFromId(kind).name];
         const [point, landName] = [`(${x}, ${y})`, this.landName(landKind, lv)];
+        const Commands = coms.coms;
 
         if (command.kind === coms.coms.donothing.id) {
             island.money += 10;
@@ -520,11 +524,21 @@ export default class Hakojima {
                 };
             }
             return 1;
-        } else if (command.kind === coms.coms.farm.id) {
-            island.lands[x][y] = {kind: lands.Farm, value: 100};
-            return 1;
         }
 
         island.absent = 0;
+
+        if (cost > 0) {
+            if (island.money < cost) {
+                this.log(`<span class="name">${name}島</span>で予定されていた` +
+                `<span class="command">${comName}</span>は、資金不足のため中止されました。`, id);
+                return 0;
+            }
+        }
+
+        if (command.kind === Commands.farm.id) {
+            island.lands[x][y] = { kind: lands.Farm, value: 100 };
+            return 1;
+        }
     }
 }
