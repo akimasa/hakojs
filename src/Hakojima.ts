@@ -599,7 +599,7 @@ export default class Hakojima {
 
                     for (let i = 0; i < 7; i++) {
                         let sx = x + ax[i];
-                        const sy = y + ay[y];
+                        const sy = y + ay[i];
                         // 行による位置調整
                         if (((sx % 2) === 0) && ((y % 2) === 1)) {
                             sx--;
