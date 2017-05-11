@@ -10,16 +10,18 @@ import * as Template from "./IslandMap.html";
         props: ["lands"],
         computed: {
             landMap: function landMap() {
-                if (this.lands === undefined) {
+                console.log(this.lands);
+                const islandSize = utils.getSettings().islandSize;
+                if (this.lands === undefined || this.lands.length !== islandSize) {
                     return;
                 }
                 const imgs = [];
-                for (const y of this.lands) {
-                    const line = [];
-                    for (const x of y) {
-                        line.push(this.landstr(x));
+                for (let x = 0; x < islandSize; x++) {
+                    imgs[x] = [];
+                    for (let y = 0; y < islandSize; y++) {
+                        // xとyを逆転する必要あり
+                        imgs[x][y] = this.landstr(this.lands[y][x]);
                     }
-                    imgs.push(line);
                 }
                 return imgs;
         },
