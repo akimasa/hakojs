@@ -70,6 +70,8 @@ export default class IslandMap extends Vue {
             image = "land9.gif";
         } else if (kind === Lands.Mountain) {
             image = "land11.gif";
+        } else if (kind === Lands.Farm) {
+            image = "land7.gif";
         } else {
             alt = kind;
         }
