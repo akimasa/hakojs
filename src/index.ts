@@ -55,6 +55,10 @@ app.get("/api/debug", (req, res, next) => {
         res.end(JSON.stringify({ err: "Debug not activated" }));
     }
 });
+app.get("/api/logs", (req, res, next) => {
+    res.writeHead(200, { "Content-Type": "application/json;charset=utf-8" });
+    res.end(JSON.stringify(hako.logData.getLog()));
+});
 app.get("/api/island/:id", (req, res, next) => {
     req.params.id = parseInt(req.params.id, 10);
     const island = hako.getCamouflagedIsland(req.params.id);

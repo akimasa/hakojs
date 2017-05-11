@@ -4,6 +4,7 @@ import { Land as Land } from "./Island";
 import { CamouflagedIsland as CamouflagedIsland } from "./Island";
 import { lands as lands } from "./lands";
 import * as lib from "./lib";
+import Log from "./Log";
 import settings from "./settings";
 interface NewIslandArg {
     name: string;
@@ -15,12 +16,16 @@ export default class Hakojima {
     public islandLastTime: number;
     public islandTurn: number;
     public islands: Island[];
+    public logData: Log;
+    private ax = [0, 1, 1, 1, 0, -1, 0, 1, 2, 2, 2, 1, 0, -1, -1, -2, -1, -1, 0];
+    private ay = [0, -1, 0, 1, 1, 0, -1, -2, -1, 0, 1, 2, 2, 2, 1, 0, -1, -2, -2];
     constructor() {
         this.nextId = 1;
         this.islandLastTime = new Date().getTime();
         this.islandLastTime = this.islandLastTime - (this.islandLastTime % (settings.unitTime * 1000));
         this.islandTurn = 1;
         this.islands = [];
+        this.logData = new Log();
     }
     public load(jsonstr: string) {
         const json = JSON.parse(jsonstr);
@@ -327,8 +332,8 @@ export default class Hakojima {
         return land;
     }
     private countAround(land: Land[][], x: number, y: number, kind: number, range: number) {
-        const ax = [0, 1, 1, 1, 0, -1, 0, 1, 2, 2, 2, 1, 0, -1, -1, -2, -1, -1, 0];
-        const ay = [0, -1, 0, 1, 1, 0, -1, -2, -1, 0, 1, 2, 2, 2, 1, 0, -1, -2, -2];
+        const ax = this.ax;
+        const ay = this.ay;
         let count = 0;
         let sx;
         let sy;
@@ -358,8 +363,11 @@ export default class Hakojima {
     private random(i: number) {
         return Math.floor(Math.random() * i);
     }
-    private log(str: string, id: number) {
-        console.log(str);
+    private publicLog(log: string, id: number) {
+        this.logData.pushLog({log, id, turn: this.islandTurn, secret: false});
+    }
+    private privateLog(log: string, id: number) {
+        this.logData.pushLog({log, id, turn: this.islandTurn, secret: true});
     }
     private estimate(num: number) {
         let pop = 0;
@@ -508,6 +516,9 @@ export default class Hakojima {
         const [name, id, landKind, lv] = [island.name, island.id, island.lands[x][y].kind, island.lands[x][y].value];
         const [cost, comName] = [coms.comFromId(kind).cost, coms.comFromId(kind).name];
         const [point, landName] = [`(${x}, ${y})`, this.landName(landKind, lv)];
+        const turn = this.islandTurn;
+        const ax = this.ax;
+        const ay = this.ay;
         const Commands = coms.coms;
 
         if (command.kind === coms.coms.donothing.id) {
@@ -530,10 +541,85 @@ export default class Hakojima {
 
         if (cost > 0) {
             if (island.money < cost) {
-                this.log(`<span class="name">${name}島</span>で予定されていた` +
+                this.publicLog(`<span class="name">${name}島</span>で予定されていた` +
                 `<span class="command">${comName}</span>は、資金不足のため中止されました。`, id);
                 return 0;
             }
+        } else if (cost < 0) {
+            if (island.food < (-cost)) {
+                this.publicLog(`<span class="name">${name}島</span>で予定されていた` +
+                `<span class="command">${comName}</span>は、備蓄食料不足のため中止されました。`, id);
+            }
+        }
+        if (kind === Commands.prepare.id || kind === Commands.prepare2.id) {
+            if (landKind === lands.Sea || landKind === lands.Sbase || landKind === lands.Oil
+            || landKind === lands.Oil || landKind === lands.Monster) {
+                this.logData.logLandFail({id, name, comName, landName, point, turn});
+                return 0;
+            }
+            island.lands[x][y] = { kind: lands.Plains, value: 0};
+            this.logData.logLandSuc({id, name, comName, point, turn});
+            island.money -= cost;
+
+            if (kind === Commands.prepare2.id) {
+                // TODO:後で地ならしの場合にのカウンタを用意する
+                return 0;
+            } else {
+                if (this.random(1000) < settings.disMaizo) {
+                    const v = 100 + this.random(901);
+                    island.money += v;
+                    this.publicLog(`<span class="name">${name}島</span>での` +
+                    `<span class="command">${comName}</span>中に、<b>${v + settings.unitMoney}もの埋蔵金</b>が発見されました。`, id);
+                }
+                return 1;
+            }
+        } else if (kind === Commands.reclaim.id) {
+            if (landKind !== lands.Sea && landKind !== lands.Oil && landKind !== lands.Sbase) {
+                this.logData.logLandFail({id, name, comName, landName, point, turn});
+                return 0;
+            }
+            const seaCount = this.countAround(island.lands, x, y, lands.Sea, 7) +
+            this.countAround(island.lands, x, y, lands.Oil, 7) +
+            this.countAround(island.lands, x, y, lands.Sbase, 7);
+            if (seaCount === 7) {
+                this.publicLog(`<span class="name">${name}島</span>で予定されていた` +
+                `<span class="command">${comName}</span>は、`
+                + `予定地の<span class="point">${point}</span>の周辺に陸地がなかったため中止されました。`, id);
+                return 0;
+            }
+            if (landKind === lands.Sea && lv === 1) {
+                // 浅瀬の場合
+                // 目的の場所を荒地にする
+                island.lands[x][y] = { kind: lands.Waste, value: 0 };
+                this.logData.logLandSuc({ id, name, comName, point, turn });
+                island.area++;
+
+                if (seaCount <= 4) {
+                    // 周りの海が3ヘックス以内なので、浅瀬にする
+
+                    for (let i = 0; i < 7; i++) {
+                        let sx = x + ax[i];
+                        const sy = y + ay[y];
+                        // 行による位置調整
+                        if (((sx % 2) === 0) && ((y % 2) === 1)) {
+                            sx--;
+                        }
+                        // 範囲内の場合
+                        if (!((sx < 0) || (sx >= settings.islandSize) ||
+                            (sy < 0) || (sy >= settings.islandSize))) {
+                            if (island.lands[sx][sy].kind === lands.Sea) {
+                                island.lands[sx][sy].value = 1;
+                            }
+                        }
+                    }
+                }
+            } else {
+                island.lands[x][y] = { kind: lands.Sea, value: 1};
+                this.logData.logLandSuc({ id, name, comName, point, turn });
+            }
+
+            island.money -= cost;
+            return 1;
         }
 
         if (command.kind === Commands.farm.id) {
