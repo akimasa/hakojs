@@ -512,7 +512,8 @@ export default class Hakojima {
         const command = island.commands.shift();
         console.log("command:", command);
 
-        const [kind, target, x, y, arg] = [command.kind, command.target, command.x, command.y, command.arg];
+        const [kind, target, x, y] = [command.kind, command.target, command.x, command.y];
+        let arg = command.arg;
         const [name, id, landKind, lv] = [island.name, island.id, island.lands[x][y].kind, island.lands[x][y].value];
         const [cost, comName] = [coms.comFromId(kind).cost, coms.comFromId(kind).name];
         const [point, landName] = [`(${x}, ${y})`, this.landName(landKind, lv)];
@@ -620,6 +621,31 @@ export default class Hakojima {
 
             island.money -= cost;
             return 1;
+        } else if (kind === Commands.destroy.id) {
+            if (landKind === lands.Sbase || landKind === lands.Oil || landKind === lands.Monster) {
+                // 海底基地、油田、怪獣は掘削できない
+                this.logData.logLandFail({id, name, comName, landName, point, turn});
+                return 0;
+            }
+            if ((landKind === lands.Sea) && (lv === 0)) {
+                // 海なら、油田探し
+                // 投資額決定
+                if (arg === 0) { arg = 1; }
+                const value = Math.min(arg * cost, island.money);
+                const str = value + settings.unitMoney;
+                const p = Math.floor(value / cost);
+                island.money -= value;
+
+                if (p > this.random(100)) {
+                    this.publicLog(`<span class="name">${name}島</span>で<b>${str}</b>の予算をつぎ込んだ` +
+                    `<span class="command">${comName}</span>が行われ、<b>油田が掘り当てられました</b>`, id);
+                    island.lands[x][y] = {kind: lands.Oil, value: 0};
+                } else {
+                    this.publicLog(`<span class="name">${name}島</span>で<b>${str}</b>の予算をつぎ込んだ` +
+                    `<span class="command">${comName}</span>が行われましたが、油田は見つかりませんでした。`, id);
+                }
+                return 1;
+            }
         }
 
         if (command.kind === Commands.farm.id) {

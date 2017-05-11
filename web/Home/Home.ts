@@ -21,6 +21,7 @@ export default class Home extends Vue {
     public settings;
     public islandNextTime;
     public remainingTimeTimer;
+    public log;
     public created() {
         this.password = localStorage.getItem("password");
         this.islandid = localStorage.getItem("islandid");
@@ -46,6 +47,11 @@ export default class Home extends Vue {
             this.remainingTimeTimer = setInterval(() => {
                 document.getElementById("remainingtime").innerText = this.getRemainingTime();
             }, 1000);
+            this.$forceUpdate();
+        });
+        utils.getApi("api/logs").then((response) => {
+            console.log(response);
+            this.log = response;
             this.$forceUpdate();
         });
     }

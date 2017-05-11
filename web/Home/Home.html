@@ -86,7 +86,9 @@
     <hr>
 
     <h1>最近の出来事</h1>
-    logPrintTop();
+    <div v-for="item in log">
+        <div v-html="item.log"></div>
+    </div>
     <h1>発見の記録</h1>
     historyPrint();
 </div>
