@@ -30,7 +30,7 @@ const coms = {
             cost: 50,
             id: 11,
         },
-        "firm": {
+        "farm": {
             name: "農場整備",
             cost: 20,
             id: 12,

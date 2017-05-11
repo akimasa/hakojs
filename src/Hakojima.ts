@@ -159,6 +159,7 @@ export default class Hakojima {
         return island.id;
     }
     public turnMain() {
+        const oldPop = [];
         // 最終更新時間を更新
         this.islandLastTime += settings.unitTime * 1000;
 
@@ -172,7 +173,19 @@ export default class Hakojima {
         for (let i = 0; i < this.islands.length; i++) {
             this.estimate(order[i]);
             this.income(this.islands[order[i]]);
+            // ターン開始前の人口をメモる
+            oldPop[order[i]] = this.islands[order[i]].pop;
         }
+
+        // コマンド処理
+        for (let i = 0; i < this.islands.length; i++) {
+            while (1) {
+                if (this.doCommand(this.islands[order[i]]) !== 0) {
+                    break;
+                }
+            }
+        }
+
     }
     private camouflageLands(rawLands: Land[][]): Land[][] {
         const camouflagedLands: Land[][] = [[]];
@@ -485,7 +498,8 @@ export default class Hakojima {
         island.food = Math.floor(island.food - pop * settings.eatenFood);
     }
     private doCommand(island: Island) {
-        const command = island.commands.splice(0, 1)[0];
+        const command = island.commands.shift();
+        console.log("command:", command);
 
         const [kind, target, x, y, arg] = [command.kind, command.target, command.x, command.y, command.arg];
         const [name, id, landKind, lv] = [island.name, island.id, island.lands[x][y].kind, island.lands[x][y].value];
@@ -505,6 +519,9 @@ export default class Hakojima {
                     arg: 0,
                 };
             }
+            return 1;
+        } else if (command.kind === coms.coms.farm.id) {
+            island.lands[x][y] = {kind: lands.Farm, value: 100};
             return 1;
         }
 
