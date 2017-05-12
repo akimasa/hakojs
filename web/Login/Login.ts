@@ -34,7 +34,7 @@ export default class Login extends Vue {
     public x: number = 0;
     public y: number = 0;
     public arg = 0;
-    public target;
+    public target: number;
     public commandsDirty = false;
     public created() {
         let id = this.$route.params.id;
@@ -47,7 +47,7 @@ export default class Login extends Vue {
         if (password === undefined) {
             password = localStorage.getItem("password");
         }
-        this.target = id;
+        this.target = parseInt(id, 10);
         this.password = password;
         Promise.all([
             utils.postApi(`api/island/${id}/login`, { password }),
