@@ -422,9 +422,11 @@ export default class Hakojima {
         // 元の箱庭諸島と厳密には非互換
         const rpx = [];
         const rpy = [];
-        for (let i = 0; i < settings.islandSize; i++) {
-            rpx[i] = i;
-            rpy[i] = i;
+        for (let j = 0; j < settings.islandSize; j++) {
+            for (let i = 0; i < settings.islandSize; i++) {
+                rpx[i + j * settings.islandSize] = i;
+                rpy[i + j * settings.islandSize] = i;
+            }
         }
         let m = rpx.length;
         while (m) {
@@ -843,7 +845,7 @@ export default class Hakojima {
             let tx;
             let ty;
             let err;
-            let boat = 0;
+            // let boat = 0;
             if (kind === Commands.missilePP.id) {
                 err = 7;
             } else {
@@ -875,6 +877,7 @@ export default class Hakojima {
                 let level = this.expToLevel(island.lands[x][y]);
 
                 while (level > 0 && arg > 0 && island.money > cost) {
+                    console.log(level, arg, "level--");
                     // 撃ったのが確定なので、各値を消耗させる
                     level--;
                     arg--;
@@ -1019,6 +1022,7 @@ export default class Hakojima {
                         }
                     }
                 }
+                count++;
             }
         }
     }
