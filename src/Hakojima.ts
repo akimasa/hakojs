@@ -774,6 +774,40 @@ export default class Hakojima {
                 }
             }
             return 1;
+        } else if (kind === Commands.mountain.id) {
+            if (landKind !== lands.Mountain) {
+                this.logData.logLandFail({id, name, comName, landName, point, turn});
+                return 0;
+            }
+            island.lands[x][y].value += 5;
+            if (island.lands[x][y].value > 200) {
+                island.lands[x][y].value = 200;
+            }
+            this.logData.logLandSuc({id, name, comName, point, turn});
+
+            island.money -= cost;
+            if (arg > 1) {
+                arg--;
+                island.commands.pop();
+                island.commands.unshift({
+                    kind,
+                    target,
+                    x,
+                    y,
+                    arg,
+                });
+            }
+            return 1;
+        } else if (kind === Commands.sbase.id) {
+            if (landKind !== lands.Sea || lv !== 0) {
+                this.logData.logLandFail({id, name, comName, landName, point, turn});
+                return 0;
+            }
+            island.lands[x][y] = {kind: lands.Sbase, value: 0};
+            this.logData.logLandSuc({id, name, comName, point: "(?, ?)", turn});
+
+            island.money -= cost;
+            return 1;
         }
     }
 }
