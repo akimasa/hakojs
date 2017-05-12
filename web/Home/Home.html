@@ -39,7 +39,10 @@
         </tr>
         <tr if="islands.settings" v-for="island in islands.islands">
             <td class="rank"></td>
-            <td><router-link :to="{name: 'island', params: { id: island.id }}">{{island.name}}</router-link></td>
+            <td>
+                <router-link :to="{name: 'island', params: { id: island.id }}">{{island.name}}</router-link>
+                <template v-if="island.absent">({{island.absent}})</template>
+            </td>
             <td>{{island.pop+islands.settings.unitPop}}</td>
             <td>{{island.area+islands.settings.unitArea}}</td>
             <td>{{island.money+islands.settings.unitMoney}}</td>
