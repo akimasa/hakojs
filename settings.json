@@ -9,7 +9,7 @@
     "islandSize": 12,
     "hideMoneyMode": 2,
     "debug": 1,
-    "initialMoney": 10000,
+    "initialMoney": 100000,
     "initialFood": 100,
     "unitMoney": "億円",
     "unitFood": "00トン",

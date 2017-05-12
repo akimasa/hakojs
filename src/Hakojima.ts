@@ -471,6 +471,8 @@ export default class Hakojima {
             return "工場";
         } else if (land === lands.Base) {
             return "ミサイル基地";
+        } else if (land === lands.Defence) {
+            return "防衛施設";
         } else if (land === lands.Mountain) {
             return "山";
         } else if (land === lands.Monster) {
@@ -710,11 +712,67 @@ export default class Hakojima {
                 this.privateLog(`<span class="name">${name}島${point}</span>で` +
                 `<span class="command">${comName}</span>が行われました。`, id);
                 this.logData.logLandSuc({id, name, comName: Commands.haribote.name, point, turn});
-            }
-        }
+            } else if (kind === Commands.farm.id) {
+                if (landKind === lands.Farm) {
+                    island.lands[x][y].value += 2;
+                    if (island.lands[x][y].value > 50) {
+                        island.lands[x][y].value = 50;
+                    }
+                } else {
+                    island.lands[x][y] = {kind: lands.Farm, value: 10};
+                }
+                this.logData.logLandSuc({id, name, comName, point, turn});
+            } else if (kind === Commands.factory.id) {
+                if (landKind === lands.Factory) {
+                    island.lands[x][y].value += 10;
+                    if (island.lands[x][y].value > 100) {
+                        island.lands[x][y].value = 100;
+                    }
+                } else {
+                    island.lands[x][y] = {kind: lands.Factory, value: 30};
+                }
+                this.logData.logLandSuc({id, name, comName, point, turn});
+            } else if (kind === Commands.dbase.id) {
+                if (landKind === lands.Defence) {
+                    island.lands[x][y].value = 1;
+                    this.publicLog(`<span class="name">${name}島${point}</span>の` +
+                `<b>${landName}</b>の<b>自爆装置がセット</b>されました。`, id);
+                } else {
+                    island.lands[x][y] = {kind: lands.Defence, value: 0};
+                    this.logData.logLandSuc({id, name, comName, point, turn});
+                }
+            } else if (kind === Commands.monument.id) {
+                if (landKind === lands.Monument) {
+                    // TODO:後で記念碑の攻撃を実装する。
 
-        if (command.kind === Commands.farm.id) {
-            island.lands[x][y] = { kind: lands.Farm, value: 100 };
+                    island.lands[x][y] = {kind: lands.Waste, value: 0};
+                    this.publicLog(`<span class="name">${name}島${point}</span>の` +
+                    `<b>${landName}</b>が<b>轟音とともに飛び立ちました</b>。`, id);
+                } else {
+                    island.lands[x][y].kind = lands.Monument;
+                    if (arg >= settings.monumentName.length) {
+                        arg = 0;
+                    }
+                    island.lands[x][y].value = arg;
+                    this.logData.logLandSuc({id, name, comName, point, turn});
+                }
+            }
+
+            island.money -= cost;
+
+            if (kind === Commands.farm.id || kind === Commands.factory.id) {
+                if (arg > 1) {
+                    arg--;
+                    island.commands.pop();
+                    island.commands.unshift({
+                        kind,
+                        target,
+                        x,
+                        y,
+                        arg,
+                    });
+                }
+            }
             return 1;
         }
     }
