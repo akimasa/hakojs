@@ -925,15 +925,18 @@ export default class Hakojima {
                         if (kind === Commands.missileST.id) {
                             // TODO:publicLogではなくlogLateを作って、使う。
                             this.publicLog(`<b>何者か</b><span class="name">${name}島${point}</span>へ向けて` +
-                            `<span class="command">${comName}</span>を行いましたが、地点上空にて力場に捉えられ、<b>空中爆発</b>しました。`, id);
+                            `<span class="command">${comName}</span>を行いましたが、` +
+                            `<span class="name">${tPoint}</span>地点上空にて力場に捉えられ、<b>空中爆発</b>しました。`, id);
                             this.privateLog(`<span class="name">${name}島</span>が` +
                             `<span class="name">${tName}島${point}</span>` +
-                            `地点に向けて<span class="command">${comName}</span>を行いましたが、地点上空にて力場に捉えられ、<b>空中爆発</b>しました。`, id);
+                            `地点に向けて<span class="command">${comName}</span>を行いましたが、` +
+                            `<span class="name">${tPoint}</span>地点上空にて力場に捉えられ、<b>空中爆発</b>しました。`, id);
 
                         } else {
                             this.publicLog(`<span class="name">${name}島</span>が` +
                             `<span class="name">${tName}島${point}</span>` +
-                            `地点に向けて<span class="command">${comName}</span>を行いましたが、地点上空にて力場に捉えられ、<b>空中爆発</b>しました。`, id);
+                            `地点に向けて<span class="command">${comName}</span>を行いましたが、` +
+                            `<span class="name">${tPoint}</span>地点上空にて力場に捉えられ、<b>空中爆発</b>しました。`, id);
                         }
                         continue;
                     }
@@ -953,18 +956,18 @@ export default class Hakojima {
                             // TODO:publicLogではなくlogLateを作って、使う。
                             this.publicLog(`<b>何者か</b><span class="name">${name}島${point}</span>へ向けて` +
                             `<span class="command">${comName}</span>を行いましたが、` +
-                            `<span class="name">${point}</span>` +
+                            `<span class="name">${tPoint}</span>` +
                             `の<B>${tLname}</B>に落ちたので被害がありませんでした。`, id);
                             this.privateLog(`<span class="name">${name}島</span>が` +
                             `<span class="name">${tName}島${point}</span>` +
                             `地点に向けて<span class="command">${comName}</span>を行いましたが、` +
-                            `<span class="name">${point}</span>` +
+                            `<span class="name">${tPoint}</span>` +
                             `の<B>${tLname}</B>に落ちたので被害がありませんでした。`, id);
                         } else {
                             this.publicLog(`<span class="name">${name}島</span>が` +
                             `<span class="name">${tName}島${point}</span>` +
                             `地点に向けて<span class="command">${comName}</span>を行いましたが、` +
-                            `<span class="name">${point}</span>` +
+                            `<span class="name">${tPoint}</span>` +
                             `の<B>${tLname}</B>に落ちたので被害がありませんでした。`, id);
                         }
                         continue;
@@ -974,7 +977,7 @@ export default class Hakojima {
                             this.publicLog(`<span class="name">${name}島</span>が` +
                             `<span class="name">${tName}島${point}</span>` +
                             `地点に向けて<span class="command">${comName}</span>を行い` +
-                            `<span class="name">${point}</span>` +
+                            `<span class="name">${tPoint}</span>` +
                             `の<b>${tLname}</b>に命中。<b>${tLname}</b>は消し飛び、荒地と化しました。`, id);
                             tLand[tx][ty] = {kind: lands.Waste, value: 0};
                             continue;
@@ -982,25 +985,25 @@ export default class Hakojima {
                             this.publicLog(`<span class="name">${name}島</span>が` +
                             `<span class="name">${tName}島${point}</span>` +
                             `地点に向けて<span class="command">${comName}</span>を行い` +
-                            `<span class="name">${point}</span>` +
+                            `<span class="name">${tPoint}</span>` +
                             `の<b>${tLname}</b>に着水後爆発、同地点にあった<b>${tLname}</b>は跡形もなく吹き飛びました。`, id);
                         } else if (tL === lands.Monster) {
                             this.publicLog(`<span class="name">${name}島</span>が` +
                             `<span class="name">${tName}島${point}</span>` +
                             `地点に向けて<span class="command">${comName}</span>を行い` +
-                            `<span class="name">${point}</span>` +
+                            `<span class="name">${tPoint}</span>` +
                             `の<b>${tLname}</b>に着弾し爆発。陸地は<b>怪獣${tLname}</b>もろとも水没しました。`, id);
                         } else if (tL === lands.Sea) {
                             this.publicLog(`<span class="name">${name}島</span>が` +
                             `<span class="name">${tName}島${point}</span>` +
                             `地点に向けて<span class="command">${comName}</span>を行い` +
-                            `<span class="name">${point}</span>` +
+                            `<span class="name">${tPoint}</span>` +
                             `の<b>${tLname}</b>に着弾。海底がえぐられました。`, id);
                         } else {
                             this.publicLog(`<span class="name">${name}島</span>が` +
                             `<span class="name">${tName}島${point}</span>` +
                             `地点に向けて<span class="command">${comName}</span>を行い` +
-                            `<span class="name">${point}</span>` +
+                            `<span class="name">${tPoint}</span>` +
                             `の<b>${tLname}</b>に着弾。陸地は水没しました。`, id);
                         }
 
