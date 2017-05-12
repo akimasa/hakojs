@@ -665,6 +665,52 @@ export default class Hakojima {
 
             island.money -= cost;
             return 1;
+        } else if (kind === Commands.selltree.id) {
+            if (landKind !== lands.Forest) {
+                this.logData.logLandFail({id, name, comName, landName, point, turn});
+                return 0;
+            }
+
+            island.lands[x][y] = { kind: lands.Plains, value: 0 };
+            this.logData.logLandSuc({ id, name, comName, point, turn });
+
+            island.money += settings.treeValue * lv;
+            return 1;
+        } else if (kind === Commands.plant.id
+        || kind === Commands.farm.id
+        || kind === Commands.factory.id
+        || kind === Commands.base.id
+        || kind === Commands.monument.id
+        || kind === Commands.haribote.id
+        || kind === Commands.dbase.id) {
+            if (!(
+                (landKind === lands.Plains) ||
+                (landKind === lands.Town) ||
+                ((landKind === lands.Monument) && (kind === Commands.monument.id)) ||
+                ((landKind === lands.Farm) && (kind === Commands.farm.id)) ||
+                ((landKind === lands.Defence) && (kind === Commands.dbase.id))
+            )) {
+                this.logData.logLandFail({id, name, comName, landName, point, turn});
+                return 0;
+            }
+            if (kind === Commands.plant.id) {
+                island.lands[x][y] = {kind: lands.Forest, value: 1};
+                this.publicLog(`こころなしか、<span class="name">${name}島</span>の` +
+                `<b>森</b>が増えたようです。`, id);
+                this.privateLog(`<span class="name">${name}島${point}</span>で` +
+                `<span class="command">${comName}</span>が行われました。`, id);
+            } else if (kind === Commands.base.id) {
+                island.lands[x][y] = {kind: lands.Base, value: 0};
+                this.publicLog(`こころなしか、<span class="name">${name}島</span>の` +
+                `<b>森</b>が増えたようです。`, id);
+                this.privateLog(`<span class="name">${name}島${point}</span>で` +
+                `<span class="command">${comName}</span>が行われました。`, id);
+            } else if (kind === Commands.haribote.id) {
+                island.lands[x][y] = {kind: lands.Haribote, value: 0};
+                this.privateLog(`<span class="name">${name}島${point}</span>で` +
+                `<span class="command">${comName}</span>が行われました。`, id);
+                this.logData.logLandSuc({id, name, comName: Commands.haribote.name, point, turn});
+            }
         }
 
         if (command.kind === Commands.farm.id) {
