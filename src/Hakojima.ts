@@ -509,8 +509,16 @@ export default class Hakojima {
         island.food = Math.floor(island.food - pop * settings.eatenFood);
     }
     private doCommand(island: Island) {
+        const Commands = coms.coms;
         const command = island.commands.shift();
         console.log("command:", command);
+        island.commands.push({
+            kind: Commands.donothing.id,
+            x: 0,
+            y: 0,
+            arg: 0,
+            target: 0,
+        });
 
         const [kind, target, x, y] = [command.kind, command.target, command.x, command.y];
         let arg = command.arg;
@@ -520,7 +528,6 @@ export default class Hakojima {
         const turn = this.islandTurn;
         const ax = this.ax;
         const ay = this.ay;
-        const Commands = coms.coms;
 
         if (command.kind === coms.coms.donothing.id) {
             island.money += 10;
