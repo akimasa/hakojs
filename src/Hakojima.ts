@@ -494,6 +494,23 @@ export default class Hakojima {
 
         return { kind, name, hp };
     }
+    private expToLevel(land: Land) {
+        if (land.kind === lands.Base) {
+            for (let i = settings.baseLevelUp.length; i > 1; i--) {
+                if (land.value >= settings.baseLevelUp[i - 2]) {
+                    return i;
+                }
+            }
+            return 1;
+        } else {
+            for (let i = settings.sBaseLevelUp.length; i > 1; i--) {
+                if (land.value >= settings.sBaseLevelUp[i - 2]) {
+                    return i;
+                }
+            }
+            return 1;
+        }
+    }
     private income(island: Island) {
         const [pop, farm, factory, mountain] = [island.pop, island.farm * 10, island.factory, island.mountain];
 
@@ -808,6 +825,201 @@ export default class Hakojima {
 
             island.money -= cost;
             return 1;
+        } else if (kind === Commands.missileNM.id
+        || kind === Commands.missilePP.id
+        || kind === Commands.missileST.id
+        || kind === Commands.missileLD.id) {
+            const tIsland = this.getIsland(target);
+            if (tIsland === undefined) {
+                    this.publicLog(`<span class="name">${name}島${point}</span>で予定されていた` +
+                    `<span class="command">${comName}</span>は、目標の島に人が見当たらないため中止されました。`, id);
+                    return 0;
+            }
+            let flag = 0;
+            if (arg === 0) {
+                arg = 10000;
+            }
+            const [tName, tLand] = [tIsland.name, tIsland.lands];
+            let tx;
+            let ty;
+            let err;
+            let boat = 0;
+            if (kind === Commands.missilePP.id) {
+                err = 7;
+            } else {
+                err = 19;
+            }
+            // 金が尽きるか指定数に足りるか基地全部が撃つまでループ
+            let [bx, by, count] = [0, 0, 0];
+            const rP = this.randomPointArray();
+            const rpx = rP.rpx;
+            const rpy = rP.rpy;
+
+            while (arg > 0 && island.money >= cost) {
+                // 基地を見つけるまでループ
+                while (count < settings.islandSize * settings.islandSize) {
+                    bx = rpx[count];
+                    by = rpy[count];
+                    if (island.lands[bx][by].kind === lands.Base || island.lands[bx][by].kind === lands.Sbase) {
+                        break;
+                    }
+                    count++;
+                }
+                if (count >= settings.islandSize * settings.islandSize) {
+                    // 見つからなかったらそこまで
+                    break;
+                }
+                // 最低一つ基地があったので、flagを立てる
+                flag = 1;
+
+                let level = this.expToLevel(island.lands[x][y]);
+
+                while (level > 0 && arg > 0 && island.money > cost) {
+                    // 撃ったのが確定なので、各値を消耗させる
+                    level--;
+                    arg--;
+                    island.money -= cost;
+
+                    // 着弾点算出
+                    const r = this.random(err);
+                    tx = x + this.ax[r];
+                    ty = y + this.ay[r];
+                    if ((ty % 2) === 0 && (y % 2) === 1) {
+                        tx--;
+                    }
+                    // 着弾点範囲内外チェック
+                    if (tx < 0 || tx >= settings.islandSize
+                    || ty < 0 || ty >= settings.islandSize) {
+                        if (kind === Commands.missileST.id) {
+                            // TODO:publicLogではなくlogLateを作って、使う。
+                            this.publicLog(`<b>何者か</b><span class="name">${name}島${point}</span>へ向けて` +
+                            `<span class="command">${comName}</span>を行いましたが、<b>領域外の海</b>に落ちた模様です。`, id);
+                            this.privateLog(`<span class="name">${name}島</span>が` +
+                            `<span class="name">${tName}島${point}</span>` +
+                            `地点に向けて<span class="command">${comName}</span>を行いましたが、<b>領域外の海</b>に落ちた模様です。`, id);
+                        } else {
+                            this.publicLog(`<span class="name">${name}島</span>が` +
+                            `<span class="name">${tName}島${point}</span>` +
+                            `地点に向けて<span class="command">${comName}</span>を行いましたが、<b>領域外の海</b>に落ちた模様です。`, id);
+                        }
+                        continue;
+                    }
+
+                    // 着弾点の地形等算出
+                    let tL = tLand[tx][ty].kind;
+                    const tLv = tLand[tx][ty].value;
+                    let tLname = this.landName(tL, tLv);
+                    const tPoint = `(${tx}, ${ty})`;
+
+                    let defence = 0;
+                    if (tL === lands.Defence) {
+                        // do nothing
+                    } else if (this.countAround(tLand, tx, ty, lands.Defence, 19)) {
+                        defence = 1;
+                    }
+
+                    if (defence === 1) {
+                        if (kind === Commands.missileST.id) {
+                            // TODO:publicLogではなくlogLateを作って、使う。
+                            this.publicLog(`<b>何者か</b><span class="name">${name}島${point}</span>へ向けて` +
+                            `<span class="command">${comName}</span>を行いましたが、地点上空にて力場に捉えられ、<b>空中爆発</b>しました。`, id);
+                            this.privateLog(`<span class="name">${name}島</span>が` +
+                            `<span class="name">${tName}島${point}</span>` +
+                            `地点に向けて<span class="command">${comName}</span>を行いましたが、地点上空にて力場に捉えられ、<b>空中爆発</b>しました。`, id);
+
+                        } else {
+                            this.publicLog(`<span class="name">${name}島</span>が` +
+                            `<span class="name">${tName}島${point}</span>` +
+                            `地点に向けて<span class="command">${comName}</span>を行いましたが、地点上空にて力場に捉えられ、<b>空中爆発</b>しました。`, id);
+                        }
+                        continue;
+                    }
+
+                    // 「効果なし」hexを最初に判定
+                    if ((tL === lands.Sea && tLv === 0) || // 深い海
+                    ((tL === lands.Sea || tL === lands.Sbase || tL === lands.Mountain) // 海または海底基地または山で
+                    && kind !== Commands.missileLD.id)) { // 陸地破壊弾以外
+                        if (tL === lands.Sbase) {
+                            // 海底基地の場合、海のフリ
+                            tL = lands.Sea;
+                        }
+                        tLname = this.landName(tL, tLv);
+
+                        // 無効化
+                        if (kind === Commands.missileST.id) {
+                            // TODO:publicLogではなくlogLateを作って、使う。
+                            this.publicLog(`<b>何者か</b><span class="name">${name}島${point}</span>へ向けて` +
+                            `<span class="command">${comName}</span>を行いましたが、` +
+                            `<span class="name">${point}</span>` +
+                            `の<B>${tLname}</B>に落ちたので被害がありませんでした。`, id);
+                            this.privateLog(`<span class="name">${name}島</span>が` +
+                            `<span class="name">${tName}島${point}</span>` +
+                            `地点に向けて<span class="command">${comName}</span>を行いましたが、` +
+                            `<span class="name">${point}</span>` +
+                            `の<B>${tLname}</B>に落ちたので被害がありませんでした。`, id);
+                        } else {
+                            this.publicLog(`<span class="name">${name}島</span>が` +
+                            `<span class="name">${tName}島${point}</span>` +
+                            `地点に向けて<span class="command">${comName}</span>を行いましたが、` +
+                            `<span class="name">${point}</span>` +
+                            `の<B>${tLname}</B>に落ちたので被害がありませんでした。`, id);
+                        }
+                        continue;
+                    }
+                    if (kind === Commands.missileLD.id) {
+                        if (tL === lands.Mountain) {
+                            this.publicLog(`<span class="name">${name}島</span>が` +
+                            `<span class="name">${tName}島${point}</span>` +
+                            `地点に向けて<span class="command">${comName}</span>を行い` +
+                            `<span class="name">${point}</span>` +
+                            `の<b>${tLname}</b>に命中。<b>${tLname}</b>は消し飛び、荒地と化しました。`, id);
+                            tLand[tx][ty] = {kind: lands.Waste, value: 0};
+                            continue;
+                        } else if (tL === lands.Sbase) {
+                            this.publicLog(`<span class="name">${name}島</span>が` +
+                            `<span class="name">${tName}島${point}</span>` +
+                            `地点に向けて<span class="command">${comName}</span>を行い` +
+                            `<span class="name">${point}</span>` +
+                            `の<b>${tLname}</b>に着水後爆発、同地点にあった<b>${tLname}</b>は跡形もなく吹き飛びました。`, id);
+                        } else if (tL === lands.Monster) {
+                            this.publicLog(`<span class="name">${name}島</span>が` +
+                            `<span class="name">${tName}島${point}</span>` +
+                            `地点に向けて<span class="command">${comName}</span>を行い` +
+                            `<span class="name">${point}</span>` +
+                            `の<b>${tLname}</b>に着弾し爆発。陸地は<b>怪獣${tLname}</b>もろとも水没しました。`, id);
+                        } else if (tL === lands.Sea) {
+                            this.publicLog(`<span class="name">${name}島</span>が` +
+                            `<span class="name">${tName}島${point}</span>` +
+                            `地点に向けて<span class="command">${comName}</span>を行い` +
+                            `<span class="name">${point}</span>` +
+                            `の<b>${tLname}</b>に着弾。海底がえぐられました。`, id);
+                        } else {
+                            this.publicLog(`<span class="name">${name}島</span>が` +
+                            `<span class="name">${tName}島${point}</span>` +
+                            `地点に向けて<span class="command">${comName}</span>を行い` +
+                            `<span class="name">${point}</span>` +
+                            `の<b>${tLname}</b>に着弾。陸地は水没しました。`, id);
+                        }
+
+                        if (tL === lands.Town) {
+                            if (island.lands[bx][by].kind === lands.Base
+                            || island.lands[bx][by].kind === lands.Sbase) {
+                                island.lands[bx][by].value += Math.floor(tLv / 20);
+                                if (island.lands[bx][by].value > settings.maxExpPoint) {
+                                    island.lands[bx][by].value = settings.maxExpPoint;
+                                }
+                            }
+                        }
+
+                        tLand[tx][ty] = {kind: lands.Sea, value: 1};
+                        tIsland.area--;
+
+                        if (tL === lands.Oil || tL === lands.Sea || tL === lands.Sbase) {
+                            tLand[tx][ty].value = 0;
+                        }
+                    }
+                }
+            }
         }
     }
 }
