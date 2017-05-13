@@ -1026,10 +1026,21 @@ export default class Hakojima {
                     } else {
                         if (tL === lands.Waste) {
                             if (kind === Commands.missileST.id) {
-                                // logMsWasteS
+                            this.publicLog(`<b>何者か</b><span class="name">${name}島${point}</span>へ向けて` +
+                            `<span class="command">${comName}</span>を行いましたが、` +
+                            `<span class="name">${tPoint}</span>` +
+                            `の<B>${tLname}</B>に落ちました。`, id);
+                            this.privateLog(`<span class="name">${name}島</span>が` +
+                            `<span class="name">${tName}島${point}</span>` +
+                            `地点に向けて<span class="command">${comName}</span>を行いましたが、` +
+                            `<span class="name">${tPoint}</span>` +
+                            `の<B>${tLname}</B>に落ちました。`, id);
                             } else {
-                                // logMsWaste
-                            }
+                            this.publicLog(`<span class="name">${name}島</span>が` +
+                            `<span class="name">${tName}島${point}</span>` +
+                            `地点に向けて<span class="command">${comName}</span>を行いましたが、` +
+                            `<span class="name">${tPoint}</span>` +
+                            `の<B>${tLname}</B>に落ちました。`, id);                            }
                         } else if (tL === lands.Monster) {
                             const monsterSpec = this.monsterSpec(tLv);
                             const special = settings.monsterSpecial[monsterSpec.kind];
@@ -1037,9 +1048,21 @@ export default class Hakojima {
                             if ((special === 3 && (this.islandTurn % 2) === 1) ||
                                 (special === 4) && (this.islandTurn % 2) === 0) {
                                 if (kind === Commands.missileST.id) {
-                                    // logMsMonNoDamageS
+                                        this.publicLog(`<b>何者か</b><span class="name">${name}島${point}</span>へ向けて` +
+                                            `<span class="command">${comName}</span>を行い、` +
+                                            `<span class="name">${tPoint}</span>` +
+                                            `の<B>怪獣${tLname}</B>に命中、しかし硬化状態だったため効果がありませんでした。`, id);
+                                        this.privateLog(`<span class="name">${name}島</span>が` +
+                                            `<span class="name">${tName}島${point}</span>` +
+                                            `地点に向けて<span class="command">${comName}</span>を行い、` +
+                                            `<span class="name">${tPoint}</span>` +
+                                            `の<B>怪獣${tLname}</B>に命中、しかし硬化状態だったため効果がありませんでした。`, id);
                                 } else {
-                                    // logMsMonNoDamage
+                                        this.publicLog(`<span class="name">${name}島</span>が` +
+                                            `<span class="name">${tName}島${point}</span>` +
+                                            `地点に向けて<span class="command">${comName}</span>を行い、` +
+                                            `<span class="name">${tPoint}</span>` +
+                                            `の<B>怪獣${tLname}</B>に命中、しかし硬化状態だったため効果がありませんでした。`, id);
                                 }
                                 continue;
                             } else {
@@ -1052,9 +1075,22 @@ export default class Hakojima {
                                         }
                                     }
                                     if (kind === Commands.missileST.id) {
-                                        // logMsMonKillS
+                                        // TODO:publicLogではなくlogLateを作って、使う。
+                                        this.publicLog(`<b>何者か</b><span class="name">${name}島${point}</span>へ向けて` +
+                                            `<span class="command">${comName}</span>を行い、` +
+                                            `<span class="name">${tPoint}</span>` +
+                                            `の<B>怪獣${tLname}</B>に命中。<B>怪獣${tLname}</B>は力尽き、倒れました。`, id);
+                                        this.privateLog(`<span class="name">${name}島</span>が` +
+                                            `<span class="name">${tName}島${point}</span>` +
+                                            `地点に向けて<span class="command">${comName}</span>を行い、` +
+                                            `<span class="name">${tPoint}</span>` +
+                                            `の<B>怪獣${tLname}</B>に命中。<B>怪獣${tLname}</B>は力尽き、倒れました。`, id);
                                     } else {
-                                        // logMsMonKill
+                                        this.publicLog(`<span class="name">${name}島</span>が` +
+                                            `<span class="name">${tName}島${point}</span>` +
+                                            `地点に向けて<span class="command">${comName}</span>を行い、` +
+                                            `<span class="name">${tPoint}</span>` +
+                                            `の<B>怪獣${tLname}</B>に命中。<B>怪獣${tLname}</B>は力尽き、倒れました。`, id);
                                     }
 
                                     const value = settings.monsterValue[monsterSpec.kind];
@@ -1066,9 +1102,22 @@ export default class Hakojima {
                                     // TODO:賞関係
                                 } else {
                                     if (kind === Commands.missileST.id) {
-                                        // logMsMonsterS
+                                        // TODO:publicLogではなくlogLateを作って、使う。
+                                        this.publicLog(`<b>何者か</b><span class="name">${name}島${point}</span>へ向けて` +
+                                            `<span class="command">${comName}</span>を行い、` +
+                                            `<span class="name">${tPoint}</span>` +
+                                            `の<B>怪獣${tLname}</B>に命中。<B>怪獣${tLname}</B>は苦しそうに咆哮しました。`, id);
+                                        this.privateLog(`<span class="name">${name}島</span>が` +
+                                            `<span class="name">${tName}島${point}</span>` +
+                                            `地点に向けて<span class="command">${comName}</span>を行い、` +
+                                            `<span class="name">${tPoint}</span>` +
+                                            `の<B>怪獣${tLname}</B>に命中。<B>怪獣${tLname}</B>は苦しそうに咆哮しました。`, id);
                                     } else {
-                                        // logMsMonster
+                                        this.publicLog(`<span class="name">${name}島</span>が` +
+                                            `<span class="name">${tName}島${point}</span>` +
+                                            `地点に向けて<span class="command">${comName}</span>を行い、` +
+                                            `<span class="name">${tPoint}</span>` +
+                                            `の<B>怪獣${tLname}</B>に命中。<B>怪獣${tLname}</B>は苦しそうに咆哮しました。`, id);
                                     }
                                     tIsland.lands[tx][ty].value--;
                                     continue;
@@ -1076,9 +1125,22 @@ export default class Hakojima {
                             }
                         } else {
                             if (kind === Commands.missileST.id) {
-                                // logMsNormalS
+                            // TODO:publicLogではなくlogLateを作って、使う。
+                            this.publicLog(`<b>何者か</b><span class="name">${name}島${point}</span>へ向けて` +
+                            `<span class="command">${comName}</span>を行い、` +
+                            `<span class="name">${tPoint}</span>` +
+                            `の<B>${tLname}</B>に命中、一帯が壊滅しました。`, id);
+                            this.privateLog(`<span class="name">${name}島</span>が` +
+                            `<span class="name">${tName}島${point}</span>` +
+                            `地点に向けて<span class="command">${comName}</span>を行い、` +
+                            `<span class="name">${tPoint}</span>` +
+                            `の<B>${tLname}</B>に命中、一帯が壊滅しました。`, id);
                             } else {
-                                // logMsNormal
+                            this.publicLog(`<span class="name">${name}島</span>が` +
+                            `<span class="name">${tName}島${point}</span>` +
+                            `地点に向けて<span class="command">${comName}</span>を行い、` +
+                            `<span class="name">${tPoint}</span>` +
+                            `の<B>${tLname}</B>に命中、一帯が壊滅しました。`, id);
                             }
                         }
                         if (tL === lands.Town) {
@@ -1147,7 +1209,9 @@ export default class Hakojima {
                 }
                 if (achive > 0) {
                     // 少しでも到着した場合、ログを吐く
-                    // logMsBoatPeople
+                    this.publicLog(`<span class="name">${name}島</span>にどこからともなく` +
+                        `<B>${achive}${settings.unitPop}もの難民</B>が漂着しました。` +
+                        `<span class="name">${name}島</span>は快く受け入れたようです。`, id);
 
                     // 難民の数が一定数以上なら、平和賞の可能性あり
                     // TODO:平和賞
@@ -1161,7 +1225,8 @@ export default class Hakojima {
                     return 0;
             }
 
-            // logMonsSend
+            this.publicLog(`<span class="name">${name}島${point}</span>が<b>人造怪獣</b>を製造。` +
+                `<span class="name">${tIsland.name}島</span>へ送りこみました。`, id);
             // tIsland.monstersend++
             island.money -= cost;
             return 1;
@@ -1169,7 +1234,8 @@ export default class Hakojima {
             if (arg === 0) { arg = 1; }
             const value = Math.min(arg * -cost, island.food);
 
-            // logSell;
+            this.publicLog(`<span class="name">${name}島</span>が` +
+            `<b>${value + settings.unitFood}</b>の<span class="command">${comName}</span>を行いました。`, id);
             island.food -= value;
             island.money += value / 10;
             return 0;
@@ -1187,7 +1253,8 @@ export default class Hakojima {
                 str = `${value}${settings.unitMoney}`;
             }
 
-            // logAid
+            this.publicLog(`<span class="name">${name}島</span>が<span class="name">${tIsland.name}島</span>へ` +
+            `<b>${str}</b>の<span class="command">${comName}</span>を行いました。`, id);
 
             if (cost < 0) {
                 island.food -= value;
@@ -1198,11 +1265,12 @@ export default class Hakojima {
             }
             return 0;
         } else if (kind === Commands.propaganda.id) {
-            // logPropaganda;
+            this.publicLog(`<span class="name">${name}島</span>で<span class="command">${comName}</span>が行われました。`, id);
             // island.propaganda = 1;
             island.money -= cost;
         } else if (kind === Commands.giveup.id) {
-            // logGiveup
+            this.publicLog(`<span class="name">${name}島</span>は放棄され、<b>無人島</b>となりました。`, id);
+            // logHistory(`<span class="name">${name}島</span>、放棄され<b>無人島</b>となる。`)
             // island.dead = 1;
             return 1;
         }
