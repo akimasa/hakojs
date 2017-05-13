@@ -42,6 +42,7 @@ export default class IslandMap extends Vue {
         let alt = "";
         const kind = data.kind;
         const value = data.value;
+        const settings = utils.getSettings();
         if (kind === Lands.Sea) {
             if (value === 1) {
                 image = "land14.gif";
@@ -71,9 +72,21 @@ export default class IslandMap extends Vue {
         } else if (kind === Lands.Base) {
             image = "land9.gif";
         } else if (kind === Lands.Mountain) {
-            image = "land11.gif";
+            if (value > 0) {
+                image = "land15.gif";
+            } else {
+                image = "land11.gif";
+            }
         } else if (kind === Lands.Farm) {
             image = "land7.gif";
+        } else if (kind === Lands.Sbase) {
+            image = "land12.gif";
+        } else if (kind === Lands.Defence || kind === Lands.Haribote) {
+            image = "land10.gif";
+        } else if (kind === Lands.Oil) {
+            image = "land16.gif";
+        } else if (kind === Lands.Monument) {
+            image = settings.monumentImage[value];
         } else {
             alt = kind;
         }
