@@ -845,7 +845,7 @@ export default class Hakojima {
             let tx;
             let ty;
             let err;
-            // let boat = 0;
+            let boat = 0;
             if (kind === Commands.missilePP.id) {
                 err = 7;
             } else {
@@ -1023,10 +1023,189 @@ export default class Hakojima {
                         if (tL === lands.Oil || tL === lands.Sea || tL === lands.Sbase) {
                             tLand[tx][ty].value = 0;
                         }
+                    } else {
+                        if (tL === lands.Waste) {
+                            if (kind === Commands.missileST.id) {
+                                // logMsWasteS
+                            } else {
+                                // logMsWaste
+                            }
+                        } else if (tL === lands.Monster) {
+                            const monsterSpec = this.monsterSpec(tLv);
+                            const special = settings.monsterSpecial[monsterSpec.kind];
+
+                            if ((special === 3 && (this.islandTurn % 2) === 1) ||
+                                (special === 4) && (this.islandTurn % 2) === 0) {
+                                if (kind === Commands.missileST.id) {
+                                    // logMsMonNoDamageS
+                                } else {
+                                    // logMsMonNoDamage
+                                }
+                                continue;
+                            } else {
+                                if (monsterSpec.hp === 1) {
+                                    if (island.lands[bx][by].kind === lands.Base
+                                        || island.lands[bx][by].kind === lands.Sbase) {
+                                        island.lands[bx][by].value += settings.monsterExp[monsterSpec.kind];
+                                        if (island.lands[bx][by].value > settings.maxExpPoint) {
+                                            island.lands[bx][by].value = settings.maxExpPoint;
+                                        }
+                                    }
+                                    if (kind === Commands.missileST.id) {
+                                        // logMsMonKillS
+                                    } else {
+                                        // logMsMonKill
+                                    }
+
+                                    const value = settings.monsterValue[monsterSpec.kind];
+                                    if (value > 0) {
+                                        island.money += value;
+                                        // logMsMonMoney
+                                    }
+
+                                    // TODO:賞関係
+                                } else {
+                                    if (kind === Commands.missileST.id) {
+                                        // logMsMonsterS
+                                    } else {
+                                        // logMsMonster
+                                    }
+                                    tIsland.lands[tx][ty].value--;
+                                    continue;
+                                }
+                            }
+                        } else {
+                            if (kind === Commands.missileST.id) {
+                                // logMsNormalS
+                            } else {
+                                // logMsNormal
+                            }
+                        }
+                        if (tL === lands.Town) {
+                            if (island.lands[bx][by].kind === lands.Base
+                            || island.lands[bx][by].kind === lands.Sbase) {
+                                island.lands[bx][by].value += Math.floor(tLv / 20);
+                                boat += tLv;
+                                if (island.lands[bx][by].value > settings.maxExpPoint) {
+                                    island.lands[bx][by].value = settings.maxExpPoint;
+                                }
+                            }
+                        }
+
+                        tIsland.lands[tx][ty] = {kind: lands.Waste, value: 1};
+
+                        if (tL === lands.Oil) {
+                            tIsland.lands[tx][ty] = {kind: lands.Sea, value: 0};
+                        }
                     }
                 }
                 count++;
             }
+            if (flag === 0) {
+                // logMsNoBase
+                return 0;
+            }
+
+            boat = Math.floor(boat / 2);
+            if (boat > 0 && id !== target && kind !== Commands.missileST.id) {
+                let achive;
+                for (let i = 0; (i < settings.islandSize * settings.islandSize && boat > 0); i++) {
+                    bx = rpx[i];
+                    by = rpy[i];
+                    if (island.lands[bx][by].kind === lands.Town) {
+                        let bLv = island.lands[bx][by].value;
+                        if (boat > 50) {
+                            bLv += 50;
+                            boat -= 50;
+                            achive += 50;
+                        } else {
+                            bLv += boat;
+                            achive += boat;
+                            boat = 0;
+                        }
+                        if (lv > 200) {
+                            boat += bLv - 200;
+                            achive -= bLv - 200;
+                            bLv = 200;
+                        }
+                        island.lands[bx][by].value = lv;
+                    } else if (island.lands[bx][by].kind === lands.Plains) {
+                        island.lands[bx][by].kind = lands.Town;
+                        if (boat > 10) {
+                            island.lands[bx][by].value = 5;
+                            boat -= 10;
+                            achive += 10;
+                        } else if (boat > 5) {
+                            island.lands[bx][by].value = boat - 5;
+                            achive += boat;
+                            boat = 0;
+                        }
+                    }
+                    if (boat <= 0) {
+                        break;
+                    }
+                }
+                if (achive > 0) {
+                    // 少しでも到着した場合、ログを吐く
+                    // logMsBoatPeople
+
+                    // 難民の数が一定数以上なら、平和賞の可能性あり
+                    // TODO:平和賞
+                }
+            }
+        } else if (kind === Commands.sendmonster.id) {
+            const tIsland = this.getIsland(target);
+            if (tIsland === undefined) {
+                    this.publicLog(`<span class="name">${name}島${point}</span>で予定されていた` +
+                    `<span class="command">${comName}</span>は、目標の島に人が見当たらないため中止されました。`, id);
+                    return 0;
+            }
+
+            // logMonsSend
+            // tIsland.monstersend++
+            island.money -= cost;
+            return 1;
+        } else if (kind === Commands.sell.id) {
+            if (arg === 0) { arg = 1; }
+            const value = Math.min(arg * -cost, island.food);
+
+            // logSell;
+            island.food -= value;
+            island.money += value / 10;
+            return 0;
+        } else if (kind === Commands.food.id || kind === Commands.money.id) {
+            const tIsland = this.getIsland(target);
+
+            if (arg === 0) { arg = 1; }
+            let value;
+            let str;
+            if (cost < 0) {
+                value = Math.min(arg * -cost, island.food);
+                str = `${value}${settings.unitFood}`;
+            } else {
+                value = Math.min(arg * cost, island.money);
+                str = `${value}${settings.unitMoney}`;
+            }
+
+            // logAid
+
+            if (cost < 0) {
+                island.food -= value;
+                tIsland.food += value;
+            } else {
+                island.money -= value;
+                tIsland.food += value;
+            }
+            return 0;
+        } else if (kind === Commands.propaganda.id) {
+            // logPropaganda;
+            // island.propaganda = 1;
+            island.money -= cost;
+        } else if (kind === Commands.giveup.id) {
+            // logGiveup
+            // island.dead = 1;
+            return 1;
         }
+        return 1;
     }
 }
