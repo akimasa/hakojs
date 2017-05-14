@@ -184,11 +184,13 @@ export default class Hakojima {
         // 順番決め
         const order = this.randomArray(this.islands.length);
 
+        // islandMemoをリセット
         this.islandMemo = [];
         // 収入、消費フェイズ
         for (let i = 0; i < this.islands.length; i++) {
             this.estimate(order[i]);
             this.income(this.islands[order[i]]);
+            // 各島のislandMemoを初期化
             this.islandMemo[order[i]] = {bigmissile: 0, propaganda: 0, oldPop: 0, dead: 0};
             // ターン開始前の人口をメモる
             this.islandMemo[order[i]].oldPop = this.islands[order[i]].pop;
@@ -430,7 +432,7 @@ export default class Hakojima {
         }
         return arr;
     }
-    private randomPointArray() {
+    private randomPointArray(): {rpx: number[], rpy: number[]} {
         // 元の箱庭諸島と厳密には非互換
         const rpx = [];
         const rpy = [];
