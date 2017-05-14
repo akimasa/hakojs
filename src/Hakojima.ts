@@ -874,7 +874,7 @@ export default class Hakojima {
                 // 最低一つ基地があったので、flagを立てる
                 flag = 1;
 
-                let level = this.expToLevel(island.lands[x][y]);
+                let level = this.expToLevel(island.lands[bx][by]);
 
                 while (level > 0 && arg > 0 && island.money > cost) {
                     console.log(level, arg, "level--");
