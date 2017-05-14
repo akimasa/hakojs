@@ -17,24 +17,26 @@ export default class Log {
     }
     public logLandFail(obj: {id: number,
          name: string, comName: string, landName: string, point: string, turn: number}) {
+        const {id, name, comName, landName, point, turn} = obj;
         this.logData.push({
-            id: obj.id,
-            turn: obj.turn,
+            id,
+            turn,
             secret: false,
-            log: `<span class="name">${obj.name}島</span>で予定されていた`
-            + `<span class="command">${obj.comName}</span>は、`
-            + `予定地の<span class="point">${obj.point}</span>が`
-            + `<b>${obj.landName}</b>だったため中止されました。`,
+            log: `<span class="name">${name}島</span>で予定されていた`
+            + `<span class="command">${comName}</span>は、`
+            + `予定地の<span class="point">${point}</span>が`
+            + `<b>${landName}</b>だったため中止されました。`,
         });
     }
     public logLandSuc(obj: {id: number,
          name: string, comName: string, point: string, turn: number}) {
+        const {id, turn, name, point, comName} = obj;
         this.logData.push({
-            id: obj.id,
-            turn: obj.turn,
+            id,
+            turn,
             secret: false,
-            log: `<span class="name">${obj.name}島${obj.point}</span>で`
-            + `<span class="command">${obj.comName}</span>が行われました。`,
+            log: `<span class="name">${name}島${point}</span>で`
+            + `<span class="command">${comName}</span>が行われました。`,
         });
     }
 }
