@@ -49,6 +49,9 @@ export default class Hakojima {
         this.nextId++;
     }
     public getJSON() {
+        if (!settings.debug) {
+            return;
+        }
         return JSON.stringify({
             nextId: this.nextId,
             islandLastTime: this.islandLastTime,

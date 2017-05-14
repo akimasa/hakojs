@@ -55,6 +55,16 @@ app.get("/api/debug", (req, res, next) => {
         res.end(JSON.stringify({ err: "Debug not activated" }));
     }
 });
+app.get("/api/debug/data", (req, res, next) => {
+    const json = hako.getJSON();
+    if (json) {
+        res.writeHead(200, { "Content-Type": "application/json;charset=utf-8" });
+        res.end(json);
+    } else {
+        res.writeHead(403, { "Content-Type": "application/json;charset=utf-8" });
+        res.end(JSON.stringify({ err: "Debug not activated" }));
+    }
+});
 app.get("/api/logs", (req, res, next) => {
     res.writeHead(200, { "Content-Type": "application/json;charset=utf-8" });
     res.end(JSON.stringify(hako.logData.getLog()));
