@@ -27,10 +27,10 @@ gulp.task("clean", () => {
     del.sync(["release"]);
 });
 gulp.task("build", ["tslint"], () => {
-    var tsProject = ts.createProject({
+    var tsProject = ts.createProject("tsconfig.json", {
         declaration: true
     });
-    var tsResult = gulp.src(["./src/**/*.ts"])
+    var tsResult = tsProject.src()
         .pipe(plumber({ errorHandler: notify.onError('<%= error.message %>') }))
         .pipe(sourcemaps.init())
         .pipe(tsProject(tsopt));

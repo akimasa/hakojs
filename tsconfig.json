@@ -6,8 +6,12 @@
     "moduleResolution": "node",
     "sourceMap": true
   } ,
+  "include": [
+    "src/"
+  ],
   "exclude": [
-    "src",
+    "web",
+    "src/web",
     "node_modules"
   ]
 }
