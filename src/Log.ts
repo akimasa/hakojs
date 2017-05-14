@@ -1,4 +1,4 @@
-interface LogData {
+export interface LogData {
     log: string;
     turn: number;
     id: number;

@@ -1,5 +1,22 @@
+export enum lands {
+    Sea,
+    Waste,
+    Plains,
+    Town,
+    Forest,
+    Farm,
+    Factory,
+    Base,
+    Defence,
+    Mountain,
+    Monster,
+    Sbase,
+    Oil,
+    Monument,
+    Haribote,
+}
 export interface Land {
-    kind: number;
+    kind: lands;
     value: number;
 }
 export interface Command {
@@ -9,7 +26,7 @@ export interface Command {
     y: number;
     arg: number;
 }
-export default class Island {
+export class Island {
     public name: string;
     public id: number;
     public prize: any; // TBD

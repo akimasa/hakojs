@@ -9,8 +9,10 @@ const merge = require('merge2');
 const tsopt = "tsconfig.json";
 const webpackStream = require("webpack-stream");
 const webpack = require("webpack");
+const plumber = require("gulp-plumber");
 gulp.task("tslint", () => {
     return gulp.src(["./src/**/*.ts"])
+        .pipe(plumber({errorHandler: notify.onError('<%= error.message %>')}))
         .pipe(tslint({
             configuration: "tslint.json"
         }))
@@ -29,6 +31,7 @@ gulp.task("build", ["tslint"], () => {
         declaration: true
     });
     var tsResult = gulp.src(["./src/**/*.ts"])
+        .pipe(plumber({ errorHandler: notify.onError('<%= error.message %>') }))
         .pipe(sourcemaps.init())
         .pipe(tsProject(tsopt));
 
@@ -39,6 +42,7 @@ gulp.task("build", ["tslint"], () => {
 });
 gulp.task("webpack", () => {
     return gulp.src('web/index.ts')
+        .pipe(plumber({ errorHandler: notify.onError('<%= error.message %>') }))
         .pipe(webpackStream(require('./webpack.config.js'), webpack))
         .pipe(gulp.dest('release/webpack'));
 });

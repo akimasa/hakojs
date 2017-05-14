@@ -1,12 +1,9 @@
 import coms from "./coms";
-import Island from "./Island";
-import { Land as Land } from "./Island";
-import { CamouflagedIsland as CamouflagedIsland } from "./Island";
-import { lands as lands } from "./lands";
+import * as Island from "./Island";
 import * as lib from "./lib";
 import Log from "./Log";
 import settings from "./settings";
-interface NewIslandArg {
+export interface NewIslandArg {
     name: string;
     password: string;
     password2: string;
@@ -24,7 +21,7 @@ export default class Hakojima {
     public nextId: number;
     public islandLastTime: number;
     public islandTurn: number;
-    public islands: Island[];
+    public islands: Island.Island[];
     public logData: Log;
     private islandMemo: IslandMemoArray;
     private ax = [0, 1, 1, 1, 0, -1, 0, 1, 2, 2, 2, 1, 0, -1, -1, -2, -1, -1, 0];
@@ -97,7 +94,7 @@ export default class Hakojima {
     public getIsland(id: number) {
         return this.islands.find((ele) => ele.id === id);
     }
-    public getCamouflagedIsland(id: number): CamouflagedIsland {
+    public getCamouflagedIsland(id: number): Island.CamouflagedIsland {
         const island = this.getIsland(id);
         if (island === undefined) {
             return undefined;
@@ -151,7 +148,7 @@ export default class Hakojima {
         if (arg.password !== arg.password2) {
             return "パスワードが違います。";
         }
-        const island = new Island();
+        const island = new Island.Island();
         island.lands = this.makeNewLand();
         island.name = arg.name;
         island.id = this.nextId;
@@ -206,29 +203,30 @@ export default class Hakojima {
         }
 
     }
-    private camouflageLands(rawLands: Land[][]): Land[][] {
-        const camouflagedLands: Land[][] = [[]];
+    private camouflageLands(rawLands: Island.Land[][]): Island.Land[][] {
+        const camouflagedLands: Island.Land[][] = [[]];
         for (let x = 0; x < settings.islandSize; x++) {
             camouflagedLands[x] = [];
             for (let y = 0; y < settings.islandSize; y++) {
                 camouflagedLands[x][y] = {kind: rawLands[x][y].kind, value: rawLands[x][y].value};
-                if (camouflagedLands[x][y].kind === lands.Base || camouflagedLands[x][y].kind === lands.Sbase) {
+                if (camouflagedLands[x][y].kind === Island.lands.Base
+                || camouflagedLands[x][y].kind === Island.lands.Sbase) {
                     camouflagedLands[x][y].value = 0;
                 }
-                if (camouflagedLands[x][y].kind === lands.Base) {
-                    camouflagedLands[x][y].kind = lands.Forest;
+                if (camouflagedLands[x][y].kind === Island.lands.Base) {
+                    camouflagedLands[x][y].kind = Island.lands.Forest;
                 }
-                if (camouflagedLands[x][y].kind === lands.Forest) {
+                if (camouflagedLands[x][y].kind === Island.lands.Forest) {
                     camouflagedLands[x][y].value = 0;
                 }
-                if (camouflagedLands[x][y].kind === lands.Sbase) {
-                    camouflagedLands[x][y].kind = lands.Sea;
+                if (camouflagedLands[x][y].kind === Island.lands.Sbase) {
+                    camouflagedLands[x][y].kind = Island.lands.Sea;
                 }
             }
         }
         return camouflagedLands;
     }
-    private getIslandsCamouflagedSummary(): Island[] {
+    private getIslandsCamouflagedSummary(): Island.Island[] {
         const islands = [];
         for (const island of this.islands) {
             islands.push({
@@ -248,19 +246,19 @@ export default class Hakojima {
         }
         return islands;
     }
-    private makeNewLand(): Land[][] {
-        const land: Land[][] = [];
+    private makeNewLand(): Island.Land[][] {
+        const land: Island.Land[][] = [];
 
         for (let x = 0; x < settings.islandSize; x++) {
             land[x] = [];
             for (let y = 0; y < settings.islandSize; y++) {
-                land[x][y] = { kind: lands.Sea, value: 0 };
+                land[x][y] = { kind: Island.lands.Sea, value: 0 };
             }
         }
         const center = settings.islandSize / 2 - 1;
         for (let y = center - 1; y < center + 3; y++) {
             for (let x = center - 1; x < center + 3; x++) {
-                land[x][y].kind = lands.Waste;
+                land[x][y].kind = Island.lands.Waste;
             }
         }
 
@@ -269,16 +267,16 @@ export default class Hakojima {
             const x = this.random(8) + center - 3;
             const y = this.random(8) + center - 3;
 
-            if (this.countAround(land, x, y, lands.Sea, 7) !== 7) {
+            if (this.countAround(land, x, y, Island.lands.Sea, 7) !== 7) {
                 // 周りに陸地がある場合、浅瀬にする
                 // 浅瀬は荒地にする
                 // 荒地は平地にする
-                if (land[x][y].kind === lands.Waste) {
-                    land[x][y].kind = lands.Plains;
+                if (land[x][y].kind === Island.lands.Waste) {
+                    land[x][y].kind = Island.lands.Plains;
                     land[x][y].value = 0;
                 } else {
                     if (land[x][y].value === 1) {
-                        land[x][y].kind = lands.Waste;
+                        land[x][y].kind = Island.lands.Waste;
                         land[x][y].value = 0;
                     } else {
                         land[x][y].value = 1;
@@ -294,8 +292,8 @@ export default class Hakojima {
             const y = this.random(4) + center - 1;
 
             // そこがすでに森でなければ、森を作る
-            if (land[x][y].kind !== lands.Forest) {
-                land[x][y].kind = lands.Forest;
+            if (land[x][y].kind !== Island.lands.Forest) {
+                land[x][y].kind = Island.lands.Forest;
                 land[x][y].value = 5;
                 count++;
             }
@@ -307,9 +305,9 @@ export default class Hakojima {
             const x = this.random(4) + center - 1;
             const y = this.random(4) + center - 1;
 
-            if ((land[x][y].kind !== lands.Town) &&
-                (land[x][y].kind !== lands.Forest)) {
-                land[x][y].kind = lands.Town;
+            if ((land[x][y].kind !== Island.lands.Town) &&
+                (land[x][y].kind !== Island.lands.Forest)) {
+                land[x][y].kind = Island.lands.Town;
                 land[x][y].value = 5;
                 count++;
             }
@@ -321,9 +319,9 @@ export default class Hakojima {
             const x = this.random(4) + center - 1;
             const y = this.random(4) + center - 1;
 
-            if ((land[x][y].kind !== lands.Town) &&
-                (land[x][y].kind !== lands.Forest)) {
-                land[x][y].kind = lands.Mountain;
+            if ((land[x][y].kind !== Island.lands.Town) &&
+                (land[x][y].kind !== Island.lands.Forest)) {
+                land[x][y].kind = Island.lands.Mountain;
                 land[x][y].value = 0;
                 count++;
             }
@@ -335,17 +333,17 @@ export default class Hakojima {
             const x = this.random(4) + center - 1;
             const y = this.random(4) + center - 1;
 
-            if ((land[x][y].kind !== lands.Town) &&
-                (land[x][y].kind !== lands.Forest) &&
-                (land[x][y].kind !== lands.Mountain)) {
-                land[x][y].kind = lands.Base;
+            if ((land[x][y].kind !== Island.lands.Town) &&
+                (land[x][y].kind !== Island.lands.Forest) &&
+                (land[x][y].kind !== Island.lands.Mountain)) {
+                land[x][y].kind = Island.lands.Base;
                 land[x][y].value = 0;
                 count++;
             }
         }
         return land;
     }
-    private countAround(land: Land[][], x: number, y: number, kind: number, range: number) {
+    private countAround(land: Island.Land[][], x: number, y: number, kind: number, range: number) {
         const ax = this.ax;
         const ay = this.ay;
         let count = 0;
@@ -361,7 +359,7 @@ export default class Hakojima {
             if ((sx < 0) || (sx >= settings.islandSize) ||
                 (sy < 0) || (sy >= settings.islandSize)) {
                 // 範囲外の場合
-                if (kind === lands.Sea) {
+                if (kind === Island.lands.Sea) {
                     // 海なら加算
                     count++;
                 }
@@ -395,17 +393,17 @@ export default class Hakojima {
             for (let x = 0; x < settings.islandSize; x++) {
                 const kind = island.lands[x][y].kind;
                 const value = island.lands[x][y].value;
-                if ((kind !== lands.Sea) &&
-                    (kind !== lands.Sbase) &&
-                    (kind !== lands.Oil)) {
+                if ((kind !== Island.lands.Sea) &&
+                    (kind !== Island.lands.Sbase) &&
+                    (kind !== Island.lands.Oil)) {
                     area++;
-                    if (kind === lands.Town) {
+                    if (kind === Island.lands.Town) {
                         pop += value;
-                    } else if (kind === lands.Farm) {
+                    } else if (kind === Island.lands.Farm) {
                         farm += value;
-                    } else if (kind === lands.Factory) {
+                    } else if (kind === Island.lands.Factory) {
                         factory += value;
-                    } else if (kind === lands.Mountain) {
+                    } else if (kind === Island.lands.Mountain) {
                         mountain += value;
                     }
                 }
@@ -461,17 +459,17 @@ export default class Hakojima {
         return { rpx, rpy };
     }
     private landName(land: number, lv: number) {
-        if (land === lands.Sea) {
+        if (land === Island.lands.Sea) {
             if (lv === 1) {
                 return "浅瀬";
             } else {
                 return "海";
             }
-        } else if (land === lands.Waste) {
+        } else if (land === Island.lands.Waste) {
             return "荒地";
-        } else if (land === lands.Plains) {
+        } else if (land === Island.lands.Plains) {
             return "平地";
-        } else if (land === lands.Town) {
+        } else if (land === Island.lands.Town) {
             if (lv < 30) {
                 return "村";
             } else if (lv < 100) {
@@ -479,27 +477,27 @@ export default class Hakojima {
             } else {
                 return "都市";
             }
-        } else if (land === lands.Forest) {
+        } else if (land === Island.lands.Forest) {
             return "森";
-        } else if (land === lands.Farm) {
+        } else if (land === Island.lands.Farm) {
             return "農場";
-        } else if (land === lands.Factory) {
+        } else if (land === Island.lands.Factory) {
             return "工場";
-        } else if (land === lands.Base) {
+        } else if (land === Island.lands.Base) {
             return "ミサイル基地";
-        } else if (land === lands.Defence) {
+        } else if (land === Island.lands.Defence) {
             return "防衛施設";
-        } else if (land === lands.Mountain) {
+        } else if (land === Island.lands.Mountain) {
             return "山";
-        } else if (land === lands.Monster) {
+        } else if (land === Island.lands.Monster) {
             return this.monsterSpec(lv).name;
-        } else if (land === lands.Sbase) {
+        } else if (land === Island.lands.Sbase) {
             return "海底基地";
-        } else if (land === lands.Oil) {
+        } else if (land === Island.lands.Oil) {
             return "海底油田";
-        } else if (land === lands.Monument) {
+        } else if (land === Island.lands.Monument) {
             return settings.monumentName[lv];
-        } else if (land === lands.Haribote) {
+        } else if (land === Island.lands.Haribote) {
             return "ハリボテ";
         }
     }
@@ -510,8 +508,8 @@ export default class Hakojima {
 
         return { kind, name, hp };
     }
-    private expToLevel(land: Land) {
-        if (land.kind === lands.Base) {
+    private expToLevel(land: Island.Land) {
+        if (land.kind === Island.lands.Base) {
             for (let i = settings.baseLevelUp.length; i > 1; i--) {
                 if (land.value >= settings.baseLevelUp[i - 2]) {
                     return i;
@@ -527,7 +525,7 @@ export default class Hakojima {
             return 1;
         }
     }
-    private income(island: Island) {
+    private income(island: Island.Island) {
         const [pop, farm, factory, mountain] = [island.pop, island.farm * 10, island.factory, island.mountain];
 
         // 収入
@@ -596,12 +594,12 @@ export default class Hakojima {
             }
         }
         if (kind === Commands.prepare.id || kind === Commands.prepare2.id) {
-            if (landKind === lands.Sea || landKind === lands.Sbase || landKind === lands.Oil
-            || landKind === lands.Oil || landKind === lands.Monster) {
+            if (landKind === Island.lands.Sea || landKind === Island.lands.Sbase || landKind === Island.lands.Oil
+            || landKind === Island.lands.Mountain || landKind === Island.lands.Monster) {
                 this.logData.logLandFail({id, name, comName, landName, point, turn});
                 return 0;
             }
-            island.lands[x][y] = { kind: lands.Plains, value: 0};
+            island.lands[x][y] = { kind: Island.lands.Plains, value: 0};
             this.logData.logLandSuc({id, name, comName, point, turn});
             island.money -= cost;
 
@@ -618,23 +616,23 @@ export default class Hakojima {
                 return 1;
             }
         } else if (kind === Commands.reclaim.id) {
-            if (landKind !== lands.Sea && landKind !== lands.Oil && landKind !== lands.Sbase) {
+            if (landKind !== Island.lands.Sea && landKind !== Island.lands.Oil && landKind !== Island.lands.Sbase) {
                 this.logData.logLandFail({id, name, comName, landName, point, turn});
                 return 0;
             }
-            const seaCount = this.countAround(island.lands, x, y, lands.Sea, 7) +
-            this.countAround(island.lands, x, y, lands.Oil, 7) +
-            this.countAround(island.lands, x, y, lands.Sbase, 7);
+            const seaCount = this.countAround(island.lands, x, y, Island.lands.Sea, 7) +
+            this.countAround(island.lands, x, y, Island.lands.Oil, 7) +
+            this.countAround(island.lands, x, y, Island.lands.Sbase, 7);
             if (seaCount === 7) {
                 this.publicLog(`<span class="name">${name}島</span>で予定されていた` +
                 `<span class="command">${comName}</span>は、`
                 + `予定地の<span class="point">${point}</span>の周辺に陸地がなかったため中止されました。`, id);
                 return 0;
             }
-            if (landKind === lands.Sea && lv === 1) {
+            if (landKind === Island.lands.Sea && lv === 1) {
                 // 浅瀬の場合
                 // 目的の場所を荒地にする
-                island.lands[x][y] = { kind: lands.Waste, value: 0 };
+                island.lands[x][y] = { kind: Island.lands.Waste, value: 0 };
                 this.logData.logLandSuc({ id, name, comName, point, turn });
                 island.area++;
 
@@ -651,26 +649,26 @@ export default class Hakojima {
                         // 範囲内の場合
                         if (!((sx < 0) || (sx >= settings.islandSize) ||
                             (sy < 0) || (sy >= settings.islandSize))) {
-                            if (island.lands[sx][sy].kind === lands.Sea) {
+                            if (island.lands[sx][sy].kind === Island.lands.Sea) {
                                 island.lands[sx][sy].value = 1;
                             }
                         }
                     }
                 }
             } else {
-                island.lands[x][y] = { kind: lands.Sea, value: 1};
+                island.lands[x][y] = { kind: Island.lands.Sea, value: 1};
                 this.logData.logLandSuc({ id, name, comName, point, turn });
             }
 
             island.money -= cost;
             return 1;
         } else if (kind === Commands.destroy.id) {
-            if (landKind === lands.Sbase || landKind === lands.Oil || landKind === lands.Monster) {
+            if (landKind === Island.lands.Sbase || landKind === Island.lands.Oil || landKind === Island.lands.Monster) {
                 // 海底基地、油田、怪獣は掘削できない
                 this.logData.logLandFail({id, name, comName, landName, point, turn});
                 return 0;
             }
-            if ((landKind === lands.Sea) && (lv === 0)) {
+            if ((landKind === Island.lands.Sea) && (lv === 0)) {
                 // 海なら、油田探し
                 // 投資額決定
                 if (arg === 0) { arg = 1; }
@@ -682,19 +680,19 @@ export default class Hakojima {
                 if (p > this.random(100)) {
                     this.publicLog(`<span class="name">${name}島</span>で<b>${str}</b>の予算をつぎ込んだ` +
                     `<span class="command">${comName}</span>が行われ、<b>油田が掘り当てられました</b>`, id);
-                    island.lands[x][y] = {kind: lands.Oil, value: 0};
+                    island.lands[x][y] = {kind: Island.lands.Oil, value: 0};
                 } else {
                     this.publicLog(`<span class="name">${name}島</span>で<b>${str}</b>の予算をつぎ込んだ` +
                     `<span class="command">${comName}</span>が行われましたが、油田は見つかりませんでした。`, id);
                 }
                 return 1;
             }
-            if (landKind === lands.Mountain) {
-                island.lands[x][y] = { kind: lands.Waste, value: 0};
-            } else if (landKind === lands.Sea) {
+            if (landKind === Island.lands.Mountain) {
+                island.lands[x][y] = { kind: Island.lands.Waste, value: 0};
+            } else if (landKind === Island.lands.Sea) {
                 island.lands[x][y].value = 0;
             } else {
-                island.lands[x][y] = { kind: lands.Sea, value: 1};
+                island.lands[x][y] = { kind: Island.lands.Sea, value: 1};
                 island.area--;
             }
             this.logData.logLandSuc({id, name, comName, point, turn});
@@ -702,12 +700,12 @@ export default class Hakojima {
             island.money -= cost;
             return 1;
         } else if (kind === Commands.selltree.id) {
-            if (landKind !== lands.Forest) {
+            if (landKind !== Island.lands.Forest) {
                 this.logData.logLandFail({id, name, comName, landName, point, turn});
                 return 0;
             }
 
-            island.lands[x][y] = { kind: lands.Plains, value: 0 };
+            island.lands[x][y] = { kind: Island.lands.Plains, value: 0 };
             this.logData.logLandSuc({ id, name, comName, point, turn });
 
             island.money += settings.treeValue * lv;
@@ -720,70 +718,71 @@ export default class Hakojima {
         || kind === Commands.haribote.id
         || kind === Commands.dbase.id) {
             if (!(
-                (landKind === lands.Plains) ||
-                (landKind === lands.Town) ||
-                ((landKind === lands.Monument) && (kind === Commands.monument.id)) ||
-                ((landKind === lands.Farm) && (kind === Commands.farm.id)) ||
-                ((landKind === lands.Defence) && (kind === Commands.dbase.id))
+                (landKind === Island.lands.Plains) ||
+                (landKind === Island.lands.Town) ||
+                ((landKind === Island.lands.Monument) && (kind === Commands.monument.id)) ||
+                ((landKind === Island.lands.Farm) && (kind === Commands.farm.id)) ||
+                ((landKind === Island.lands.Factory) && (kind === Commands.factory.id)) ||
+                ((landKind === Island.lands.Defence) && (kind === Commands.dbase.id))
             )) {
                 this.logData.logLandFail({id, name, comName, landName, point, turn});
                 return 0;
             }
             if (kind === Commands.plant.id) {
-                island.lands[x][y] = {kind: lands.Forest, value: 1};
+                island.lands[x][y] = {kind: Island.lands.Forest, value: 1};
                 this.publicLog(`こころなしか、<span class="name">${name}島</span>の` +
                 `<b>森</b>が増えたようです。`, id);
                 this.privateLog(`<span class="name">${name}島${point}</span>で` +
                 `<span class="command">${comName}</span>が行われました。`, id);
             } else if (kind === Commands.base.id) {
-                island.lands[x][y] = {kind: lands.Base, value: 0};
+                island.lands[x][y] = {kind: Island.lands.Base, value: 0};
                 this.publicLog(`こころなしか、<span class="name">${name}島</span>の` +
                 `<b>森</b>が増えたようです。`, id);
                 this.privateLog(`<span class="name">${name}島${point}</span>で` +
                 `<span class="command">${comName}</span>が行われました。`, id);
             } else if (kind === Commands.haribote.id) {
-                island.lands[x][y] = {kind: lands.Haribote, value: 0};
+                island.lands[x][y] = {kind: Island.lands.Haribote, value: 0};
                 this.privateLog(`<span class="name">${name}島${point}</span>で` +
                 `<span class="command">${comName}</span>が行われました。`, id);
                 this.logData.logLandSuc({id, name, comName: Commands.haribote.name, point, turn});
             } else if (kind === Commands.farm.id) {
-                if (landKind === lands.Farm) {
+                if (landKind === Island.lands.Farm) {
                     island.lands[x][y].value += 2;
                     if (island.lands[x][y].value > 50) {
                         island.lands[x][y].value = 50;
                     }
                 } else {
-                    island.lands[x][y] = {kind: lands.Farm, value: 10};
+                    island.lands[x][y] = {kind: Island.lands.Farm, value: 10};
                 }
                 this.logData.logLandSuc({id, name, comName, point, turn});
             } else if (kind === Commands.factory.id) {
-                if (landKind === lands.Factory) {
+                if (landKind === Island.lands.Factory) {
                     island.lands[x][y].value += 10;
                     if (island.lands[x][y].value > 100) {
                         island.lands[x][y].value = 100;
                     }
                 } else {
-                    island.lands[x][y] = {kind: lands.Factory, value: 30};
+                    island.lands[x][y] = {kind: Island.lands.Factory, value: 30};
                 }
                 this.logData.logLandSuc({id, name, comName, point, turn});
             } else if (kind === Commands.dbase.id) {
-                if (landKind === lands.Defence) {
+                if (landKind === Island.lands.Defence) {
                     island.lands[x][y].value = 1;
                     this.publicLog(`<span class="name">${name}島${point}</span>の` +
                 `<b>${landName}</b>の<b>自爆装置がセット</b>されました。`, id);
                 } else {
-                    island.lands[x][y] = {kind: lands.Defence, value: 0};
+                    island.lands[x][y] = {kind: Island.lands.Defence, value: 0};
                     this.logData.logLandSuc({id, name, comName, point, turn});
                 }
             } else if (kind === Commands.monument.id) {
-                if (landKind === lands.Monument) {
+                if (landKind === Island.lands.Monument) {
                     // TODO:後で記念碑の攻撃を実装する。
 
-                    island.lands[x][y] = {kind: lands.Waste, value: 0};
+                    island.lands[x][y] = {kind: Island.lands.Waste, value: 0};
                     this.publicLog(`<span class="name">${name}島${point}</span>の` +
                     `<b>${landName}</b>が<b>轟音とともに飛び立ちました</b>。`, id);
                 } else {
-                    island.lands[x][y].kind = lands.Monument;
+                    island.lands[x][y].kind = Island.lands.Monument;
                     if (arg >= settings.monumentName.length) {
                         arg = 0;
                     }
@@ -809,7 +808,7 @@ export default class Hakojima {
             }
             return 1;
         } else if (kind === Commands.mountain.id) {
-            if (landKind !== lands.Mountain) {
+            if (landKind !== Island.lands.Mountain) {
                 this.logData.logLandFail({id, name, comName, landName, point, turn});
                 return 0;
             }
@@ -833,11 +832,11 @@ export default class Hakojima {
             }
             return 1;
         } else if (kind === Commands.sbase.id) {
-            if (landKind !== lands.Sea || lv !== 0) {
+            if (landKind !== Island.lands.Sea || lv !== 0) {
                 this.logData.logLandFail({id, name, comName, landName, point, turn});
                 return 0;
             }
-            island.lands[x][y] = {kind: lands.Sbase, value: 0};
+            island.lands[x][y] = {kind: Island.lands.Sbase, value: 0};
             this.logData.logLandSuc({id, name, comName, point: "(?, ?)", turn});
 
             island.money -= cost;
@@ -877,7 +876,8 @@ export default class Hakojima {
                 while (count < settings.islandSize * settings.islandSize) {
                     bx = rpx[count];
                     by = rpy[count];
-                    if (island.lands[bx][by].kind === lands.Base || island.lands[bx][by].kind === lands.Sbase) {
+                    if (island.lands[bx][by].kind === Island.lands.Base
+                     || island.lands[bx][by].kind === Island.lands.Sbase) {
                         break;
                     }
                     count++;
@@ -930,9 +930,9 @@ export default class Hakojima {
                     const tPoint = `(${tx}, ${ty})`;
 
                     let defence = 0;
-                    if (tL === lands.Defence) {
+                    if (tL === Island.lands.Defence) {
                         // do nothing
-                    } else if (this.countAround(tLand, tx, ty, lands.Defence, 19)) {
+                    } else if (this.countAround(tLand, tx, ty, Island.lands.Defence, 19)) {
                         defence = 1;
                     }
 
@@ -957,12 +957,13 @@ export default class Hakojima {
                     }
 
                     // 「効果なし」hexを最初に判定
-                    if ((tL === lands.Sea && tLv === 0) || // 深い海
-                    ((tL === lands.Sea || tL === lands.Sbase || tL === lands.Mountain) // 海または海底基地または山で
+                    if ((tL === Island.lands.Sea && tLv === 0) || // 深い海
+                    ((tL === Island.lands.Sea || tL === Island.lands.Sbase
+                    || tL === Island.lands.Mountain) // 海または海底基地または山で
                     && kind !== Commands.missileLD.id)) { // 陸地破壊弾以外
-                        if (tL === lands.Sbase) {
+                        if (tL === Island.lands.Sbase) {
                             // 海底基地の場合、海のフリ
-                            tL = lands.Sea;
+                            tL = Island.lands.Sea;
                         }
                         tLname = this.landName(tL, tLv);
 
@@ -988,27 +989,27 @@ export default class Hakojima {
                         continue;
                     }
                     if (kind === Commands.missileLD.id) {
-                        if (tL === lands.Mountain) {
+                        if (tL === Island.lands.Mountain) {
                             this.publicLog(`<span class="name">${name}島</span>が` +
                             `<span class="name">${tName}島${point}</span>` +
                             `地点に向けて<span class="command">${comName}</span>を行い` +
                             `<span class="name">${tPoint}</span>` +
                             `の<b>${tLname}</b>に命中。<b>${tLname}</b>は消し飛び、荒地と化しました。`, id);
-                            tLand[tx][ty] = {kind: lands.Waste, value: 0};
+                            tLand[tx][ty] = {kind: Island.lands.Waste, value: 0};
                             continue;
-                        } else if (tL === lands.Sbase) {
+                        } else if (tL === Island.lands.Sbase) {
                             this.publicLog(`<span class="name">${name}島</span>が` +
                             `<span class="name">${tName}島${point}</span>` +
                             `地点に向けて<span class="command">${comName}</span>を行い` +
                             `<span class="name">${tPoint}</span>` +
                             `の<b>${tLname}</b>に着水後爆発、同地点にあった<b>${tLname}</b>は跡形もなく吹き飛びました。`, id);
-                        } else if (tL === lands.Monster) {
+                        } else if (tL === Island.lands.Monster) {
                             this.publicLog(`<span class="name">${name}島</span>が` +
                             `<span class="name">${tName}島${point}</span>` +
                             `地点に向けて<span class="command">${comName}</span>を行い` +
                             `<span class="name">${tPoint}</span>` +
                             `の<b>${tLname}</b>に着弾し爆発。陸地は<b>怪獣${tLname}</b>もろとも水没しました。`, id);
-                        } else if (tL === lands.Sea) {
+                        } else if (tL === Island.lands.Sea) {
                             this.publicLog(`<span class="name">${name}島</span>が` +
                             `<span class="name">${tName}島${point}</span>` +
                             `地点に向けて<span class="command">${comName}</span>を行い` +
@@ -1022,9 +1023,9 @@ export default class Hakojima {
                             `の<b>${tLname}</b>に着弾。陸地は水没しました。`, id);
                         }
 
-                        if (tL === lands.Town) {
-                            if (island.lands[bx][by].kind === lands.Base
-                            || island.lands[bx][by].kind === lands.Sbase) {
+                        if (tL === Island.lands.Town) {
+                            if (island.lands[bx][by].kind === Island.lands.Base
+                            || island.lands[bx][by].kind === Island.lands.Sbase) {
                                 island.lands[bx][by].value += Math.floor(tLv / 20);
                                 if (island.lands[bx][by].value > settings.maxExpPoint) {
                                     island.lands[bx][by].value = settings.maxExpPoint;
@@ -1032,14 +1033,14 @@ export default class Hakojima {
                             }
                         }
 
-                        tLand[tx][ty] = {kind: lands.Sea, value: 1};
+                        tLand[tx][ty] = {kind: Island.lands.Sea, value: 1};
                         tIsland.area--;
 
-                        if (tL === lands.Oil || tL === lands.Sea || tL === lands.Sbase) {
+                        if (tL === Island.lands.Oil || tL === Island.lands.Sea || tL === Island.lands.Sbase) {
                             tLand[tx][ty].value = 0;
                         }
                     } else {
-                        if (tL === lands.Waste) {
+                        if (tL === Island.lands.Waste) {
                             if (kind === Commands.missileST.id) {
                             this.publicLog(`<b>何者か</b><span class="name">${name}島${point}</span>へ向けて` +
                             `<span class="command">${comName}</span>を行いましたが、` +
@@ -1056,7 +1057,7 @@ export default class Hakojima {
                             `地点に向けて<span class="command">${comName}</span>を行いましたが、` +
                             `<span class="name">${tPoint}</span>` +
                             `の<B>${tLname}</B>に落ちました。`, id);                            }
-                        } else if (tL === lands.Monster) {
+                        } else if (tL === Island.lands.Monster) {
                             const monsterSpec = this.monsterSpec(tLv);
                             const special = settings.monsterSpecial[monsterSpec.kind];
 
@@ -1082,8 +1083,8 @@ export default class Hakojima {
                                 continue;
                             } else {
                                 if (monsterSpec.hp === 1) {
-                                    if (island.lands[bx][by].kind === lands.Base
-                                        || island.lands[bx][by].kind === lands.Sbase) {
+                                    if (island.lands[bx][by].kind === Island.lands.Base
+                                        || island.lands[bx][by].kind === Island.lands.Sbase) {
                                         island.lands[bx][by].value += settings.monsterExp[monsterSpec.kind];
                                         if (island.lands[bx][by].value > settings.maxExpPoint) {
                                             island.lands[bx][by].value = settings.maxExpPoint;
@@ -1158,9 +1159,9 @@ export default class Hakojima {
                             `の<B>${tLname}</B>に命中、一帯が壊滅しました。`, id);
                             }
                         }
-                        if (tL === lands.Town) {
-                            if (island.lands[bx][by].kind === lands.Base
-                            || island.lands[bx][by].kind === lands.Sbase) {
+                        if (tL === Island.lands.Town) {
+                            if (island.lands[bx][by].kind === Island.lands.Base
+                            || island.lands[bx][by].kind === Island.lands.Sbase) {
                                 island.lands[bx][by].value += Math.floor(tLv / 20);
                                 boat += tLv;
                                 if (island.lands[bx][by].value > settings.maxExpPoint) {
@@ -1169,10 +1170,10 @@ export default class Hakojima {
                             }
                         }
 
-                        tIsland.lands[tx][ty] = {kind: lands.Waste, value: 1};
+                        tIsland.lands[tx][ty] = {kind: Island.lands.Waste, value: 1};
 
-                        if (tL === lands.Oil) {
-                            tIsland.lands[tx][ty] = {kind: lands.Sea, value: 0};
+                        if (tL === Island.lands.Oil) {
+                            tIsland.lands[tx][ty] = {kind: Island.lands.Sea, value: 0};
                         }
                     }
                 }
@@ -1189,7 +1190,7 @@ export default class Hakojima {
                 for (let i = 0; (i < settings.islandSize * settings.islandSize && boat > 0); i++) {
                     bx = rpx[i];
                     by = rpy[i];
-                    if (island.lands[bx][by].kind === lands.Town) {
+                    if (island.lands[bx][by].kind === Island.lands.Town) {
                         let bLv = island.lands[bx][by].value;
                         if (boat > 50) {
                             bLv += 50;
@@ -1206,8 +1207,8 @@ export default class Hakojima {
                             bLv = 200;
                         }
                         island.lands[bx][by].value = lv;
-                    } else if (island.lands[bx][by].kind === lands.Plains) {
-                        island.lands[bx][by].kind = lands.Town;
+                    } else if (island.lands[bx][by].kind === Island.lands.Plains) {
+                        island.lands[bx][by].kind = Island.lands.Town;
                         if (boat > 10) {
                             island.lands[bx][by].value = 5;
                             boat -= 10;

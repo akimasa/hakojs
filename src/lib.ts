@@ -1,5 +1,4 @@
 import * as crypto from "crypto";
-import Island from "./Island";
 import settings from "./settings";
 
 export function encodepass(pass: string) {

@@ -1,4 +1,4 @@
-interface Settings {
+export interface Settings {
     masterPassword: string;
     passwordIterations: number;
     unitTime: number;
