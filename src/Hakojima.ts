@@ -11,12 +11,22 @@ interface NewIslandArg {
     password: string;
     password2: string;
 }
+interface IslandMemo {
+    bigmissile: number;
+    propaganda: number;
+    dead: number;
+    oldPop: number;
+}
+interface IslandMemoArray {
+    [index: number]: IslandMemo;
+}
 export default class Hakojima {
     public nextId: number;
     public islandLastTime: number;
     public islandTurn: number;
     public islands: Island[];
     public logData: Log;
+    private islandMemo: IslandMemoArray;
     private ax = [0, 1, 1, 1, 0, -1, 0, 1, 2, 2, 2, 1, 0, -1, -1, -2, -1, -1, 0];
     private ay = [0, -1, 0, 1, 1, 0, -1, -2, -1, 0, 1, 2, 2, 2, 1, 0, -1, -2, -2];
     constructor() {
@@ -25,6 +35,7 @@ export default class Hakojima {
         this.islandLastTime = this.islandLastTime - (this.islandLastTime % (settings.unitTime * 1000));
         this.islandTurn = 1;
         this.islands = [];
+        this.islandMemo = [];
         this.logData = new Log();
     }
     public load(jsonstr: string) {
@@ -164,7 +175,6 @@ export default class Hakojima {
         return island.id;
     }
     public turnMain() {
-        const oldPop = [];
         // 最終更新時間を更新
         this.islandLastTime += settings.unitTime * 1000;
 
@@ -174,18 +184,20 @@ export default class Hakojima {
         // 順番決め
         const order = this.randomArray(this.islands.length);
 
+        this.islandMemo = [];
         // 収入、消費フェイズ
         for (let i = 0; i < this.islands.length; i++) {
             this.estimate(order[i]);
             this.income(this.islands[order[i]]);
+            this.islandMemo[order[i]] = {bigmissile: 0, propaganda: 0, oldPop: 0, dead: 0};
             // ターン開始前の人口をメモる
-            oldPop[order[i]] = this.islands[order[i]].pop;
+            this.islandMemo[order[i]].oldPop = this.islands[order[i]].pop;
         }
 
         // コマンド処理
         for (let i = 0; i < this.islands.length; i++) {
             while (1) {
-                if (this.doCommand(this.islands[order[i]]) !== 0) {
+                if (this.doCommand(order[i]) !== 0) {
                     break;
                 }
             }
@@ -403,7 +415,7 @@ export default class Hakojima {
         island.factory = factory;
         island.mountain = mountain;
     }
-    private randomArray(num: number) {
+    private randomArray(num: number): number[] {
         const arr = [];
         for (let i = 0; i < num; i++) {
             arr[i] = i;
@@ -529,7 +541,8 @@ export default class Hakojima {
         // 食料消費
         island.food = Math.floor(island.food - pop * settings.eatenFood);
     }
-    private doCommand(island: Island) {
+    private doCommand(islandId: number) {
+        const island = this.islands[islandId];
         const Commands = coms.coms;
         const command = island.commands.shift();
         console.log("command:", command);
