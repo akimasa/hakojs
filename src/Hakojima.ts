@@ -52,12 +52,7 @@ export default class Hakojima {
         if (!settings.debug) {
             return;
         }
-        return JSON.stringify({
-            nextId: this.nextId,
-            islandLastTime: this.islandLastTime,
-            islandTurn: this.islandTurn,
-            islands: this.islands,
-        });
+        return JSON.stringify(this.getData());
     }
     public getSummary() {
         return {
@@ -248,6 +243,15 @@ export default class Hakojima {
             });
         }
         return islands;
+    }
+    private getData() {
+        return {
+            nextId: this.nextId,
+            islandLastTime: this.islandLastTime,
+            islandTurn: this.islandTurn,
+            islands: this.islands,
+            logData: this.logData.getLog(),
+        };
     }
     private makeNewLand(): Island.Land[][] {
         const land: Island.Land[][] = [];
