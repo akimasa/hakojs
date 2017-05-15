@@ -90,7 +90,7 @@ app.post("/api/island/new", (req, res, next) => {
         res.end(JSON.stringify({ err: ret }));
     }
 });
-app.post("/api/island/:id/plan", (req, res, next) => {
+app.post("/api/island/:id/command/get", (req, res, next) => {
     const id = parseInt(req.params.id, 10);
     const island = hako.getIsland(id);
     if (island === undefined) {
@@ -118,7 +118,7 @@ app.post("/api/island/:id/login", (req, res, next) => {
         res.end(JSON.stringify(island));
     }
 });
-app.post("/api/island/:id/update", (req, res, next) => {
+app.post("/api/island/:id/command/update", (req, res, next) => {
     const id = parseInt(req.params.id, 10);
     const island = hako.getIsland(id);
     if (island === undefined) {

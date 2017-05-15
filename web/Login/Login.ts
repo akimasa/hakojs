@@ -159,7 +159,7 @@ export default class Login extends Vue {
         }
     }
     private submitCommand() {
-        utils.postApi(`api/island/${this.island.id}/update`, {
+        utils.postApi(`api/island/${this.island.id}/command/update`, {
             password: this.password,
             commands: this.island.commands,
         }).then(() => {
