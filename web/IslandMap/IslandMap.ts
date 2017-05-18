@@ -97,6 +97,9 @@ export default class IslandMap extends Vue {
         } else if (kind === Lands.Farm) {
             image = "land7.gif";
             alt = `農場(${value}0${settings.unitPop}規模)`;
+        } else if (kind === Lands.Factory) {
+            image = "land8.gif";
+            alt = `工場(${value}0${settings.unitPop}規模)`;
         } else if (kind === Lands.Sbase) {
             image = "land12.gif";
             alt = `海底基地 (レベル /経験値 ${value})`;
