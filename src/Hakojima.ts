@@ -200,6 +200,11 @@ export default class Hakojima {
             }
         }
 
+        // 成長および単ヘックス災害
+        for (let i = 0; i < this.islands.length; i++) {
+            this.doEachHex(order[i]);
+        }
+
     }
     private camouflageLands(rawLands: Island.Land[][]): Island.Land[][] {
         const camouflagedLands: Island.Land[][] = [[]];
@@ -1298,5 +1303,83 @@ export default class Hakojima {
             return 1;
         }
         return 1;
+    }
+    private countGrow(land: Island.Land[][], x: number, y: number) {
+        const ax = this.ax;
+        const ay = this.ay;
+        let sx;
+        let sy;
+        for (let i = 0; i < 7; i++) {
+            sx = x + ax[i];
+            sy = y + ay[i];
+            // 行による位置調整
+            if (((sx % 2) === 0) && ((y % 2) === 1)) {
+                sx--;
+            }
+            if ((sx < 0) || (sx >= settings.islandSize) ||
+                (sy < 0) || (sy >= settings.islandSize)) {
+                // 範囲外の場合
+            } else {
+                if (land[sx][sy].kind === Island.lands.Town || land[sx][sy].kind === Island.lands.Farm) {
+                    if (land[sx][sy].value !== 1) {
+                        return 1;
+                    }
+                }
+            }
+        }
+        return 0;
+    }
+    private doEachHex(islandNum: number) {
+        const island = this.islands[islandNum];
+        const [name, id] = [island.name, island.id];
+
+        // 増える人口のタネ値
+        let addpop = 10; // 村、町
+        let addpop2 = 0; // 都市
+        if (island.food < 0) {
+            addpop = -30;
+        } else if (this.islandMemo[islandNum].propaganda === 1) {
+            addpop = 30;
+            addpop2 = 3;
+        }
+        const {rpx, rpy} = this.randomPointArray();
+        for (let i = 0; i < settings.islandSize * settings.islandSize; i++) {
+            const x = rpx[i];
+            const y = rpy[i];
+            const landKind = island.lands[x][y].kind;
+            let lv = island.lands[x][y].value;
+
+            if (landKind === Island.lands.Town) {
+                if (addpop < 0) {
+                    lv -= (this.random(-addpop) + 1);
+                    if (lv <= 0) {
+                        island.lands[x][y].kind = Island.lands.Plains;
+                        island.lands[x][y].value = 0;
+                        continue;
+                    }
+                } else {
+                    if (lv < 100) {
+                        lv += this.random(addpop) + 1;
+                        if (lv > 100) {
+                            lv = 100;
+                        }
+                    } else {
+                        if (addpop2 > 0) {
+                            lv += this.random(addpop2) + 1;
+                        }
+                    }
+                }
+                if (lv > 200) {
+                    lv = 200;
+                }
+                island.lands[x][y].value = lv;
+            } else if (landKind === Island.lands.Plains) {
+                if (this.random(5) === 0) {
+                    if (this.countGrow(island.lands, x, y)) {
+                        island.lands[x][y] = {kind: Island.lands.Town, value: 1};
+                    }
+                }
+            }
+        }
     }
 }
