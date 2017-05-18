@@ -1294,12 +1294,13 @@ export default class Hakojima {
             return 0;
         } else if (kind === Commands.propaganda.id) {
             this.publicLog(`<span class="name">${name}島</span>で<span class="command">${comName}</span>が行われました。`, id);
-            this.islandMemo[id].propaganda = 1;
+            this.islandMemo[islandId].propaganda = 1;
             island.money -= cost;
+            return 1;
         } else if (kind === Commands.giveup.id) {
             this.publicLog(`<span class="name">${name}島</span>は放棄され、<b>無人島</b>となりました。`, id);
             // logHistory(`<span class="name">${name}島</span>、放棄され<b>無人島</b>となる。`)
-            this.islandMemo[id].dead = 1;
+            this.islandMemo[islandId].dead = 1;
             return 1;
         }
         return 1;

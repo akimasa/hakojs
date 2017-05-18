@@ -37,6 +37,9 @@ export default class IslandMap extends Vue {
     public setPoint(x, y) {
         this.$emit("setPoint", x, y);
     }
+    public showNavi(item) {
+        document.getElementById("navi").innerHTML = item.alt;
+    }
         private landstr(data) {
         let image = "";
         let alt = "";
@@ -49,8 +52,10 @@ export default class IslandMap extends Vue {
                 alt = "海（浅瀬）";
             } else {
                 image = "land0.gif";
+                alt = "海";
             }
         } else if (kind === Lands.Waste) {
+            alt = "荒地";
             if (value === 1) {
                 image = "land13.gif";
             } else {
@@ -58,38 +63,59 @@ export default class IslandMap extends Vue {
             }
         } else if (kind === Lands.Plains) {
             image = "land2.gif";
+            alt = "平地";
         } else if (kind === Lands.Forest) {
             image = "land6.gif";
+            if (value > 0) {
+                alt = `森(${value + settings.unitTree})`;
+            } else {
+                alt = "森";
+            }
         } else if (kind === Lands.Town) {
             if (value < 3) {
                 image = "land3.gif";
+                alt = "村";
             } else if (value < 100) {
                 image = "land4.gif";
+                alt = "町";
             } else {
                 image = "land5.gif";
+                alt = "都市";
             }
-
+            alt += `(${value}${settings.unitPop})`;
         } else if (kind === Lands.Base) {
             image = "land9.gif";
+            alt = `ミサイル基地 (レベル /経験値 ${value})`;
         } else if (kind === Lands.Mountain) {
             if (value > 0) {
                 image = "land15.gif";
+                alt = `"山(採掘場${value}0${settings.unitPop}規模)`;
             } else {
                 image = "land11.gif";
+                alt = "山";
             }
         } else if (kind === Lands.Farm) {
             image = "land7.gif";
+            alt = `農場(${value}0${settings.unitPop}規模)`;
         } else if (kind === Lands.Sbase) {
             image = "land12.gif";
+            alt = `海底基地 (レベル /経験値 ${value})`;
         } else if (kind === Lands.Defence || kind === Lands.Haribote) {
             image = "land10.gif";
+            if (kind === Lands.Defence) {
+                alt = "防衛施設";
+            } else {
+                alt = "ハリボテ";
+            }
         } else if (kind === Lands.Oil) {
             image = "land16.gif";
+            alt = "海底油田";
         } else if (kind === Lands.Monument) {
             image = settings.monumentImage[value];
+            alt = settings.monumentName[value];
         } else {
             alt = kind;
         }
-        return "img/" + image;
+        return {image: "img/" + image, alt};
     }
 }
