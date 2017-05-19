@@ -1314,7 +1314,7 @@ export default class Hakojima {
             sx = x + ax[i];
             sy = y + ay[i];
             // 行による位置調整
-            if (((sx % 2) === 0) && ((y % 2) === 1)) {
+            if (((sy % 2) === 0) && ((y % 2) === 1)) {
                 sx--;
             }
             if ((sx < 0) || (sx >= settings.islandSize) ||
