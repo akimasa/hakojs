@@ -8,16 +8,21 @@ export function encodepass(pass: string) {
 }
 export function checkPassword(saved: string, input: string) {
     if (input === "" || input === undefined || input === null) {
-        return false;
+        return Promise.reject("blank pssword input");
     }
     if (input === settings.masterPassword) {
-        return true;
+        return Promise.resolve();
     }
     const parts = saved.split(":");
     const salt = new Buffer(parts[0], "base64");
-    const key = crypto.pbkdf2Sync(input, salt, settings.passwordIterations, 128, "sha512");
-    if (parts[1] === key.toString("base64")) {
-        return true;
-    }
-    return false;
+    return new Promise((resolve, reject) => {
+        crypto.pbkdf2(input, salt, settings.passwordIterations, 128, "sha512", (err, derivedKey) => {
+            if (err || parts[1] !== derivedKey.toString("base64")) {
+                reject("password check failed");
+            } else {
+                resolve();
+            }
+        });
+
+    });
 }

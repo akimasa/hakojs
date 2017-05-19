@@ -122,7 +122,7 @@ export default class Hakojima {
         }
         return ret;
     }
-    public authIsland(id: number, input: string): boolean {
+    public authIsland(id: number, input: string) {
         return lib.checkPassword(this.getIsland(id).password, input);
     }
     public newIslandMain(arg: NewIslandArg) {
