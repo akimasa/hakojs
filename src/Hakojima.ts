@@ -365,7 +365,7 @@ export default class Hakojima {
             sx = x + ax[i];
             sy = y + ay[i];
             // 行による位置調整
-            if (((sx % 2) === 0) && ((y % 2) === 1)) {
+            if (((sy % 2) === 0) && ((y % 2) === 1)) {
                 sx--;
             }
             if ((sx < 0) || (sx >= settings.islandSize) ||
@@ -1379,6 +1379,96 @@ export default class Hakojima {
                     if (this.countGrow(island.lands, x, y)) {
                         island.lands[x][y] = {kind: Island.lands.Town, value: 1};
                     }
+                }
+            } else if (landKind === Island.lands.Forest) {
+                if (lv < 200) {
+                    island.lands[x][y].value++;
+                }
+            } else if (landKind === Island.lands.Defence) {
+                if (lv === 1) {
+                    // 防衛施設自爆
+                    const lName = this.landName(landKind, lv);
+                    this.publicLog(`<span class="name">${name}島(${x}, ${y})</span>の` +
+                        `<b>${lName}</b>の<span class="disaster">自爆装置作動！！</span>`, id);
+
+                    // 広域被害ルーチン
+                    this.wideDamage({ id, name, lands: island.lands, x, y });
+                }
+            }
+        }
+    }
+    private wideDamage(obj: {id: number, name: string, lands: Island.Land[][], x: number, y: number}) {
+        const { id, name, lands, x, y } = obj;
+
+        const ax = this.ax;
+        const ay = this.ay;
+        let sx;
+        let sy;
+        for (let i = 0; i < 19; i++) {
+            sx = x + ax[i];
+            sy = y + ay[i];
+            // 行による位置調整
+            if (((sy % 2) === 0) && ((y % 2) === 1)) {
+                sx--;
+            }
+
+            const landKind = lands[sx][sy].kind;
+            const lv = lands[sx][sy].value;
+            const landName = this.landName(landKind, lv);
+            const point = `(${sx}, ${sy})`;
+            // 範囲外判定
+            if ((sx < 0) || (sx >= settings.islandSize) ||
+                (sy < 0) || (sy >= settings.islandSize)) {
+                continue;
+            }
+            // 範囲による分岐
+            if (i < 7) {
+                if (landKind === Island.lands.Sea) {
+                    lands[sx][sy].value = 0;
+                    continue;
+                } else if (landKind === Island.lands.Sbase || landKind === Island.lands.Oil) {
+                    // logWideDamageSea2
+                    this.publicLog(`<span class="name">${name}島${point}</span>の` +
+                        `<b>${landName}</b>は跡形もなくなりました。`, id);
+                    lands[sx][sy] = { kind: Island.lands.Sea, value: 0 };
+                } else {
+                    if (landKind === Island.lands.Monster) {
+                        // logWideDamageMonsterSea
+                        this.publicLog(`<span class="name">${name}島${point}</span>の陸地は` +
+                            `<b>怪獣${landName}</b>もろとも水没しました。`, id);
+
+                    } else {
+                        // logWideDamageSea
+                        this.publicLog(`<span class="name">${name}島${point}</span>の` +
+                            `<b>${landName}</b>は<b>水没</b>しました。`, id);
+
+                    }
+                    lands[sx][sy].kind = Island.lands.Sea;
+                    if (i === 0) {
+                        lands[sx][sy].value = 0;
+                    } else {
+                        lands[sx][sy].value = 1;
+                    }
+                }
+            } else {
+                // 2ヘックス
+                if (landKind === Island.lands.Sea ||
+                landKind === Island.lands.Oil ||
+                landKind === Island.lands.Waste ||
+                landKind === Island.lands.Mountain ||
+                landKind === Island.lands.Sbase) {
+                    continue;
+                } else if (landKind === Island.lands.Monster) {
+                    // logWideDamageMonster
+                    this.publicLog(`<span class="name">${name}島(${x}, ${y})</span>の` +
+                        `<b>怪獣${landName}</b>は消し飛びました。`, id);
+                    lands[sx][sy] = {kind: Island.lands.Waste, value: 0};
+                } else {
+                    // logWideDamageWaste
+                    this.publicLog(`<span class="name">${name}島(${x}, ${y})</span>の` +
+                        `<b>${landName}</b>は一瞬にして<b>荒地</b>と化しました。`, id);
+
+                    lands[sx][sy] = {kind: Island.lands.Waste, value: 0};
                 }
             }
         }
