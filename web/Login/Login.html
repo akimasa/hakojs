@@ -23,9 +23,9 @@
                     </template>
                 </select>
                 <div>コマンド入力</div>
-                <a @click="addCommand">追加</a>
-                <a @click="overCommand">上書き</a>
-                <a @click="delCommand">削除</a>
+                <a @click="addCommand" href="javascript:void(0)">追加</a>
+                <a @click="overCommand" href="javascript:void(0)">上書き</a>
+                <a @click="delCommand" href="javascript:void(0)">削除</a>
                 <div>座標</div>
                 <select name="x" v-model.number="x">
                     <template v-for="n in settings.islandSize">
