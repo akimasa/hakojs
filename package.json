@@ -9,7 +9,9 @@
     "test": "gulp test",
     "clean": "gulp clean",
     "prepublish": "gulp build",
-    "webpack": "gulp webpack"
+    "webpack": "gulp webpack",
+    "install": "gulp build webpack",
+    "start": "node release/index.js"
   },
   "author": "akimasa",
   "license": "ISC",
