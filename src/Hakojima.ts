@@ -449,22 +449,18 @@ export default class Hakojima {
         for (let j = 0; j < settings.islandSize; j++) {
             for (let i = 0; i < settings.islandSize; i++) {
                 rpx[i + j * settings.islandSize] = i;
-                rpy[i + j * settings.islandSize] = i;
+                rpy[i + j * settings.islandSize] = j;
             }
         }
         let m = rpx.length;
         while (m) {
             const i = Math.floor(Math.random() * m--);
 
-            const t = rpx[m];
+            let t = rpx[m];
             rpx[m] = rpx[i];
             rpx[i] = t;
-        }
-        m = rpy.length;
-        while (m) {
-            const i = Math.floor(Math.random() * m--);
 
-            const t = rpy[m];
+            t = rpy[m];
             rpy[m] = rpy[i];
             rpy[i] = t;
         }
