@@ -1402,6 +1402,22 @@ export default class Hakojima {
                     this.publicLog(`<span class="name">${name}島(${x}, ${y})</span>の<B>${lName}</B>は`
                     + `枯渇したようです`, id);
                 }
+            } else if (landKind === Island.lands.Monster) {
+                // TODO: 怪獣は後で実装する。
+            }
+            // 火災判定
+            if ((landKind === Island.lands.Town && lv > 30) ||
+            landKind === Island.lands.Haribote ||
+            landKind === Island.lands.Factory) {
+                if (this.random(1000) < settings.disFire) {
+                    if (this.countAround(island.lands, x, y, Island.lands.Forest, 7) +
+                    this.countAround(island.lands, x, y, Island.lands.Monument, 7) === 0) {
+                        const lName = this.landName(landKind, lv);
+                        this.publicLog(`<span class="name">${name}島(${x}, ${y})</span>の<B>${lName}</B>が`
+                        + `<span class="disaster">火災</span>により壊滅しました。`, id);
+                        island.lands[x][y] = {kind: Island.lands.Waste, value: 0};
+                    }
+                }
             }
         }
     }
