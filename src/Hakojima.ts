@@ -1394,6 +1394,18 @@ export default class Hakojima {
                     // 広域被害ルーチン
                     this.wideDamage({ id, name, lands: island.lands, x, y });
                 }
+            } else if (landKind === Island.lands.Oil) {
+                island.money += settings.oilMoney;
+                const lName = this.landName(landKind, lv);
+                const str = `${settings.oilMoney}${settings.unitMoney}`;
+
+                this.publicLog(`<span class="name">${name}島</span>の<B>${lName}</B>から、<B>${str}</B>の収益が上がりました。`, id);
+
+                if (this.random(1000) < settings.oilRatio) {
+                    island.lands[x][y] = {kind: Island.lands.Sea, value: 0};
+                    this.publicLog(`<span class="name">${name}島(${x}, ${y})</span>の<B>${lName}</B>は`
+                    + `枯渇したようです`, id);
+                }
             }
         }
     }
