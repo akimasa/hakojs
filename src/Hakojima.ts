@@ -135,8 +135,8 @@ export default class Hakojima {
         if (/[,\?\(\)\<\>]|^無人$/.test(arg.name)) {
             return "',?()<>\$'とか入ってたり、「無人島」とかいった変な名前はやめましょうよ〜";
         }
-        for (const island of this.islands) {
-            if (island.name === arg.name) {
+        for (const i of this.islands) {
+            if (i.name === arg.name) {
                 return "その島ならすでに発見されています。";
             }
         }

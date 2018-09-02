@@ -3,9 +3,7 @@ import Component from "vue-class-component";
 
 import { lands as Lands } from "../../src/lands";
 import utils from "../utils";
-import * as Template from "./IslandMap.html";
 
-@Template
 @Component<IslandMap>({
         props: ["lands"],
         computed: {
@@ -29,7 +27,7 @@ import * as Template from "./IslandMap.html";
             const settings = utils.getSettings();
             return settings.islandSize;
         },
-    },
+    }
 })
 export default class IslandMap extends Vue {
     public lands;

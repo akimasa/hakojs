@@ -1,11 +1,9 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 
-import Island from "../Island/Island";
+import Island from "../Island/Island.vue";
 import utils from "../utils";
-import * as Template from "./NewIsland.html";
 
-@Template
 @Component<NewIsland>({
     components: {
         Island,

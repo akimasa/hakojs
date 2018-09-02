@@ -16,7 +16,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(compression());
 
-const PROD = JSON.parse(process.env.PROD || 0);
+const PROD = JSON.parse(process.env.PROD || "0");
 if (PROD) {
     app.get("*.js", (req, res, next) => {
         req.url = req.url + ".gz";

@@ -2,17 +2,13 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import { mapActions } from "vuex";
 
-import * as Template from "./index.html";
+import App from "./App/App.vue"
 import router from "./router";
 
 // import "./style.scss";
 
-@Template
-@Component<App>({
+new Vue({
     router,
+    el: '#app',
+    render: (h) => h(App)
 })
-class App extends Vue { }
-
-const vm = new App();
-
-vm.$mount("#app");

@@ -2,25 +2,14 @@ import Vue from "vue";
 import Component from "vue-class-component";
 
 import {Command as Command} from "../../src/Island";
-import IslandMap from "../IslandMap/IslandMap";
+import IslandMap from "../IslandMap/IslandMap.vue";
 import utils from "../utils";
-import * as Template from "./Login.html";
 
-@Template
 @Component<Login>({
     components: {
         IslandMap,
     },
-    methods: {
-        selectCmdPos: this.selectCmdPos,
-        addCommand: this.addCommand,
-        overCommand: this.overCommand,
-        delCommand: this.delCommand,
-        getIslandNameFromId: this.getIslandNameFromId,
-        getCommandName: this.getCommandName,
-        isMissile: this.isMissile,
-        submitCommand: this.submitCommand,
-    },
+
 })
 export default class Login extends Vue {
     public commands;

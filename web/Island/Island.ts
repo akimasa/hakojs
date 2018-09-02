@@ -1,31 +1,25 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 
-import IslandHeader from "../IslandHeader/IslandHeader";
-import IslandMap from "../IslandMap/IslandMap";
+import IslandHeader from "../IslandHeader/IslandHeader.vue";
+import IslandMap from "../IslandMap/IslandMap.vue";
 import utils from "../utils";
-import * as Template from "./Island.html";
 
-@Template
 @Component<Island>({
     props: ["id", "password"],
     components: {
         IslandMap,
         IslandHeader,
     },
-    methods: {
-        fetchDataByRoute: this.fetchDataByRoute,
-        fetchDataByProp: this.fetchDataByProp,
-        fetchData: this.fetchData,
-    },
+
     watch: {
         $route: "fetchDataByRoute",
         id: "fetchDataByProp",
-    },
+    }
 })
 export default class Island extends Vue {
     public lands = [];
-    public island;
+    public island = null;
     public password;
     public id;
     public created() {

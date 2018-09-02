@@ -2,14 +2,12 @@ import Vue from "vue";
 import Component from "vue-class-component";
 
 import utils from "../utils";
-import * as Template from "./IslandHeader.html";
 
-@Template
 @Component<IslandHeader>({
         props: ["island"],
         watch: {
             island: "watchIsland",
-        },
+        }
 })
 export default class IslandHeader extends Vue {
     public island;

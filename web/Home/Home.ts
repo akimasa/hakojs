@@ -3,25 +3,19 @@ import Component from "vue-class-component";
 import { Getter } from "vuex";
 
 import utils from "../utils";
-import * as Template from "./Home.html";
-@Template
-@Component<Home>({
-    methods: {
-        getRemainingTime: this.getRemainingTime,
-        debugButton: this.debugButton,
-    },
-})
+
+@Component
 export default class Home extends Vue {
-    public islands;
+    public islands = null;
     public password;
     public islandid;
-    public newislandname;
-    public newislandpassword;
-    public newislandpassword2;
+    public newislandname = null;
+    public newislandpassword = null;
+    public newislandpassword2 = null;
     public settings;
     public islandNextTime;
     public remainingTimeTimer;
-    public log;
+    public log = null;
     public created() {
         this.password = localStorage.getItem("password");
         this.islandid = localStorage.getItem("islandid");

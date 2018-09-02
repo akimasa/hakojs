@@ -1,10 +1,10 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 
-import Home from "./Home/Home";
-import Island from "./Island/Island";
-import Login from "./Login/Login";
-import NewIsland from "./NewIsland/NewIsland";
+import Home from "./Home/Home.vue";
+import Island from "./Island/Island.vue";
+import Login from "./Login/Login.vue";
+import NewIsland from "./NewIsland/NewIsland.vue";
 
 Vue.use(VueRouter);
 

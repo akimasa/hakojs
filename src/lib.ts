@@ -6,7 +6,7 @@ export function encodepass(pass: string) {
     const key = crypto.pbkdf2Sync(pass, salt, settings.passwordIterations, 128, "sha512");
     return salt.toString("base64") + ":" + key.toString("base64");
 }
-export function checkPassword(saved: string, input: string) {
+export function checkPassword(saved: string, input: string): Promise<void|{}> {
     if (input === "" || input === undefined || input === null) {
         return Promise.reject("blank pssword input");
     }
