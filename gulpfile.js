@@ -26,7 +26,7 @@ gulp.task("tslint", () => {
 gulp.task("clean", () => {
     del.sync(["release"]);
 });
-gulp.task("build", ["tslint"], () => {
+gulp.task("build", gulp.series(("tslint"), () => {
     var tsProject = ts.createProject("tsconfig.json", {
         declaration: true
     });
@@ -39,7 +39,7 @@ gulp.task("build", ["tslint"], () => {
         tsResult.dts.pipe(gulp.dest('release/definitions')),
         tsResult.js.pipe(sourcemaps.write({sourceRoot: "../src"})).pipe(gulp.dest('release'))
     ]).pipe(notify({message: "built", onLast:true}));
-});
+}));
 gulp.task("webpack", () => {
     return gulp.src('web/index.ts')
         .pipe(plumber({ errorHandler: notify.onError('<%= error.message %>') }))
@@ -50,7 +50,7 @@ gulp.task("watch", () => {
     gulp.watch(["./src/**/*.ts"],["build"]);
     gulp.watch(["./web/**/*"],["webpack"]);
 });
-gulp.task("test", ["build"], () => {
+gulp.task("test", gulp.series(("build"), () => {
     gulp.src('./release/test/**/*.js', { read: false })
         .pipe(mocha({ reporter: 'spec' }));
-})
+}))
