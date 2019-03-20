@@ -1329,6 +1329,7 @@ export default class Hakojima {
     private doEachHex(islandNum: number) {
         const island = this.islands[islandNum];
         const [name, id] = [island.name, island.id];
+        const monsterMove = [[]];
 
         // 増える人口のタネ値
         let addpop = 10; // 村、町
@@ -1403,7 +1404,83 @@ export default class Hakojima {
                     + `枯渇したようです`, id);
                 }
             } else if (landKind === Island.lands.Monster) {
-                // TODO: 怪獣は後で実装する。
+                if (monsterMove[x][y] === 2) {
+                    continue;
+                }
+
+                const mSpec = this.monsterSpec(lv);
+                const special = settings.monsterSpecial[mSpec.kind];
+                if (((special === 3) && ((this.islandTurn % 2) === 1)) ||
+                ((special === 4) && ((this.islandTurn % 2) === 0))
+                ) {
+                    // 硬化中
+                    continue;
+                }
+                // 動く方向を決定
+                let d;
+                let sx;
+                let sy;
+                for ( let j = 0; j < 3; j++ ) {
+                    d = this.random(6) + 1;
+                    sx = x + this.ax[d];
+                    sy = y + this.ay[d];
+                }
+                // 行による位置調整
+                if (((sy % 2) === 0) && ((y % 2) === 1)) {
+                    sx--;
+                }
+
+                if ((sx < 0) || ( sx >= settings.islandSize) ||
+                (sy < 0) || ( sy >= settings.islandSize )) {
+                    continue;
+                }
+                if ((island.lands[sx][sy].kind !== Island.lands.Sea) &&
+                (island.lands[sx][sy].kind !== Island.lands.Sbase) &&
+                (island.lands[sx][sy].kind !== Island.lands.Oil) &&
+                (island.lands[sx][sy].kind !== Island.lands.Mountain) &&
+                (island.lands[sx][sy].kind !== Island.lands.Monument) &&
+                (island.lands[sx][sy].kind !== Island.lands.Monster)
+                ) {
+                    break;
+                }
+
+                if (i === 3) {
+                    // 動かなかった
+                    continue;
+                }
+                // 動いた先の地形によりメッセージ
+
+                // 移動
+                island.lands[sx][sy] = island.lands[x][y];
+
+                // もと居た位置を荒地に
+                island.lands[x][y].kind = Island.lands.Waste;
+                island.lands[x][y].value = 0;
+
+                // 移動済みフラグ
+                if (special === 2) {
+                    // 移動済みフラグは立てない
+                } else if (special === 1) {
+                    // 速い怪獣
+                    monsterMove[sx][sy] = monsterMove[x][y] + 1;
+                } else {
+                    // 普通の怪獣
+                    monsterMove[sx][sy] = 2;
+                }
+
+                if ((island.lands[sx][sy].kind === Island.lands.Defence) && (settings.dBaseAuto === 1)) {
+                    // 防衛施設を踏んだ
+                    const lName = this.landName(landKind, lv);
+                    this.publicLog(`<B>怪獣$mName</B>が<span class="name">${name}島(${x}, ${y})</span>`
+                    + `の<B>${lName}</B>へ到達、<B>${lName}の自爆装置が作動！！</B>`, id);
+
+                    this.wideDamage({id, name, lands: island.lands, x: sx, y: sy});
+                } else {
+                    const lName = this.landName(landKind, lv);
+                    this.publicLog(`<span class="name">${name}島(${x}, ${y})</span>の<B>${lName}</B>が`
+                    + `が<B>怪獣${mSpec.name}</B>に踏み荒らされました。`, id);
+                }
+
             }
             // 火災判定
             if ((landKind === Island.lands.Town && lv > 30) ||
