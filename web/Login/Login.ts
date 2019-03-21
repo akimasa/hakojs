@@ -25,6 +25,7 @@ export default class Login extends Vue {
     public arg = 0;
     public target: number;
     public commandsDirty = false;
+    public turn;
     public created() {
         let id = this.$route.params.id;
         let password = this.$route.params.password;
@@ -45,8 +46,10 @@ export default class Login extends Vue {
             .then((responses) => {
                 localStorage.setItem("password", password);
                 localStorage.setItem("islandid", id);
-                this.lands = (responses[0] as any).lands;
-                this.island = responses[0];
+                const [island, turn] = [(responses[0] as any).island, (responses[0] as any).turn];
+                this.lands = island.lands;
+                this.island = island;
+                this.turn = turn;
                 this.commands = responses[1];
                 this.islandsNames = responses[2];
                 this.$forceUpdate();

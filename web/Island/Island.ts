@@ -20,6 +20,7 @@ import utils from "../utils";
 export default class Island extends Vue {
     public lands = [];
     public island = null;
+    public turn = null;
     public password;
     public id;
     public created() {
@@ -31,20 +32,22 @@ export default class Island extends Vue {
     }
     public fetchData(id: string | number) {
         utils.getApi(`api/island/${id}`)
-        .then((response) => {
-            const island = response as any;
+        .then((response: any) => {
+            const [island, turn] = [response.island, response.turn];
             this.lands = island.lands;
             this.island = island;
+            this.turn = turn;
             this.$forceUpdate();
         });
     }
     private fetchDataByRoute() {
         if (this.password) {
             utils.postApi(`api/island/${this.id}/login`, { password: this.password })
-                .then((response) => {
-                    const island = response as any;
+                .then((response: any) => {
+                    const [island, turn] = [response.island, response.turn];
                     this.lands = island.lands;
                     this.island = island;
+                    this.turn = turn;
                     this.$forceUpdate();
                 });
         } else {

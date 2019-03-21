@@ -5,7 +5,7 @@ import { lands as Lands } from "../../src/lands";
 import utils from "../utils";
 
 @Component<IslandMap>({
-        props: ["lands"],
+        props: ["lands", "turn"],
         computed: {
             landMap: function landMap() {
                 console.log(this.lands);
@@ -31,6 +31,7 @@ import utils from "../utils";
 })
 export default class IslandMap extends Vue {
     public lands;
+    public turn;
     private imgs;
     public setPoint(x, y) {
         this.$emit("setPoint", x, y);
@@ -116,8 +117,13 @@ export default class IslandMap extends Vue {
             alt = settings.monumentName[value];
         } else if (kind === Lands.Monster) {
             const monsterKind = Math.floor(value / 10);
-            image = settings.monsterImage[monsterKind]
+            image = settings.monsterImage[monsterKind];
             alt = settings.monsterName[monsterKind];
+            const special = settings.monsterSpecial[monsterKind];
+            if (((special === 3) && ((this.turn % 2) === 1) ||
+            ((special === 4) && ((this.turn % 2) === 0)))) {
+                image = settings.monsterImage2[monsterKind];
+            }
         } else {
             alt = kind;
         }

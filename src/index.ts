@@ -77,7 +77,7 @@ app.get("/api/island/:id", (req, res, next) => {
         res.end(JSON.stringify({ err: "Island not found." }));
     } else {
         res.writeHead(200, { "Content-Type": "application/json;charset=utf-8" });
-        res.end(JSON.stringify(island));
+        res.end(JSON.stringify({island, turn: hako.islandTurn}));
     }
 });
 app.post("/api/island/new", (req, res, next) => {
@@ -115,7 +115,7 @@ app.post("/api/island/:id/login", (req, res, next) => {
     } else {
         hako.authIsland(id, req.body.password).then(() => {
             res.writeHead(200, { "Content-Type": "application/json;charset=utf-8" });
-            res.end(JSON.stringify(island));
+            res.end(JSON.stringify({island, turn: hako.islandTurn}));
         }, () => {
             res.writeHead(403, { "Content-Type": "application/json;charset=utf-8" });
             res.end(JSON.stringify({ err: "Island Forbidden" }));
