@@ -114,6 +114,10 @@ export default class IslandMap extends Vue {
         } else if (kind === Lands.Monument) {
             image = settings.monumentImage[value];
             alt = settings.monumentName[value];
+        } else if (kind === Lands.Monster) {
+            const monsterKind = Math.floor(value / 10);
+            image = settings.monsterImage[monsterKind]
+            alt = settings.monsterName[monsterKind];
         } else {
             alt = kind;
         }
