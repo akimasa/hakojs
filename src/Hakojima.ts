@@ -1329,7 +1329,13 @@ export default class Hakojima {
     private doEachHex(islandNum: number) {
         const island = this.islands[islandNum];
         const [name, id] = [island.name, island.id];
-        const monsterMove = [[]];
+        const monsterMove = [];
+        for (let x = 0; x < settings.islandSize; x++) {
+            monsterMove[x] = [];
+            for (let y = 0; y < settings.islandSize; y++) {
+                monsterMove[x][y] = 0;
+            }
+        }
 
         // 増える人口のタネ値
         let addpop = 10; // 村、町
@@ -1404,6 +1410,7 @@ export default class Hakojima {
                     + `枯渇したようです`, id);
                 }
             } else if (landKind === Island.lands.Monster) {
+                console.log(landKind);
                 if (monsterMove[x][y] === 2) {
                     continue;
                 }
@@ -1424,34 +1431,37 @@ export default class Hakojima {
                     d = this.random(6) + 1;
                     sx = x + this.ax[d];
                     sy = y + this.ay[d];
-                }
-                // 行による位置調整
-                if (((sy % 2) === 0) && ((y % 2) === 1)) {
-                    sx--;
-                }
 
-                if ((sx < 0) || ( sx >= settings.islandSize) ||
-                (sy < 0) || ( sy >= settings.islandSize )) {
-                    continue;
-                }
-                if ((island.lands[sx][sy].kind !== Island.lands.Sea) &&
-                (island.lands[sx][sy].kind !== Island.lands.Sbase) &&
-                (island.lands[sx][sy].kind !== Island.lands.Oil) &&
-                (island.lands[sx][sy].kind !== Island.lands.Mountain) &&
-                (island.lands[sx][sy].kind !== Island.lands.Monument) &&
-                (island.lands[sx][sy].kind !== Island.lands.Monster)
-                ) {
-                    break;
-                }
+                    // 行による位置調整
+                    if (((sy % 2) === 0) && ((y % 2) === 1)) {
+                        sx--;
+                    }
 
-                if (i === 3) {
-                    // 動かなかった
-                    continue;
-                }
+                    if ((sx < 0) || ( sx >= settings.islandSize) ||
+                    (sy < 0) || ( sy >= settings.islandSize )) {
+                        continue;
+                    }
+                    if ((island.lands[sx][sy].kind !== Island.lands.Sea) &&
+                    (island.lands[sx][sy].kind !== Island.lands.Sbase) &&
+                    (island.lands[sx][sy].kind !== Island.lands.Oil) &&
+                    (island.lands[sx][sy].kind !== Island.lands.Mountain) &&
+                    (island.lands[sx][sy].kind !== Island.lands.Monument) &&
+                    (island.lands[sx][sy].kind !== Island.lands.Monster)
+                    ) {
+                        break;
+                    }
+
+                    if (i === 3) {
+                        // 動かなかった
+                        continue;
+                    }
+            }
                 // 動いた先の地形によりメッセージ
+                const lName = this.landName(island.lands[sx][sy].kind, island.lands[sx][sy].value);
 
                 // 移動
-                island.lands[sx][sy] = island.lands[x][y];
+                island.lands[sx][sy].kind = island.lands[x][y].kind;
+                island.lands[sx][sy].value = island.lands[x][y].value;
 
                 // もと居た位置を荒地に
                 island.lands[x][y].kind = Island.lands.Waste;
@@ -1470,14 +1480,12 @@ export default class Hakojima {
 
                 if ((island.lands[sx][sy].kind === Island.lands.Defence) && (settings.dBaseAuto === 1)) {
                     // 防衛施設を踏んだ
-                    const lName = this.landName(landKind, lv);
                     this.publicLog(`<B>怪獣$mName</B>が<span class="name">${name}島(${x}, ${y})</span>`
                     + `の<B>${lName}</B>へ到達、<B>${lName}の自爆装置が作動！！</B>`, id);
 
                     this.wideDamage({id, name, lands: island.lands, x: sx, y: sy});
                 } else {
-                    const lName = this.landName(landKind, lv);
-                    this.publicLog(`<span class="name">${name}島(${x}, ${y})</span>の<B>${lName}</B>が`
+                    this.publicLog(`<span class="name">${name}島(${sx}, ${sy})</span>の<B>${lName}</B>`
                     + `が<B>怪獣${mSpec.name}</B>に踏み荒らされました。`, id);
                 }
 
